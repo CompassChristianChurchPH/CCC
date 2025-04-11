@@ -118,7 +118,7 @@
 
     <div class="profile-info">
       <input type="text" id="profileUsername" placeholder="Username" readonly>
-      <input type="email" id="profileEmail" placeholder="Email">
+      <input type="email" id="profileEmail" placeholder="Email" required>
       <button class="submit-btn" onclick="saveProfile()">Save Profile</button>
     </div>
 
@@ -169,6 +169,10 @@
       const user = auth.currentUser;
       const email = document.getElementById("profileEmail").value;
 
+      if (!validateEmail(email)) {
+        return alert('Please enter a valid email address.');
+      }
+
       setDoc(doc(db, "users", user.uid), {
         email: email
       }, { merge: true }).then(() => {
@@ -176,6 +180,11 @@
       }).catch((error) => {
         console.error('Error updating profile: ', error);
       });
+    }
+
+    function validateEmail(email) {
+      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return regex.test(email);
     }
 
     function uploadProfilePic(event) {
