@@ -5,13 +5,111 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Compass Christian Church</title>
   <link rel="icon" href="assets/favicon.png" />
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background: #f5f5f5; color: #333; }
+    header {
+      background: #0077cc;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+    }
+    .logo { height: 40px; }
+    .ccc-title { font-weight: bold; margin-left: 10px; font-size: 1.5em; }
+    nav ul { list-style: none; display: flex; gap: 15px; }
+    nav a { color: white; text-decoration: none; font-weight: bold; }
+    section { padding: 20px; }
+    .auth-section form, #registerForm, #loginForm {
+      display: flex;
+      flex-direction: column;
+      max-width: 300px;
+      gap: 10px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 1em;
+    }
+    button { background: #0077cc; color: white; border: none; cursor: pointer; }
+    button:hover { background: #005fa3; }
+    .social-icons a {
+      margin-right: 10px;
+      text-decoration: none;
+      color: #0077cc;
+    }
+    .hidden { display: none; }
+    .user-nav ul {
+      display: flex;
+      gap: 10px;
+      list-style: none;
+      margin-bottom: 20px;
+    }
+    .user-nav li {
+      cursor: pointer;
+      padding: 5px 10px;
+      background: #0077cc;
+      color: white;
+    }
+    .main-tabs button {
+      margin-right: 10px;
+      padding: 10px;
+    }
+    .tab-content { margin-top: 20px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      background: #eee;
+      margin-top: 40px;
+    }
+  </style>
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const homeSection = document.getElementById('home');
+    const accountsSection = document.getElementById('accounts');
+
+    loginForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      homeSection.classList.remove('hidden');
+      document.getElementById('login').classList.add('hidden');
+      document.getElementById('register').classList.add('hidden');
+    });
+
+    registerForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Account registered! You can now login.');
+      document.getElementById('register').classList.add('hidden');
+      document.getElementById('login').classList.remove('hidden');
+    });
+
+    function logout() {
+      homeSection.classList.add('hidden');
+      document.getElementById('login').classList.remove('hidden');
+    }
+
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+      document.getElementById(tabId).classList.remove('hidden');
+    }
+  </script>
 </head>
 <body>
   <header>
-    <img src="assets/favicon.png" alt="CCC Logo" class="logo" />
-    <span class="ccc-title">CCC</span>
+    <div style="display:flex; align-items:center">
+      <img src="assets/favicon.png" alt="CCC Logo" class="logo" />
+      <span class="ccc-title">CCC</span>
+    </div>
     <nav>
       <ul>
         <li><a href="#login">Login</a></li>
@@ -22,7 +120,6 @@
   </header>
 
   <main>
-    <!-- LOGIN SECTION -->
     <section id="login" class="auth-section">
       <h2>Login</h2>
       <form id="loginForm">
@@ -32,7 +129,6 @@
       </form>
     </section>
 
-    <!-- REGISTER SECTION -->
     <section id="register" class="auth-section">
       <h2>Register</h2>
       <form id="registerForm">
@@ -44,7 +140,6 @@
       </form>
     </section>
 
-    <!-- ABOUT US SECTION -->
     <section id="about">
       <h2>About Compass Christian Church</h2>
       <p>We help people to find and follow Jesus. Join our community of faith and fellowship.</p>
@@ -55,11 +150,10 @@
       </div>
     </section>
 
-    <!-- HOME PAGE (Visible after login) -->
     <section id="home" class="hidden">
       <nav class="user-nav">
         <ul>
-          <li>Home</li>
+          <li onclick="showTab('bible')">Home</li>
           <li>Profile</li>
           <li>Settings</li>
           <li>Messages</li>
@@ -80,7 +174,6 @@
       <div id="events" class="tab-content hidden">Upcoming Events list...</div>
     </section>
 
-    <!-- ACCOUNTS PAGE -->
     <section id="accounts" class="hidden">
       <h2>Account List</h2>
       <table>
@@ -88,7 +181,8 @@
           <tr><th>Username</th><th>Email</th><th>Account Level</th></tr>
         </thead>
         <tbody id="accountList">
-          <!-- Account rows populated here -->
+          <tr><td>bryan</td><td>ablaobryan4400@gmail.com</td><td>Admin</td></tr>
+          <tr><td>member1</td><td>member1@example.com</td><td>Member</td></tr>
         </tbody>
       </table>
     </section>
@@ -99,4 +193,3 @@
   </footer>
 </body>
 </html>
-
