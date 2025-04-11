@@ -4,192 +4,143 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Compass Christian Church</title>
-  <link rel="icon" href="assets/favicon.png" />
+  <link rel="icon" type="image/png" href="assets/ccc icon.png" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { background: #f5f5f5; color: #333; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background-color: #f4f4f4;
+      text-align: center;
+    }
     header {
-      background: #0077cc;
-      color: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background-color: #2b5dad;
+      color: white;
       padding: 10px 20px;
     }
-    .logo { height: 40px; }
-    .ccc-title { font-weight: bold; margin-left: 10px; font-size: 1.5em; }
-    nav ul { list-style: none; display: flex; gap: 15px; }
-    nav a { color: white; text-decoration: none; font-weight: bold; }
-    section { padding: 20px; }
-    .auth-section form, #registerForm, #loginForm {
+    header h1 {
       display: flex;
-      flex-direction: column;
-      max-width: 300px;
+      align-items: center;
       gap: 10px;
     }
-    input, button {
-      padding: 10px;
-      font-size: 1em;
+    header h1 img {
+      width: 32px;
+      height: 32px;
     }
-    button { background: #0077cc; color: white; border: none; cursor: pointer; }
-    button:hover { background: #005fa3; }
-    .social-icons a {
-      margin-right: 10px;
-      text-decoration: none;
-      color: #0077cc;
-    }
-    .hidden { display: none; }
-    .user-nav ul {
+    nav {
       display: flex;
-      gap: 10px;
-      list-style: none;
-      margin-bottom: 20px;
+      gap: 15px;
     }
-    .user-nav li {
+    nav button {
+      padding: 8px 16px;
+      background-color: white;
+      border: none;
+      border-radius: 5px;
+      color: #2b5dad;
+      font-weight: bold;
       cursor: pointer;
-      padding: 5px 10px;
-      background: #0077cc;
-      color: white;
     }
-    .main-tabs button {
-      margin-right: 10px;
-      padding: 10px;
+    .container {
+      padding: 40px 20px;
     }
-    .tab-content { margin-top: 20px; }
-    table {
+    .tab-content {
+      display: none;
+      margin-top: 30px;
+      background-color: white;
+      padding: 30px;
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
+      max-width: 400px;
+      margin-inline: auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border-radius: 10px;
     }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: left;
+    .tab-content.active {
+      display: block;
     }
-    footer {
-      text-align: center;
+    .tab-content input {
+      width: 100%;
       padding: 10px;
-      background: #eee;
-      margin-top: 40px;
+      margin: 10px 0;
+      font-size: 1rem;
+    }
+    .tab-content button {
+      padding: 10px 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      background-color: #2b5dad;
+      color: white;
+      cursor: pointer;
+    }
+    .social-icons img {
+      width: 32px;
+      margin: 10px;
+      cursor: pointer;
     }
   </style>
-  <script>
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    const homeSection = document.getElementById('home');
-    const accountsSection = document.getElementById('accounts');
-
-    loginForm?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      homeSection.classList.remove('hidden');
-      document.getElementById('login').classList.add('hidden');
-      document.getElementById('register').classList.add('hidden');
-    });
-
-    registerForm?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Account registered! You can now login.');
-      document.getElementById('register').classList.add('hidden');
-      document.getElementById('login').classList.remove('hidden');
-    });
-
-    function logout() {
-      homeSection.classList.add('hidden');
-      document.getElementById('login').classList.remove('hidden');
-    }
-
-    function showTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-      document.getElementById(tabId).classList.remove('hidden');
-    }
-  </script>
 </head>
 <body>
+
   <header>
-    <div style="display:flex; align-items:center">
-      <img src="assets/favicon.png" alt="CCC Logo" class="logo" />
-      <span class="ccc-title">CCC</span>
-    </div>
+    <h1>
+      <img src="assets/ccc icon.png" alt="favicon" />
+      CCC
+    </h1>
     <nav>
-      <ul>
-        <li><a href="#login">Login</a></li>
-        <li><a href="#register">Register</a></li>
-        <li><a href="#about">About Us</a></li>
-      </ul>
+      <button onclick="showTab('login')">Login</button>
+      <button onclick="showTab('register')">Register</button>
+      <button onclick="showTab('about')">About Us</button>
     </nav>
   </header>
 
-  <main>
-    <section id="login" class="auth-section">
+  <div class="container">
+    <div id="login" class="tab-content">
       <h2>Login</h2>
-      <form id="loginForm">
-        <input type="text" placeholder="Username" required />
-        <input type="password" placeholder="Password" required />
-        <button type="submit">Login</button>
-      </form>
-    </section>
+      <input type="text" placeholder="Username" />
+      <input type="password" placeholder="Password" />
+      <button>Login</button>
+    </div>
 
-    <section id="register" class="auth-section">
+    <div id="register" class="tab-content">
       <h2>Register</h2>
-      <form id="registerForm">
-        <input type="text" placeholder="Username" required />
-        <input type="email" placeholder="Email" required />
-        <input type="password" placeholder="Password" required />
-        <input type="password" placeholder="Confirm Password" required />
-        <button type="submit">Register</button>
-      </form>
-    </section>
+      <input type="text" placeholder="Username" />
+      <input type="email" placeholder="Email" />
+      <input type="password" placeholder="Password" />
+      <input type="password" placeholder="Confirm Password" />
+      <button>Register</button>
+    </div>
 
-    <section id="about">
-      <h2>About Compass Christian Church</h2>
-      <p>We help people to find and follow Jesus. Join our community of faith and fellowship.</p>
+    <div id="about" class="tab-content">
+      <h2>About Us</h2>
+      <p>Welcome to Compass Christian Church!<br />
+      We help people to find and follow Jesus.</p>
       <div class="social-icons">
-        <a href="https://web.facebook.com/bryangablao" target="_blank">Facebook</a>
-        <a href="https://www.linkedin.com/in/bryan-ablao-66734a359/" target="_blank">LinkedIn</a>
-        <a href="mailto:ablaobryan4400@gmail.com">Gmail</a>
+        <a href="https://web.facebook.com/bryangablao" target="_blank">
+          <img src="assets/facebook.png" alt="Facebook" />
+        </a>
+        <a href="https://www.linkedin.com/in/bryan-ablao-66734a359/" target="_blank">
+          <img src="assets/linkedin.png" alt="LinkedIn" />
+        </a>
+        <a href="mailto:ablaobryan4400@gmail.com">
+          <img src="assets/gmail.png" alt="Gmail" />
+        </a>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <section id="home" class="hidden">
-      <nav class="user-nav">
-        <ul>
-          <li onclick="showTab('bible')">Home</li>
-          <li>Profile</li>
-          <li>Settings</li>
-          <li>Messages</li>
-          <li>Mailbox</li>
-          <li>Friendlist</li>
-          <li onclick="logout()">Logout</li>
-        </ul>
-      </nav>
-      <div class="main-tabs">
-        <button onclick="showTab('bible')">Bible</button>
-        <button onclick="showTab('testimony')">Testimony</button>
-        <button onclick="showTab('prayer')">Prayer Wall</button>
-        <button onclick="showTab('events')">Events</button>
-      </div>
-      <div id="bible" class="tab-content">Bible content here...</div>
-      <div id="testimony" class="tab-content hidden">Testimonies shared by members...</div>
-      <div id="prayer" class="tab-content hidden">Prayer Wall for your requests...</div>
-      <div id="events" class="tab-content hidden">Upcoming Events list...</div>
-    </section>
+  <script>
+    function showTab(id) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+  </script>
 
-    <section id="accounts" class="hidden">
-      <h2>Account List</h2>
-      <table>
-        <thead>
-          <tr><th>Username</th><th>Email</th><th>Account Level</th></tr>
-        </thead>
-        <tbody id="accountList">
-          <tr><td>bryan</td><td>ablaobryan4400@gmail.com</td><td>Admin</td></tr>
-          <tr><td>member1</td><td>member1@example.com</td><td>Member</td></tr>
-        </tbody>
-      </table>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Compass Christian Church | Built by Bryan Gutierrez Ablao</p>
-  </footer>
 </body>
 </html>
