@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile - Compass Christian Church</title>
+  <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
+  <style>
+    /* Reuse styles from home.html for consistency */
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>
+      <img src="assets/ccc icon.png" alt="favicon" />
+      CCC
+    </h1>
+    <nav>
+      <!-- Navigation menu similar to home.html -->
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="dashboard">
+      <h2>Profile</h2>
+      <div id="profileDetails"></div>
+      <button onclick="editProfile()">Edit Profile</button>
+    </div>
+  </div>
+
+  <script>
+    // Check if user is logged in
+    const user = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
+    if (!user) {
+      window.location.href = 'index.html'; // Redirect to login if not logged in
+    }
+
+    // Display profile details
+    function displayProfile() {
+      const profileDiv = document.getElementById('profileDetails');
+      profileDiv.innerHTML = `
+        <p><strong>Username:</strong> ${user.username}</p>
+        <p><strong>Email:</strong> ${user.email}</p>
+        <p><strong>Name:</strong> ${user.firstName} ${user.lastName}</p>
+      `;
+    }
+
+    // Edit profile functionality (could open a form)
+    function editProfile() {
+      alert('Edit profile functionality to be implemented!');
+    }
+
+    displayProfile();  // Call function to display profile on page load
+  </script>
+</body>
+</html>
