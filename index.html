@@ -131,6 +131,11 @@
         padding: 6px 10px;
         font-size: 14px;
       }
+
+      .socials img {
+        width: 25px;
+        height: 25px;
+      }
     }
   </style>
 </head>
@@ -176,18 +181,35 @@
     </div>
   </div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <!-- Firebase SDKs for v9+ (modular style) -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+    import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
-  <!-- Your Firebase Configuration -->
-  <script src="firebase-config.js"></script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+      projectId: "compass-christian-church-4b02e",
+      storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
+      messagingSenderId: "436310011988",
+      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+      measurementId: "G-T6EWRN2THW"
+    };
 
-  <script>
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
     function showSection(id) {
       document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+    }
+
+    function validateEmail(email) {
+      const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      return re.test(String(email).toLowerCase());
     }
 
     function registerUser() {
@@ -197,12 +219,14 @@
       const confirm = document.getElementById("regConfirm").value;
 
       if (!username || !email || !password || !confirm) return alert("Please fill all fields.");
+      if (!validateEmail(email)) return alert("Please enter a valid email.");
       if (password !== confirm) return alert("Passwords do not match.");
 
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(userCredential => {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(async userCredential => {
           const user = userCredential.user;
-          db.collection("users").add({
+          // Save user details to Firestore
+          await addDoc(collection(db, "users"), {
             username,
             email,
             uid: user.uid
@@ -217,7 +241,10 @@
       const email = document.getElementById("loginUsername").value.trim();
       const password = document.getElementById("loginPassword").value;
 
-      auth.signInWithEmailAndPassword(email, password)
+      if (!email || !password) return alert("Please enter both email and password.");
+      if (!validateEmail(email)) return alert("Please enter a valid email.");
+
+      signInWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
           const user = userCredential.user;
           alert("Welcome, " + user.email + "!");
@@ -226,5 +253,6 @@
         .catch(err => alert(err.message));
     }
   </script>
+
 </body>
 </html>
