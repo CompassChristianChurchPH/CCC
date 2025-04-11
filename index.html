@@ -188,8 +188,8 @@
   <!-- Firebase SDKs for v9+ (modular style) -->
   <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-  import { getAuth, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
-  import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+  import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+  import { getFirestore, query, where, getDocs, collection } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
@@ -206,39 +206,44 @@
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // Validate email format
-  function validateEmail(email) {
-    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return re.test(String(email).toLowerCase());
-  }
+  // Login user function with username
+  window.loginUser = async function () {
+    const username = document.getElementById("loginUsername").value.trim(); // Username input
+    const password = document.getElementById("loginPassword").value;
 
-  // Register user function
-  window.registerUser = function () {
-    const username = document.getElementById("regUsername").value.trim();
-    const email = document.getElementById("regEmail").value.trim();
-    const password = document.getElementById("regPassword").value;
-    const confirm = document.getElementById("regConfirm").value;
+    if (!username || !password) {
+      return alert("Please fill all fields.");
+    }
 
-    if (!username || !email || !password || !confirm) return alert("Please fill all fields.");
-    if (!validateEmail(email)) return alert("Please enter a valid email.");
-    if (password !== confirm) return alert("Passwords do not match.");
+    try {
+      // Query Firestore to get the email associated with the username
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("username", "==", username));
+      const querySnapshot = await getDocs(q);
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(async userCredential => {
-        const user = userCredential.user;
-        await addDoc(collection(db, "users"), {
-          username,
-          email,
-          uid: user.uid
+      if (querySnapshot.empty) {
+        return alert("No user found with the provided username.");
+      }
+
+      // Get the first matching document (assuming usernames are unique)
+      const userDoc = querySnapshot.docs[0];
+      const email = userDoc.data().email;
+
+      // Use the email to log in
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert("Logged in successfully!");
+          // Redirect to the home.html page
+          window.location.href = "https://github.com/CompassChristianChurchPH/CCC/blob/main/home.html";
+        })
+        .catch(err => {
+          console.error("Error during login:", err.message);
+          alert(err.message);
         });
-        alert("Registered successfully!");
-        // Redirect to the home.html page
-        window.location.href = "https://github.com/CompassChristianChurchPH/CCC/blob/main/home.html";
-      })
-      .catch(err => {
-        console.error("Error during registration:", err.message);
-        alert(err.message);
-      });
+    } catch (err) {
+      console.error("Error fetching user data:", err.message);
+      alert("An error occurred while logging in. Please try again.");
+    }
   };
 </script>
 </body>
