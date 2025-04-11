@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Testimony - Compass Christian Church</title>
+  <link rel="icon" type="image/png" href="assets/ccc icon.png" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body {
+      background-color: #fefefe;
+      color: #222;
+      padding-bottom: 60px;
+    }
+    header {
+      background-color: #2b5dad;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    header img { width: 32px; height: 32px; }
+
+    nav button {
+      margin-left: 10px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: white;
+      color: #2b5dad;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      min-height: 100px;
+      margin-bottom: 15px;
+    }
+
+    button.submit-btn {
+      padding: 10px 20px;
+      background-color: #2b5dad;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .testimony-list {
+      margin-top: 30px;
+    }
+
+    .testimony {
+      background-color: #f1f1f1;
+      border-left: 5px solid #2b5dad;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+
+    .testimony strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #2b5dad;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #2b5dad;
+      color: white;
+      text-align: center;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
+    <nav>
+      <button onclick="location.href='home.html'">Home</button>
+      <button onclick="location.href='profile.html'">Profile</button>
+      <button onclick="location.href='bible.html'">Bible</button>
+      <button onclick="location.href='testimony.html'">Testimony</button>
+      <button onclick="logoutUser()">Logout</button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>🙌 Share Your Testimony</h2>
+
+    <textarea id="testimonyInput" placeholder="Write your story here..."></textarea>
+    <button class="submit-btn" onclick="submitTestimony()">Submit Testimony</button>
+
+    <div class="testimony-list" id="testimonyList">
+      <!-- Testimonies will show here -->
+    </div>
+  </div>
+
+  <footer>
+    Compass Christian Church – Giving Glory to God Through Every Story
+  </footer>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
+    if (!user) window.location.href = 'index.html';
+
+    const input = document.getElementById("testimonyInput");
+    const list = document.getElementById("testimonyList");
+
+    let testimonies = JSON.parse(localStorage.getItem("ccc_testimonies")) || [];
+
+    function renderTestimonies() {
+      list.innerHTML = "";
+      testimonies.slice().reverse().forEach(t => {
+        const div = document.createElement("div");
+        div.className = "testimony";
+        div.innerHTML = `<strong>${t.user}</strong><p>${t.text}</p>`;
+        list.appendChild(div);
+      });
+    }
+
+    function submitTestimony() {
+      const text = input.value.trim();
+      if (!text) {
+        alert("Please write something first.");
+        return;
+      }
+
+      const newTestimony = {
+        user: user.username,
+        text: text,
+        timestamp: new Date().toISOString()
+      };
+
+      testimonies.push(newTestimony);
+      localStorage.setItem("ccc_testimonies", JSON.stringify(testimonies));
+      input.value = "";
+      renderTestimonies();
+    }
+
+    function logoutUser() {
+      localStorage.removeItem("ccc_loggedInUser");
+      window.location.href = "index.html";
+    }
+
+    // Initial load
+    renderTestimonies();
+  </script>
+
+</body>
+</html>
