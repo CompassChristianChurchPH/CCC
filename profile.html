@@ -123,83 +123,99 @@
     </div>
   </div>
 
-  <script>
-    const user = JSON.parse(localStorage.getItem("ccc_loggedInUser"));
-    if (!user) {
-      window.location.href = "index.html";
-    }
+  <script type="module">
+    import { auth, db, storage } from './firebase-config.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+    import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+    import { ref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
 
-    // Load user info
-    document.getElementById("profileUsername").value = user.username;
-    document.getElementById("profileEmail").value = user.email || "";
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        window.location.href = 'index.html'; // If no user is authenticated, redirect to login
+      } else {
+        // User is signed in, load profile data
+        loadProfile(user);
+      }
+    });
 
-    // Load profile picture if stored
-    const storedPic = localStorage.getItem("ccc_profile_pic_" + user.username);
-    if (storedPic) {
-      document.getElementById("profilePic").src = storedPic;
-    } else {
-      document.getElementById("profilePic").src = "https://via.placeholder.com/100";
-    }
-
-    // Save profile changes
-    function saveProfile() {
-      const email = document.getElementById("profileEmail").value;
-      user.email = email;
-      localStorage.setItem("ccc_loggedInUser", JSON.stringify(user));
-
-      let users = JSON.parse(localStorage.getItem("ccc_users") || "[]");
-      users = users.map(u => u.username === user.username ? {...u, email} : u);
-      localStorage.setItem("ccc_users", JSON.stringify(users));
-      alert("Profile saved!");
-    }
-
-    function uploadProfilePic(event) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById("profilePic").src = e.target.result;
-        localStorage.setItem("ccc_profile_pic_" + user.username, e.target.result);
-      };
-      reader.readAsDataURL(event.target.files[0]);
-    }
-
-    function createPost() {
-      const content = document.getElementById("newPost").value;
-      if (!content) return alert("Please write something!");
-
-      const post = {
-        username: user.username,
-        content,
-        time: new Date().toLocaleString()
-      };
-
-      const posts = JSON.parse(localStorage.getItem("ccc_posts") || "[]");
-      posts.unshift(post); // Add to top
-      localStorage.setItem("ccc_posts", JSON.stringify(posts));
-      document.getElementById("newPost").value = "";
-      loadPosts();
-    }
-
-    function loadPosts() {
-      const posts = JSON.parse(localStorage.getItem("ccc_posts") || "[]");
-      const userPosts = posts.filter(p => p.username === user.username);
-      const postList = document.getElementById("postList");
-      postList.innerHTML = "";
-
-      userPosts.forEach(post => {
-        const div = document.createElement("div");
-        div.className = "post";
-        div.innerHTML = `<strong>${post.username}</strong><br><small>${post.time}</small><p>${post.content}</p>`;
-        postList.appendChild(div);
+    function loadProfile(user) {
+      // Get user data from Firestore
+      const userRef = doc(db, "users", user.uid);
+      getDoc(userRef).then((docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById("profileUsername").value = data.username;
+          document.getElementById("profileEmail").value = data.email;
+          if (data.profilePicUrl) {
+            document.getElementById("profilePic").src = data.profilePicUrl;
+          }
+        } else {
+          console.log("No user data found.");
+        }
       });
     }
 
-    function logoutUser() {
-      localStorage.removeItem("ccc_loggedInUser");
-      window.location.href = "index.html";
+    function saveProfile() {
+      const user = auth.currentUser;
+      const email = document.getElementById("profileEmail").value;
+      
+      // Update user profile in Firestore
+      setDoc(doc(db, "users", user.uid), {
+        email: email
+      }, { merge: true }).then(() => {
+        alert('Profile updated successfully!');
+      }).catch((error) => {
+        console.error('Error updating profile: ', error);
+      });
     }
 
-    // Load posts initially
-    loadPosts();
+    function uploadProfilePic(event) {
+      const user = auth.currentUser;
+      const file = event.target.files[0];
+      const storageRef = ref(storage, 'profile_pics/' + user.uid);
+
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on('state_changed', 
+        (snapshot) => {},
+        (error) => { console.error(error); },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            // Save the download URL to Firestore
+            setDoc(doc(db, "users", user.uid), {
+              profilePicUrl: downloadURL
+            }, { merge: true }).then(() => {
+              document.getElementById("profilePic").src = downloadURL;
+            }).catch((error) => {
+              console.error('Error saving profile picture URL: ', error);
+            });
+          });
+        }
+      );
+    }
+
+    function createPost() {
+      const user = auth.currentUser;
+      const content = document.getElementById("newPost").value;
+      
+      if (!content) return alert("Please write something!");
+
+      const post = {
+        username: user.displayName,
+        content,
+        time: new Date().toLocaleString(),
+        uid: user.uid
+      };
+
+      const postsRef = doc(db, "posts", user.uid);
+      setDoc(postsRef, post).then(() => {
+        alert('Post created!');
+        loadPosts(user);
+      });
+    }
+
+    function loadPosts(user) {
+      // Load posts from Firestore (you could display them similarly as you're doing with localStorage)
+    }
   </script>
 </body>
 </html>
