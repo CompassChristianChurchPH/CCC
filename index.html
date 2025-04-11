@@ -2,87 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Compass Christian Church</title>
-  <link rel="icon" type="image/png" href="assets/ccc icon.png" />
+  <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-    body {
-      background-color: #f4f4f4;
-      text-align: center;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background-color: #f4f4f4; text-align: center; }
     header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: #2b5dad;
-      color: white;
-      padding: 10px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      background-color: #2b5dad; color: white; padding: 10px 20px;
     }
     header h1 {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: flex; align-items: center; gap: 10px;
     }
-    header h1 img {
-      width: 32px;
-      height: 32px;
-    }
-    nav {
-      display: flex;
-      gap: 15px;
-    }
+    header h1 img { width: 32px; height: 32px; }
+    nav { display: flex; gap: 15px; }
     nav button {
-      padding: 8px 16px;
-      background-color: white;
-      border: none;
-      border-radius: 5px;
-      color: #2b5dad;
-      font-weight: bold;
-      cursor: pointer;
+      padding: 8px 16px; background-color: white; border: none; border-radius: 5px;
+      color: #2b5dad; font-weight: bold; cursor: pointer;
     }
-    .container {
-      padding: 40px 20px;
-    }
+    .container { padding: 40px 20px; }
     .tab-content {
-      display: none;
-      margin-top: 30px;
-      background-color: white;
-      padding: 30px;
-      width: 100%;
-      max-width: 400px;
-      margin-inline: auto;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      border-radius: 10px;
+      display: none; margin-top: 30px; background-color: white;
+      padding: 30px; width: 100%; max-width: 400px; margin-inline: auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1); border-radius: 10px;
     }
-    .tab-content.active {
-      display: block;
-    }
+    .tab-content.active { display: block; }
     .tab-content input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 1rem;
+      width: 100%; padding: 10px; margin: 10px 0; font-size: 1rem;
     }
     .tab-content button {
-      padding: 10px 20px;
-      font-weight: bold;
-      border: none;
-      border-radius: 5px;
-      background-color: #2b5dad;
-      color: white;
+      padding: 10px 20px; font-weight: bold; border: none;
+      border-radius: 5px; background-color: #2b5dad; color: white;
       cursor: pointer;
     }
     .social-icons img {
-      width: 32px;
-      margin: 10px;
-      cursor: pointer;
+      width: 32px; margin: 10px; cursor: pointer;
     }
+    .message {
+      margin-top: 10px; font-size: 14px;
+    }
+    .success { color: green; }
+    .error { color: red; }
   </style>
 </head>
 <body>
@@ -102,18 +63,20 @@
   <div class="container">
     <div id="login" class="tab-content">
       <h2>Login</h2>
-      <input type="text" placeholder="Username" />
-      <input type="password" placeholder="Password" />
-      <button>Login</button>
+      <input id="loginUsername" type="text" placeholder="Username" />
+      <input id="loginPassword" type="password" placeholder="Password" />
+      <button onclick="loginUser()">Login</button>
+      <div id="loginMessage" class="message"></div>
     </div>
 
     <div id="register" class="tab-content">
       <h2>Register</h2>
-      <input type="text" placeholder="Username" />
-      <input type="email" placeholder="Email" />
-      <input type="password" placeholder="Password" />
-      <input type="password" placeholder="Confirm Password" />
-      <button>Register</button>
+      <input id="regUsername" type="text" placeholder="Username" />
+      <input id="regEmail" type="email" placeholder="Email" />
+      <input id="regPassword" type="password" placeholder="Password" />
+      <input id="regConfirm" type="password" placeholder="Confirm Password" />
+      <button onclick="registerUser()">Register</button>
+      <div id="registerMessage" class="message"></div>
     </div>
 
     <div id="about" class="tab-content">
@@ -136,10 +99,71 @@
 
   <script>
     function showTab(id) {
-      const tabs = document.querySelectorAll('.tab-content');
-      tabs.forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+      document.getElementById('loginMessage').textContent = '';
+      document.getElementById('registerMessage').textContent = '';
     }
+
+    function registerUser() {
+      const username = document.getElementById('regUsername').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const confirm = document.getElementById('regConfirm').value;
+      const message = document.getElementById('registerMessage');
+
+      if (!username || !email || !password || !confirm) {
+        message.textContent = 'Please fill all fields.';
+        message.className = 'message error';
+        return;
+      }
+
+      if (password !== confirm) {
+        message.textContent = 'Passwords do not match.';
+        message.className = 'message error';
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem('ccc_users') || '[]');
+      if (users.find(u => u.username === username)) {
+        message.textContent = 'Username already exists.';
+        message.className = 'message error';
+        return;
+      }
+
+      users.push({ username, email, password });
+      localStorage.setItem('ccc_users', JSON.stringify(users));
+      message.textContent = 'Registration successful!';
+      message.className = 'message success';
+
+      document.getElementById('regUsername').value = '';
+      document.getElementById('regEmail').value = '';
+      document.getElementById('regPassword').value = '';
+      document.getElementById('regConfirm').value = '';
+    }
+
+    function loginUser() {
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+      const message = document.getElementById('loginMessage');
+
+      const users = JSON.parse(localStorage.getItem('ccc_users') || '[]');
+      const user = users.find(u => u.username === username && u.password === password);
+
+      if (user) {
+        message.textContent = 'Login successful! Redirecting...';
+        message.className = 'message success';
+        setTimeout(() => {
+          window.location.href = 'home.html'; // Placeholder
+        }, 1500);
+      } else {
+        message.textContent = 'Invalid username or password.';
+        message.className = 'message error';
+      }
+    }
+
+    // Default to Login tab
+    showTab('login');
   </script>
 
 </body>
