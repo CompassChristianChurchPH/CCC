@@ -29,6 +29,9 @@
       padding: 10px 20px; background-color: #2b5dad; color: white; border: none;
       border-radius: 5px; cursor: pointer;
     }
+    .rsvp-btn:disabled {
+      background-color: #a0a0a0;
+    }
   </style>
 </head>
 <body>
@@ -59,26 +62,35 @@
     <div class="event">
       <h3>Sunday Service</h3>
       <p>Join us every Sunday at 9:00 AM for an inspiring service.</p>
-      <button class="rsvp-btn" onclick="rsvpEvent('Sunday Service')">RSVP</button>
+      <button class="rsvp-btn" onclick="rsvpEvent('Sunday Service')" id="rsvpSunday">RSVP</button>
     </div>
 
     <div class="event">
       <h3>Youth Service</h3>
       <p>Every Sunday at 1:00 PM, we have a youth-focused service.</p>
-      <button class="rsvp-btn" onclick="rsvpEvent('Youth Service')">RSVP</button>
+      <button class="rsvp-btn" onclick="rsvpEvent('Youth Service')" id="rsvpYouth">RSVP</button>
     </div>
 
     <div class="event">
       <h3>Saturday Prayer Meeting</h3>
       <p>Join us every Saturday at 4:00 PM for a time of prayer and fellowship.</p>
-      <button class="rsvp-btn" onclick="rsvpEvent('Saturday Prayer Meeting')">RSVP</button>
+      <button class="rsvp-btn" onclick="rsvpEvent('Saturday Prayer Meeting')" id="rsvpPrayer">RSVP</button>
     </div>
 
   </div>
 
   <script>
+    // Check if user is logged in
+    const user = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
+    if (!user) {
+      window.location.href = 'index.html'; // Redirect to login if not logged in
+    }
+
+    // RSVP event handler
     function rsvpEvent(eventName) {
       alert('You have RSVP\'d for ' + eventName + '.');
+      // Disable RSVP button after RSVP
+      document.getElementById('rsvp' + eventName.replace(/\s/g, '')).disabled = true;
     }
 
     // Logout function
