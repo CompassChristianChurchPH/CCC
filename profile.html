@@ -17,7 +17,11 @@
       justify-content: space-between;
       align-items: center;
     }
-    header h1 { display: flex; align-items: center; gap: 10px; }
+    header h1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
     header h1 img { width: 32px; height: 32px; }
     nav button {
       margin-left: 10px;
@@ -54,10 +58,6 @@
       background-color: #ccc;
     }
 
-    .profile-header input[type="file"] {
-      margin-top: 10px;
-    }
-
     .profile-info input {
       width: 100%;
       margin: 10px 0;
@@ -86,6 +86,14 @@
       border-radius: 8px;
       margin-top: 15px;
       text-align: left;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      resize: vertical;
     }
   </style>
 </head>
@@ -116,41 +124,43 @@
 
     <div class="posts-section">
       <h3>Create a Post</h3>
-      <textarea id="newPost" rows="4" style="width:100%;padding:10px;"></textarea><br>
+      <textarea id="newPost" rows="4" placeholder="Write something..."></textarea>
       <button class="submit-btn" onclick="createPost()">Post</button>
-
       <div id="postList"></div>
     </div>
   </div>
 
   <script type="module">
     import { auth, db, storage } from './firebase-config.js';
-    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
-    import { doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
-    import { ref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
+    import {
+      getAuth, onAuthStateChanged
+    } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+    import {
+      doc, getDoc, setDoc, addDoc, collection, getDocs, query, where
+    } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+    import {
+      ref, uploadBytesResumable, getDownloadURL
+    } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
 
     onAuthStateChanged(auth, user => {
       if (!user) {
-        window.location.href = 'index.html'; // If no user is authenticated, redirect to login
+        window.location.href = 'index.html';
       } else {
-        // User is signed in, load profile data
         loadProfile(user);
+        loadPosts(user);
       }
     });
 
     function loadProfile(user) {
-      // Get user data from Firestore
       const userRef = doc(db, "users", user.uid);
       getDoc(userRef).then((docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          document.getElementById("profileUsername").value = data.username;
-          document.getElementById("profileEmail").value = data.email;
+          document.getElementById("profileUsername").value = data.username || user.email.split('@')[0];
+          document.getElementById("profileEmail").value = data.email || user.email;
           if (data.profilePicUrl) {
             document.getElementById("profilePic").src = data.profilePicUrl;
           }
-        } else {
-          console.log("No user data found.");
         }
       });
     }
@@ -158,8 +168,7 @@
     function saveProfile() {
       const user = auth.currentUser;
       const email = document.getElementById("profileEmail").value;
-      
-      // Update user profile in Firestore
+
       setDoc(doc(db, "users", user.uid), {
         email: email
       }, { merge: true }).then(() => {
@@ -172,49 +181,65 @@
     function uploadProfilePic(event) {
       const user = auth.currentUser;
       const file = event.target.files[0];
-      const storageRef = ref(storage, 'profile_pics/' + user.uid);
-
+      const storageRef = ref(storage, `profile_pics/${user.uid}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on('state_changed', 
-        (snapshot) => {},
-        (error) => { console.error(error); },
+
+      uploadTask.on('state_changed', null, 
+        error => console.error(error),
         () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            // Save the download URL to Firestore
+          getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
             setDoc(doc(db, "users", user.uid), {
               profilePicUrl: downloadURL
             }, { merge: true }).then(() => {
               document.getElementById("profilePic").src = downloadURL;
-            }).catch((error) => {
-              console.error('Error saving profile picture URL: ', error);
             });
           });
         }
       );
     }
 
-    function createPost() {
+    async function createPost() {
       const user = auth.currentUser;
-      const content = document.getElementById("newPost").value;
-      
+      const content = document.getElementById("newPost").value.trim();
       if (!content) return alert("Please write something!");
 
       const post = {
-        username: user.displayName,
-        content,
-        time: new Date().toLocaleString(),
-        uid: user.uid
+        uid: user.uid,
+        username: user.displayName || user.email.split('@')[0],
+        content: content,
+        time: new Date().toLocaleString()
       };
 
-      const postsRef = doc(db, "posts", user.uid);
-      setDoc(postsRef, post).then(() => {
-        alert('Post created!');
-        loadPosts(user);
+      await addDoc(collection(db, "posts"), post);
+      document.getElementById("newPost").value = "";
+      loadPosts(user);
+    }
+
+    async function loadPosts(user) {
+      const postList = document.getElementById("postList");
+      postList.innerHTML = '';
+
+      const q = query(collection(db, "posts"), where("uid", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach(doc => {
+        const post = doc.data();
+        const div = document.createElement("div");
+        div.className = "post";
+        div.innerHTML = `
+          <strong>${post.username}</strong> <small>(${post.time})</small><br>
+          <p>${post.content}</p>
+        `;
+        postList.prepend(div);
       });
     }
 
-    function loadPosts(user) {
-      // Load posts from Firestore (you could display them similarly as you're doing with localStorage)
+    function logoutUser() {
+      auth.signOut().then(() => {
+        window.location.href = 'index.html';
+      }).catch(error => {
+        alert("Error logging out: " + error.message);
+      });
     }
   </script>
 </body>
