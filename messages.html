@@ -138,6 +138,21 @@
     footer a:hover {
       text-decoration: underline;
     }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      nav button {
+        margin: 5px 0;
+      }
+      .container {
+        width: 100%;
+        margin: 20px;
+        padding: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -226,9 +241,10 @@
       db.collection("messages").doc(user.uid).collection("userMessages").add(messageData)
         .then(() => {
           messageInput.value = "";
+          messageInput.focus(); // Refocus the input after sending a message
         })
         .catch(error => {
-          console.error("Error sending message: ", error);
+          alert("Error sending message: " + error.message);
         });
     }
 
