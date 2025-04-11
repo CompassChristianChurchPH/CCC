@@ -140,6 +140,13 @@
       margin-top: 15px;
       font-style: italic;
     }
+
+    .loading {
+      text-align: center;
+      color: #888;
+      font-style: italic;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -164,6 +171,7 @@
 
     <ul id="friendList"></ul>
     <div class="empty" id="emptyText">No friends yet. Start adding!</div>
+    <div class="loading" id="loadingText">Loading friends...</div>
   </div>
 
   <!-- Firebase SDK -->
@@ -191,12 +199,15 @@
     const friendListContainer = document.getElementById("friendList");
     const emptyText = document.getElementById("emptyText");
     const input = document.getElementById("friendInput");
+    const loadingText = document.getElementById("loadingText");
 
     function displayFriends() {
+      loadingText.style.display = "block";
       const userRef = db.collection("users").doc(user.username).collection("friends");
 
       userRef.get().then(snapshot => {
         friendListContainer.innerHTML = "";
+        loadingText.style.display = "none";
         if (snapshot.empty) {
           emptyText.style.display = "block";
           return;
@@ -212,7 +223,10 @@
           `;
           friendListContainer.appendChild(li);
         });
-      }).catch(err => console.error("Error fetching friends:", err));
+      }).catch(err => {
+        loadingText.style.display = "none";
+        console.error("Error fetching friends:", err);
+      });
     }
 
     function addFriend() {
