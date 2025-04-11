@@ -33,6 +33,10 @@
       font-weight: bold;
       cursor: pointer;
     }
+    nav button:hover {
+      background-color: #f0f0f0;
+      color: #2b5dad;
+    }
 
     .container {
       max-width: 800px;
@@ -132,15 +136,9 @@
 
   <script type="module">
     import { auth, db, storage } from './firebase-config.js';
-    import {
-      getAuth, onAuthStateChanged
-    } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
-    import {
-      doc, getDoc, setDoc, addDoc, collection, getDocs, query, where
-    } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
-    import {
-      ref, uploadBytesResumable, getDownloadURL
-    } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+    import { doc, getDoc, setDoc, addDoc, collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+    import { ref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
 
     onAuthStateChanged(auth, user => {
       if (!user) {
@@ -173,13 +171,9 @@
         return alert('Please enter a valid email address.');
       }
 
-      setDoc(doc(db, "users", user.uid), {
-        email: email
-      }, { merge: true }).then(() => {
-        alert('Profile updated successfully!');
-      }).catch((error) => {
-        console.error('Error updating profile: ', error);
-      });
+      setDoc(doc(db, "users", user.uid), { email: email }, { merge: true })
+        .then(() => alert('Profile updated successfully!'))
+        .catch((error) => console.error('Error updating profile: ', error));
     }
 
     function validateEmail(email) {
@@ -197,11 +191,8 @@
         error => console.error(error),
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
-            setDoc(doc(db, "users", user.uid), {
-              profilePicUrl: downloadURL
-            }, { merge: true }).then(() => {
-              document.getElementById("profilePic").src = downloadURL;
-            });
+            setDoc(doc(db, "users", user.uid), { profilePicUrl: downloadURL }, { merge: true })
+              .then(() => document.getElementById("profilePic").src = downloadURL);
           });
         }
       );
@@ -244,11 +235,10 @@
     }
 
     function logoutUser() {
-      auth.signOut().then(() => {
-        window.location.href = 'index.html';
-      }).catch(error => {
-        alert("Error logging out: " + error.message);
-      });
+      if (confirm('Are you sure you want to log out?')) {
+        auth.signOut().then(() => window.location.href = 'index.html')
+          .catch(error => alert("Error logging out: " + error.message));
+      }
     }
   </script>
 </body>
