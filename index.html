@@ -187,85 +187,59 @@
 
   <!-- Firebase SDKs for v9+ (modular style) -->
   <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
-    import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+  import { getAuth, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+  import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
-      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
-      projectId: "compass-christian-church-4b02e",
-      storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
-      messagingSenderId: "436310011988",
-      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
-      measurementId: "G-T6EWRN2THW"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+    authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+    projectId: "compass-christian-church-4b02e",
+    storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
+    messagingSenderId: "436310011988",
+    appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+    measurementId: "G-T6EWRN2THW"
+  };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // Show the selected section - Attach to the global window object
-    window.showSection = function (id) {
-      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    };
-
-    function validateEmail(email) {
-      const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      return re.test(String(email).toLowerCase());
-    }
-
-    window.registerUser = function () {
-      const username = document.getElementById("regUsername").value.trim();
-      const email = document.getElementById("regEmail").value.trim();
-      const password = document.getElementById("regPassword").value;
-      const confirm = document.getElementById("regConfirm").value;
-
-      if (!username || !email || !password || !confirm) return alert("Please fill all fields.");
-      if (!validateEmail(email)) return alert("Please enter a valid email.");
-      if (password !== confirm) return alert("Passwords do not match.");
-
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(async userCredential => {
-          const user = userCredential.user;
-          await addDoc(collection(db, "users"), {
-            username,
-            email,
-            uid: user.uid
-          });
-          alert("Registered successfully!");
-          showSection("login");
-        })
-        .catch(err => {
-          console.error("Error during registration:", err.message);
-          alert(err.message);
-        });
-    };
-
-    window.loginUser = function () {
-  const email = document.getElementById("loginUsername").value.trim(); // This is the email input
-  const password = document.getElementById("loginPassword").value;
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
   // Validate email format
-  if (!email || !password) {
-    return alert("Please fill all fields.");
-  }
-  if (!validateEmail(email)) {
-    return alert("Please enter a valid email address.");
+  function validateEmail(email) {
+    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return re.test(String(email).toLowerCase());
   }
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Logged in successfully!");
-      showSection("about");
-    })
-    .catch(err => {
-      console.error("Error during login:", err.message);
-      alert(err.message);
-    });
-};
-  </script>
+  // Register user function
+  window.registerUser = function () {
+    const username = document.getElementById("regUsername").value.trim();
+    const email = document.getElementById("regEmail").value.trim();
+    const password = document.getElementById("regPassword").value;
+    const confirm = document.getElementById("regConfirm").value;
+
+    if (!username || !email || !password || !confirm) return alert("Please fill all fields.");
+    if (!validateEmail(email)) return alert("Please enter a valid email.");
+    if (password !== confirm) return alert("Passwords do not match.");
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(async userCredential => {
+        const user = userCredential.user;
+        await addDoc(collection(db, "users"), {
+          username,
+          email,
+          uid: user.uid
+        });
+        alert("Registered successfully!");
+        // Redirect to the home.html page
+        window.location.href = "https://github.com/CompassChristianChurchPH/CCC/blob/main/home.html";
+      })
+      .catch(err => {
+        console.error("Error during registration:", err.message);
+        alert(err.message);
+      });
+  };
+</script>
 </body>
 </html>
