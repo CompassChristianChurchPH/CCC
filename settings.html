@@ -120,12 +120,36 @@
     </div>
   </div>
 
+  <!-- Include Firebase SDK and Firebase config -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
   <script>
-    const user = JSON.parse(localStorage.getItem("ccc_loggedInUser"));
-    if (!user) {
-      window.location.href = "index.html";
-    }
+    // Your Firebase config here
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Check if the user is logged in
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "index.html";  // Redirect to login if not authenticated
+      } else {
+        // Load user data (if necessary)
+        loadSettings(user);
+      }
+    });
+
+    // Update password in Firebase Authentication
     function updatePassword() {
       const newPass = document.getElementById("newPassword").value;
       const confirmPass = document.getElementById("confirmPassword").value;
@@ -134,36 +158,57 @@
         return alert("Passwords do not match!");
       }
 
-      let users = JSON.parse(localStorage.getItem("ccc_users") || "[]");
-      users = users.map(u => u.username === user.username ? { ...u, password: newPass } : u);
-      localStorage.setItem("ccc_users", JSON.stringify(users));
-      alert("Password updated successfully!");
+      const user = auth.currentUser;
+      user.updatePassword(newPass).then(() => {
+        alert("Password updated successfully!");
+      }).catch(error => {
+        alert("Error updating password: " + error.message);
+      });
     }
 
+    // Handle dark mode toggle and store it in Firestore
     function toggleDarkMode() {
       const isDark = document.getElementById("darkModeToggle").checked;
       if (isDark) {
         document.body.classList.add("dark-mode");
-        localStorage.setItem("ccc_theme", "dark");
+        saveThemeToFirestore("dark");
       } else {
         document.body.classList.remove("dark-mode");
-        localStorage.setItem("ccc_theme", "light");
+        saveThemeToFirestore("light");
       }
     }
 
+    function saveThemeToFirestore(theme) {
+      const user = auth.currentUser;
+      db.collection("users").doc(user.uid).update({
+        theme: theme
+      }).catch(error => {
+        console.error("Error saving theme to Firestore: " + error.message);
+      });
+    }
+
+    function loadSettings(user) {
+      // Check Firestore for user's theme preference
+      db.collection("users").doc(user.uid).get().then(doc => {
+        if (doc.exists) {
+          const data = doc.data();
+          const theme = data.theme || "light"; // Default to light theme
+          if (theme === "dark") {
+            document.body.classList.add("dark-mode");
+            document.getElementById("darkModeToggle").checked = true;
+          }
+        }
+      });
+    }
+
+    // Logout function
     function logoutUser() {
-      localStorage.removeItem("ccc_loggedInUser");
-      window.location.href = "index.html";
+      auth.signOut().then(() => {
+        window.location.href = "index.html";
+      }).catch(error => {
+        alert("Error logging out: " + error.message);
+      });
     }
-
-    // Load theme
-    window.onload = function() {
-      const theme = localStorage.getItem("ccc_theme");
-      if (theme === "dark") {
-        document.body.classList.add("dark-mode");
-        document.getElementById("darkModeToggle").checked = true;
-      }
-    };
   </script>
 </body>
 </html>
