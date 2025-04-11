@@ -6,13 +6,22 @@
   <title>Friendlist - Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-    body { background-color: #f4f4f4; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f4f4f4;
+      min-height: 100vh;
+    }
 
     header {
       background-color: #2b5dad;
       color: white;
-      padding: 10px 20px;
+      padding: 15px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -22,33 +31,42 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      font-size: 20px;
     }
 
-    header h1 img { width: 32px; height: 32px; }
+    header h1 img {
+      width: 32px;
+      height: 32px;
+    }
 
     nav button {
-      margin-left: 10px;
-      padding: 8px 12px;
+      margin-left: 8px;
+      padding: 8px 14px;
       border: none;
       border-radius: 5px;
       background-color: white;
       color: #2b5dad;
       font-weight: bold;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    nav button:hover {
+      background-color: #e0e0e0;
     }
 
     .container {
       max-width: 700px;
-      margin: 30px auto;
+      margin: 40px auto;
       background: white;
-      padding: 25px;
+      padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       color: #2b5dad;
     }
 
@@ -57,32 +75,40 @@
       gap: 10px;
       margin-bottom: 20px;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     .friend-form input {
-      padding: 8px;
-      width: 60%;
+      padding: 10px;
+      flex: 1;
+      min-width: 200px;
       border: 1px solid #ccc;
       border-radius: 5px;
     }
 
     .friend-form button {
-      padding: 8px 16px;
+      padding: 10px 20px;
       border: none;
       background-color: #2b5dad;
       color: white;
       font-weight: bold;
       border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .friend-form button:hover {
+      background-color: #1f4c8a;
     }
 
     ul {
       list-style: none;
       padding: 0;
+      margin-top: 10px;
     }
 
     li {
-      padding: 10px;
+      padding: 12px 10px;
       border-bottom: 1px solid #ddd;
       display: flex;
       justify-content: space-between;
@@ -91,21 +117,28 @@
 
     li span {
       font-weight: bold;
+      color: #333;
     }
 
     li button {
       background-color: crimson;
       border: none;
       color: white;
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 5px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    li button:hover {
+      background-color: darkred;
     }
 
     .empty {
       text-align: center;
       color: #888;
       margin-top: 15px;
+      font-style: italic;
     }
   </style>
 </head>
@@ -124,7 +157,6 @@
 
   <div class="container">
     <h2>My Friends</h2>
-
     <div class="friend-form">
       <input type="text" id="friendInput" placeholder="Enter friend's username"/>
       <button onclick="addFriend()">Add</button>
@@ -140,85 +172,78 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 
   <script>
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
-  authDomain: "compass-christian-church-4b02e.firebaseapp.com",
-  projectId: "compass-christian-church-4b02e",
-  storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
-  messagingSenderId: "436310011988",
-  appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
-  measurementId: "G-T6EWRN2THW"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+      projectId: "compass-christian-church-4b02e",
+      storageBucket: "compass-christian-church-4b02e.appspot.com",
+      messagingSenderId: "436310011988",
+      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+      measurementId: "G-T6EWRN2THW"
+    };
 
-    // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore(app);
 
     const user = JSON.parse(localStorage.getItem("ccc_loggedInUser"));
-    if (!user) window.location.href = "index.html"; // Redirect if no user is logged in
+    if (!user) window.location.href = "index.html";
 
     const friendListContainer = document.getElementById("friendList");
     const emptyText = document.getElementById("emptyText");
     const input = document.getElementById("friendInput");
 
-    // Fetch and display friends from Firestore
     function displayFriends() {
       const userRef = db.collection("users").doc(user.username).collection("friends");
-      userRef.get().then((querySnapshot) => {
+
+      userRef.get().then(snapshot => {
         friendListContainer.innerHTML = "";
-        if (querySnapshot.empty) {
+        if (snapshot.empty) {
           emptyText.style.display = "block";
           return;
         }
         emptyText.style.display = "none";
-        
-        querySnapshot.forEach(doc => {
-          const friend = doc.data();
+
+        snapshot.forEach(doc => {
+          const { username } = doc.data();
           const li = document.createElement("li");
           li.innerHTML = `
-            <span>${friend.username}</span>
-            <button onclick="removeFriend('${doc.id}')">Remove</button>
+            <span>${username}</span>
+            <button onclick="confirmRemove('${doc.id}', '${username}')">Remove</button>
           `;
           friendListContainer.appendChild(li);
         });
-      }).catch((error) => {
-        console.error("Error fetching friends: ", error);
-      });
+      }).catch(err => console.error("Error fetching friends:", err));
     }
 
-    // Add friend
     function addFriend() {
       const friendUsername = input.value.trim();
-      if (!friendUsername) return alert("Enter a username");
+      if (!friendUsername) return alert("Please enter a username");
+      if (friendUsername === user.username) return alert("You cannot add yourself");
+
       const userRef = db.collection("users").doc(user.username).collection("friends");
 
-      // Check if the user is already a friend
-      userRef.where("username", "==", friendUsername).get().then((querySnapshot) => {
-        if (!querySnapshot.empty) {
-          return alert("This user is already your friend");
-        }
+      userRef.where("username", "==", friendUsername).get().then(snapshot => {
+        if (!snapshot.empty) return alert("This user is already in your friend list");
 
-        // Add friend to the Firestore collection
         userRef.add({ username: friendUsername }).then(() => {
-          displayFriends();
           input.value = "";
-        }).catch((error) => {
-          console.error("Error adding friend: ", error);
+          displayFriends();
         });
-      });
+      }).catch(err => console.error("Error adding friend:", err));
     }
 
-    // Remove friend
+    function confirmRemove(friendId, username) {
+      if (confirm(`Are you sure you want to remove "${username}" from your friend list?`)) {
+        removeFriend(friendId);
+      }
+    }
+
     function removeFriend(friendId) {
       db.collection("users").doc(user.username).collection("friends").doc(friendId).delete().then(() => {
         displayFriends();
-      }).catch((error) => {
-        console.error("Error removing friend: ", error);
-      });
+      }).catch(err => console.error("Error removing friend:", err));
     }
 
-    // Logout function
     function logoutUser() {
       localStorage.removeItem("ccc_loggedInUser");
       window.location.href = "index.html";
@@ -226,6 +251,5 @@ const firebaseConfig = {
 
     displayFriends();
   </script>
-
 </body>
 </html>
