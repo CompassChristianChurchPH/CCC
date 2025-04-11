@@ -125,7 +125,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
   <script>
-    // Your Firebase config here
+    // Firebase config
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_AUTH_DOMAIN",
@@ -135,21 +135,22 @@
       appId: "YOUR_APP_ID"
     };
 
+    // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Check if the user is logged in
+    // Check if user is logged in
     auth.onAuthStateChanged(user => {
       if (!user) {
-        window.location.href = "index.html";  // Redirect to login if not authenticated
+        window.location.href = "index.html"; // Redirect to login if not authenticated
       } else {
-        // Load user data (if necessary)
+        // Load user settings (if necessary)
         loadSettings(user);
       }
     });
 
-    // Update password in Firebase Authentication
+    // Update password function
     function updatePassword() {
       const newPass = document.getElementById("newPassword").value;
       const confirmPass = document.getElementById("confirmPassword").value;
@@ -166,7 +167,7 @@
       });
     }
 
-    // Handle dark mode toggle and store it in Firestore
+    // Dark mode toggle and save to Firestore
     function toggleDarkMode() {
       const isDark = document.getElementById("darkModeToggle").checked;
       if (isDark) {
