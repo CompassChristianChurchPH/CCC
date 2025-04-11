@@ -11,47 +11,112 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 
   <script>
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
-  authDomain: "compass-christian-church-4b02e.firebaseapp.com",
-  projectId: "compass-christian-church-4b02e",
-  storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
-  messagingSenderId: "436310011988",
-  appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
-  measurementId: "G-T6EWRN2THW"
-};
-    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+      projectId: "compass-christian-church-4b02e",
+      storageBucket: "compass-christian-church-4b02e.appspot.com",
+      messagingSenderId: "436310011988",
+      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+      measurementId: "G-T6EWRN2THW"
+    };
+
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
   </script>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-    body { background-color: #f4f4f4; text-align: center; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
     header {
-      display: flex; align-items: center; justify-content: space-between;
-      background-color: #2b5dad; color: white; padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2b5dad;
+      color: white;
+      padding: 10px 20px;
     }
+
     header h1 {
-      display: flex; align-items: center; gap: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
     }
-    header h1 img { width: 32px; height: 32px; }
-    nav { display: flex; gap: 15px; }
+
+    header h1 img {
+      width: 32px;
+      height: 32px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
     nav button {
-      padding: 8px 16px; background-color: white; border: none; border-radius: 5px;
-      color: #2b5dad; font-weight: bold; cursor: pointer;
+      background-color: white;
+      border: none;
+      border-radius: 5px;
+      color: #2b5dad;
+      font-weight: bold;
+      padding: 8px 12px;
+      cursor: pointer;
     }
-    .container { padding: 40px 20px; }
-    .event { padding: 20px; background-color: white; box-shadow: 0 0 15px rgba(0,0,0,0.1); border-radius: 10px; margin-bottom: 20px; }
-    .event h3 { font-size: 1.2rem; margin-bottom: 10px; }
-    .event p { margin-bottom: 10px; }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .event {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .event h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .event p {
+      font-size: 0.95rem;
+      margin-bottom: 15px;
+    }
+
     .rsvp-btn {
-      padding: 10px 20px; background-color: #2b5dad; color: white; border: none;
-      border-radius: 5px; cursor: pointer;
+      padding: 10px 20px;
+      background-color: #2b5dad;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
+
     .rsvp-btn:disabled {
-      background-color: #a0a0a0;
+      background-color: #aaa;
+      cursor: not-allowed;
     }
   </style>
 </head>
@@ -59,7 +124,7 @@ const firebaseConfig = {
 
   <header>
     <h1>
-      <img src="assets/ccc icon.png" alt="favicon" />
+      <img src="assets/ccc icon.png" alt="Compass Christian Church" />
       CCC
     </h1>
     <nav>
@@ -79,74 +144,88 @@ const firebaseConfig = {
 
   <div class="container">
     <h2>Upcoming Events</h2>
-
-    <!-- Events will be dynamically populated here -->
     <div id="eventsList"></div>
-
   </div>
 
   <script>
-    // Check if user is logged in
-    const user = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
-    if (!user) {
-      window.location.href = 'index.html'; // Redirect to login if not logged in
+    const currentUser = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
+    if (!currentUser) {
+      window.location.href = 'index.html';
     }
 
-    // Fetch events from Firebase
     function loadEvents() {
-      db.collection("events").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const eventData = doc.data();
-          
-          // Dynamically add events to the page
-          const eventDiv = document.createElement("div");
-          eventDiv.className = "event";
-          eventDiv.innerHTML = `
-            <h3>${eventData.name}</h3>
-            <p>${eventData.description}</p>
-            <button class="rsvp-btn" onclick="rsvpEvent('${eventData.name}')" id="rsvp${eventData.name.replace(/\s/g, '')}">RSVP</button>
-          `;
-          document.getElementById('eventsList').appendChild(eventDiv);
+      db.collection("events")
+        .orderBy("date", "asc")
+        .get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            document.getElementById('eventsList').innerHTML = "<p>No upcoming events.</p>";
+            return;
+          }
+
+          snapshot.forEach(doc => {
+            const event = doc.data();
+            const eventId = doc.id;
+            const rsvpId = `rsvp-${eventId}`;
+
+            const eventDiv = document.createElement("div");
+            eventDiv.className = "event";
+            eventDiv.innerHTML = `
+              <h3>${event.name}</h3>
+              <p>${event.description}</p>
+              <button class="rsvp-btn" id="${rsvpId}" onclick="rsvpEvent('${eventId}', '${event.name}')">RSVP</button>
+            `;
+
+            document.getElementById("eventsList").appendChild(eventDiv);
+
+            checkRSVPStatus(eventId, rsvpId);
+          });
+        })
+        .catch(err => {
+          console.error("Error loading events:", err);
+          alert("Failed to load events. Please try again later.");
         });
-      }).catch((error) => {
-        console.error("Error getting events: ", error);
-        alert('An error occurred while fetching events.');
-      });
     }
 
-    // RSVP event handler
-    function rsvpEvent(eventName) {
-      const user = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
-      if (!user) {
-        alert('You must be logged in to RSVP.');
-        return;
-      }
+    function checkRSVPStatus(eventId, buttonId) {
+      db.collection("rsvps")
+        .where("eventId", "==", eventId)
+        .where("username", "==", currentUser.username)
+        .get()
+        .then(snapshot => {
+          if (!snapshot.empty) {
+            document.getElementById(buttonId).disabled = true;
+            document.getElementById(buttonId).innerText = "Already RSVPed";
+          }
+        });
+    }
 
-      const eventRef = db.collection("rsvps").doc(eventName);
-
-      // Save RSVP data to Firestore
-      eventRef.set({
-        user: user.username,
+    function rsvpEvent(eventId, eventName) {
+      const rsvpData = {
+        username: currentUser.username,
         event: eventName,
+        eventId: eventId,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-        alert('You have RSVP\'d for ' + eventName + '.');
-        document.getElementById('rsvp' + eventName.replace(/\s/g, '')).disabled = true;
-      })
-      .catch((error) => {
-        console.error("Error saving RSVP: ", error);
-        alert('An error occurred while saving your RSVP.');
-      });
+      };
+
+      db.collection("rsvps").add(rsvpData)
+        .then(() => {
+          alert(`You have RSVPed to ${eventName}`);
+          const btn = document.getElementById(`rsvp-${eventId}`);
+          btn.disabled = true;
+          btn.innerText = "Already RSVPed";
+        })
+        .catch(error => {
+          console.error("RSVP failed:", error);
+          alert("An error occurred while submitting your RSVP.");
+        });
     }
 
-    // Logout function
     function logoutUser() {
-      localStorage.removeItem('ccc_loggedInUser'); // Remove logged-in user data
-      window.location.href = 'index.html'; // Redirect to login page
+      localStorage.removeItem("ccc_loggedInUser");
+      window.location.href = "index.html";
     }
 
-    // Load events when the page loads
     window.onload = loadEvents;
   </script>
 </body>
