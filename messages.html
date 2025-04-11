@@ -6,8 +6,18 @@
   <title>Messages - Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-    body { background-color: #f4f4f4; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: Arial, sans-serif; 
+    }
+
+    body { 
+      background-color: #f4f4f4; 
+      font-size: 16px;
+      color: #333;
+    }
 
     header {
       background-color: #2b5dad;
@@ -16,15 +26,20 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     header h1 {
       display: flex;
       align-items: center;
       gap: 10px;
+      font-size: 1.5rem;
     }
 
-    header h1 img { width: 32px; height: 32px; }
+    header h1 img { 
+      width: 32px; 
+      height: 32px; 
+    }
 
     nav button {
       margin-left: 10px;
@@ -35,6 +50,11 @@
       color: #2b5dad;
       font-weight: bold;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    nav button:hover {
+      background-color: #d3e2f1;
     }
 
     .container {
@@ -54,11 +74,13 @@
       border-radius: 8px;
       margin-bottom: 15px;
       background: #fafafa;
+      background-image: linear-gradient(to right, #f0f0f0, #ffffff);
     }
 
     .message {
       margin-bottom: 10px;
       text-align: left;
+      font-size: 0.9rem;
     }
 
     .message span {
@@ -68,11 +90,13 @@
       color: white;
       border-radius: 10px;
       max-width: 80%;
+      word-wrap: break-word;
     }
 
     .input-area {
       display: flex;
       gap: 10px;
+      align-items: center;
     }
 
     .input-area input {
@@ -80,6 +104,7 @@
       padding: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
+      font-size: 1rem;
     }
 
     .input-area button {
@@ -90,13 +115,35 @@
       border-radius: 5px;
       font-weight: bold;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .input-area button:hover {
+      background-color: #1e4b87;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    footer a {
+      color: #2b5dad;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
+    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> Compass Christian Church</h1>
     <nav>
       <button onclick="location.href='home.html'">Home</button>
       <button onclick="location.href='profile.html'">Profile</button>
@@ -115,32 +162,33 @@
     </div>
   </div>
 
+  <footer>
+    <p>For support, visit <a href="https://compasschristianchurch.org">Compass Christian Church</a> website.</p>
+  </footer>
+
   <!-- Include Firebase SDK and Firebase config -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
   <script>
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
-  authDomain: "compass-christian-church-4b02e.firebaseapp.com",
-  projectId: "compass-christian-church-4b02e",
-  storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
-  messagingSenderId: "436310011988",
-  appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
-  measurementId: "G-T6EWRN2THW"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+      projectId: "compass-christian-church-4b02e",
+      storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
+      messagingSenderId: "436310011988",
+      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+      measurementId: "G-T6EWRN2THW"
+    };
 
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Check if the user is logged in
     auth.onAuthStateChanged(user => {
       if (!user) {
         window.location.href = "index.html";  // Redirect to login if not authenticated
       } else {
-        // Load user's messages from Firestore
         loadMessages(user);
       }
     });
@@ -148,7 +196,6 @@ const firebaseConfig = {
     function loadMessages(user) {
       const chatBox = document.getElementById("chatBox");
 
-      // Get messages from Firestore
       db.collection("messages").doc(user.uid).collection("userMessages")
         .orderBy("timestamp")
         .onSnapshot(snapshot => {
@@ -176,7 +223,6 @@ const firebaseConfig = {
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      // Save the message in Firestore
       db.collection("messages").doc(user.uid).collection("userMessages").add(messageData)
         .then(() => {
           messageInput.value = "";
