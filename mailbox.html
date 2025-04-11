@@ -1,31 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mailbox - Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
   <style>
-    /* Reuse styles from home.html for consistency */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background-color: #f4f4f4; }
+
+    header {
+      background-color: #2b5dad;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header h1 img { width: 32px; height: 32px; }
+
+    nav button {
+      margin-left: 10px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: white;
+      color: #2b5dad;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .mailbox-title {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .mail-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .mail-item {
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mail-item:hover {
+      background-color: #f1f1f1;
+    }
+
+    .mail-content {
+      text-align: left;
+    }
+
+    .mail-subject {
+      font-weight: bold;
+      color: #2b5dad;
+    }
+
+    .mail-time {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .mail-actions button {
+      background: #2b5dad;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .empty {
+      text-align: center;
+      color: #888;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>
-      <img src="assets/ccc icon.png" alt="favicon" />
-      CCC
-    </h1>
+    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
     <nav>
-      <!-- Navigation menu similar to home.html -->
+      <button onclick="location.href='home.html'">Home</button>
+      <button onclick="location.href='profile.html'">Profile</button>
+      <button onclick="location.href='settings.html'">Settings</button>
+      <button onclick="location.href='mailbox.html'">Mailbox</button>
+      <button onclick="logoutUser()">Logout</button>
     </nav>
   </header>
 
   <div class="container">
-    <div class="dashboard">
-      <h2>Mailbox</h2>
-      <p>Mailbox feature is under development!</p>
-    </div>
+    <div class="mailbox-title">Your Mailbox</div>
+    <ul class="mail-list" id="mailList"></ul>
+    <div class="empty" id="emptyText">No messages in your mailbox.</div>
   </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("ccc_loggedInUser"));
+    if (!user) {
+      window.location.href = "index.html";
+    }
+
+    const mails = JSON.parse(localStorage.getItem("ccc_mailbox") || "{}");
+    if (!mails[user.username]) {
+      mails[user.username] = []; // create empty inbox if doesn't exist
+    }
+
+    const mailList = document.getElementById("mailList");
+    const emptyText = document.getElementById("emptyText");
+
+    function displayMails() {
+      mailList.innerHTML = "";
+      const userMails = mails[user.username];
+      if (userMails.length === 0) {
+        emptyText.style.display = "block";
+        return;
+      }
+
+      emptyText.style.display = "none";
+
+      userMails.forEach((mail, index) => {
+        const li = document.createElement("li");
+        li.className = "mail-item";
+        li.innerHTML = `
+          <div class="mail-content">
+            <div class="mail-subject">${mail.subject}</div>
+            <div class="mail-time">${mail.time}</div>
+          </div>
+          <div class="mail-actions">
+            <button onclick="deleteMail(${index})">Delete</button>
+          </div>
+        `;
+        mailList.appendChild(li);
+      });
+    }
+
+    function deleteMail(index) {
+      mails[user.username].splice(index, 1);
+      localStorage.setItem("ccc_mailbox", JSON.stringify(mails));
+      displayMails();
+    }
+
+    function logoutUser() {
+      localStorage.removeItem("ccc_loggedInUser");
+      window.location.href = "index.html";
+    }
+
+    displayMails();
+  </script>
+
 </body>
 </html>
