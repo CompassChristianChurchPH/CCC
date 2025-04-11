@@ -202,6 +202,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Show the selected section
     function showSection(id) {
       document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
       document.getElementById(id).classList.add('active');
@@ -218,8 +219,6 @@
       const password = document.getElementById("regPassword").value;
       const confirm = document.getElementById("regConfirm").value;
 
-      console.log("Registering User - Username:", username, "Email:", email); // Debugging
-
       if (!username || !email || !password || !confirm) return alert("Please fill all fields.");
       if (!validateEmail(email)) return alert("Please enter a valid email.");
       if (password !== confirm) return alert("Passwords do not match.");
@@ -227,8 +226,6 @@
       createUserWithEmailAndPassword(auth, email, password)
         .then(async userCredential => {
           const user = userCredential.user;
-          console.log("User Registered:", user); // Debugging
-          // Save user details to Firestore
           await addDoc(collection(db, "users"), {
             username,
             email,
@@ -238,7 +235,7 @@
           showSection("login");
         })
         .catch(err => {
-          console.error("Error during registration:", err.message); // Error log
+          console.error("Error during registration:", err.message);
           alert(err.message);
         });
     }
@@ -247,20 +244,17 @@
       const email = document.getElementById("loginUsername").value.trim();
       const password = document.getElementById("loginPassword").value;
 
-      console.log("Login Attempt - Email:", email); // Debugging
-
       if (!email || !password) return alert("Please enter both email and password.");
       if (!validateEmail(email)) return alert("Please enter a valid email.");
 
       signInWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
           const user = userCredential.user;
-          console.log("User Logged In:", user); // Debugging
           alert("Welcome, " + user.email + "!");
           window.location.href = "home.html";
         })
         .catch(err => {
-          console.error("Error during login:", err.message); // Error log
+          console.error("Error during login:", err.message);
           alert(err.message);
         });
     }
@@ -268,4 +262,3 @@
 
 </body>
 </html>
-
