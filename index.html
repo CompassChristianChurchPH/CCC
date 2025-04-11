@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Compass Christian Church</title>
-  <link rel="icon" type="image/png" href="assets/ccc icon.png">
+  <link rel="icon" type="image/png" href="assets/ccc%20icon.png">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
     body { background-color: #f0f4f8; }
@@ -44,7 +44,7 @@
 </head>
 <body>
   <header>
-    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
+    <h1><img src="assets/ccc%20icon.png" alt="CCC Icon"> CCC</h1>
     <nav>
       <button onclick="showSection('login')">Login</button>
       <button onclick="showSection('register')">Register</button>
@@ -114,7 +114,7 @@
       if (!found) return alert("Invalid credentials.");
 
       alert("Welcome, " + found.username + "!");
-      window.location.href = "home.html";
+      window.location.href = "home.html";  // Redirect to home.html after login
     }
   </script>
 </body>
