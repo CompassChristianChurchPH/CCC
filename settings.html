@@ -6,48 +6,164 @@
   <title>Settings - Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
   <style>
-    /* Reuse styles from home.html for consistency */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body {
+      background-color: #f0f2f5;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode {
+      background-color: #1c1c1c;
+      color: white;
+    }
+
+    header {
+      background-color: #2b5dad;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header h1 img {
+      width: 32px;
+      height: 32px;
+    }
+
+    nav button {
+      margin-left: 10px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: white;
+      color: #2b5dad;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="password"], input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .submit-btn {
+      margin-top: 20px;
+      background: #2b5dad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .toggle {
+      margin-top: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>
-      <img src="assets/ccc icon.png" alt="favicon" />
-      CCC
-    </h1>
+    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
     <nav>
-      <!-- Navigation menu similar to home.html -->
+      <button onclick="location.href='home.html'">Home</button>
+      <button onclick="location.href='profile.html'">Profile</button>
+      <button onclick="location.href='settings.html'">Settings</button>
+      <button onclick="logoutUser()">Logout</button>
     </nav>
   </header>
 
   <div class="container">
-    <div class="dashboard">
-      <h2>Settings</h2>
-      <div id="settingsForm">
-        <label for="newPassword">New Password:</label>
-        <input type="password" id="newPassword" placeholder="Enter new password"/>
-        <button onclick="updatePassword()">Update Password</button>
-      </div>
+    <h2>Account Settings</h2>
+    <label for="newPassword">New Password</label>
+    <input type="password" id="newPassword" placeholder="Enter new password">
+
+    <label for="confirmPassword">Confirm Password</label>
+    <input type="password" id="confirmPassword" placeholder="Confirm new password">
+
+    <button class="submit-btn" onclick="updatePassword()">Update Password</button>
+
+    <div class="toggle">
+      <label>Dark Mode</label>
+      <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
     </div>
   </div>
 
   <script>
-    const user = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
+    const user = JSON.parse(localStorage.getItem("ccc_loggedInUser"));
     if (!user) {
-      window.location.href = 'index.html'; // Redirect to login if not logged in
+      window.location.href = "index.html";
     }
 
     function updatePassword() {
-      const newPassword = document.getElementById('newPassword').value;
-      if (newPassword) {
-        user.password = newPassword;  // Update password in user object
-        localStorage.setItem('ccc_loggedInUser', JSON.stringify(user)); // Save updated user data
-        alert('Password updated successfully!');
+      const newPass = document.getElementById("newPassword").value;
+      const confirmPass = document.getElementById("confirmPassword").value;
+
+      if (newPass !== confirmPass) {
+        return alert("Passwords do not match!");
+      }
+
+      let users = JSON.parse(localStorage.getItem("ccc_users") || "[]");
+      users = users.map(u => u.username === user.username ? { ...u, password: newPass } : u);
+      localStorage.setItem("ccc_users", JSON.stringify(users));
+      alert("Password updated successfully!");
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.getElementById("darkModeToggle").checked;
+      if (isDark) {
+        document.body.classList.add("dark-mode");
+        localStorage.setItem("ccc_theme", "dark");
       } else {
-        alert('Please enter a valid password!');
+        document.body.classList.remove("dark-mode");
+        localStorage.setItem("ccc_theme", "light");
       }
     }
+
+    function logoutUser() {
+      localStorage.removeItem("ccc_loggedInUser");
+      window.location.href = "index.html";
+    }
+
+    // Load theme
+    window.onload = function() {
+      const theme = localStorage.getItem("ccc_theme");
+      if (theme === "dark") {
+        document.body.classList.add("dark-mode");
+        document.getElementById("darkModeToggle").checked = true;
+      }
+    };
   </script>
 </body>
 </html>
