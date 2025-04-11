@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings - Compass Christian Church</title>
+  <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
+  <style>
+    /* Reuse styles from home.html for consistency */
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>
+      <img src="assets/ccc icon.png" alt="favicon" />
+      CCC
+    </h1>
+    <nav>
+      <!-- Navigation menu similar to home.html -->
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="dashboard">
+      <h2>Settings</h2>
+      <div id="settingsForm">
+        <label for="newPassword">New Password:</label>
+        <input type="password" id="newPassword" placeholder="Enter new password"/>
+        <button onclick="updatePassword()">Update Password</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
+    if (!user) {
+      window.location.href = 'index.html'; // Redirect to login if not logged in
+    }
+
+    function updatePassword() {
+      const newPassword = document.getElementById('newPassword').value;
+      if (newPassword) {
+        user.password = newPassword;  // Update password in user object
+        localStorage.setItem('ccc_loggedInUser', JSON.stringify(user)); // Save updated user data
+        alert('Password updated successfully!');
+      } else {
+        alert('Please enter a valid password!');
+      }
+    }
+  </script>
+</body>
+</html>
