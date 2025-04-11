@@ -6,10 +6,136 @@
   <title>Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc icon.png" />
   <style>
-    /* (Your existing styles here) */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f1f4f8;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #2b5dad;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      gap: 10px;
+    }
+
+    header h1 img {
+      width: 30px;
+      height: 30px;
+    }
+
+    nav button {
+      background: white;
+      color: #2b5dad;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 14px;
+      margin-left: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    nav button:hover {
+      background-color: #e0e8f5;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2b5dad;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #2b5dad;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .submit-btn:hover {
+      background-color: #1f4c94;
+    }
+
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .socials img {
+      width: 30px;
+      height: 30px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        margin: 20px;
+      }
+
+      nav button {
+        padding: 6px 10px;
+        font-size: 14px;
+      }
+    }
   </style>
 </head>
 <body>
+
   <header>
     <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
     <nav>
@@ -20,13 +146,15 @@
   </header>
 
   <div class="container">
+    <!-- LOGIN SECTION -->
     <div id="login" class="section active">
       <h2>Login</h2>
-      <input type="text" id="loginUsername" placeholder="Username" />
+      <input type="text" id="loginUsername" placeholder="Email" />
       <input type="password" id="loginPassword" placeholder="Password" />
       <button class="submit-btn" onclick="loginUser()">Login</button>
     </div>
 
+    <!-- REGISTER SECTION -->
     <div id="register" class="section">
       <h2>Register</h2>
       <input type="text" id="regUsername" placeholder="Username" />
@@ -36,9 +164,10 @@
       <button class="submit-btn" onclick="registerUser()">Register</button>
     </div>
 
+    <!-- ABOUT SECTION -->
     <div id="about" class="section">
       <h2>About Us</h2>
-      <p>We help people to find and follow Jesus.</p>
+      <p style="text-align: center;">We help people to find and follow Jesus.</p>
       <div class="socials">
         <a href="https://web.facebook.com/bryangablao" target="_blank"><img src="assets/facebook.png" alt="Facebook" /></a>
         <a href="https://www.linkedin.com/in/bryan-ablao-66734a359/" target="_blank"><img src="assets/linkedin.png" alt="LinkedIn" /></a>
@@ -52,59 +181,49 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 
-  <!-- Your Firebase Configuration Script -->
+  <!-- Your Firebase Configuration -->
   <script src="firebase-config.js"></script>
 
   <script>
-    // Register a user with Firebase Authentication and Firestore
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
     function registerUser() {
-      const username = document.getElementById("regUsername").value;
-      const email = document.getElementById("regEmail").value;
+      const username = document.getElementById("regUsername").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
       const password = document.getElementById("regPassword").value;
       const confirm = document.getElementById("regConfirm").value;
 
       if (!username || !email || !password || !confirm) return alert("Please fill all fields.");
       if (password !== confirm) return alert("Passwords do not match.");
 
-      // Create user with Firebase Authentication
-      auth.createUserWithEmailAndPassword(email, password)  // Use 'auth' from firebase-config.js
-        .then((userCredential) => {
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
           const user = userCredential.user;
-          // Store username in Firestore (as Firebase Auth does not have username)
-          db.collection("users").add({  // Use 'db' from firebase-config.js
-            username: username,
-            email: email,
+          db.collection("users").add({
+            username,
+            email,
             uid: user.uid
           });
-
           alert("Registered successfully!");
           showSection("login");
         })
-        .catch((error) => {
-          alert(error.message);
-        });
+        .catch(err => alert(err.message));
     }
 
-    // Login user with Firebase Authentication
     function loginUser() {
-      const email = document.getElementById("loginUsername").value;
+      const email = document.getElementById("loginUsername").value.trim();
       const password = document.getElementById("loginPassword").value;
 
-      auth.signInWithEmailAndPassword(email, password)  // Use 'auth' from firebase-config.js
-        .then((userCredential) => {
+      auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
           const user = userCredential.user;
           alert("Welcome, " + user.email + "!");
           window.location.href = "home.html";
         })
-        .catch((error) => {
-          alert(error.message);
-        });
-    }
-    
-    // Show section function
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
+        .catch(err => alert(err.message));
     }
   </script>
 </body>
