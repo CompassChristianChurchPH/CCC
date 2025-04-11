@@ -248,14 +248,12 @@
       const email = document.getElementById("loginUsername").value.trim();
       const password = document.getElementById("loginPassword").value;
 
-      if (!email || !password) return alert("Please enter both email and password.");
-      if (!validateEmail(email)) return alert("Please enter a valid email.");
+      if (!email || !password) return alert("Please fill all fields.");
 
       signInWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
-          const user = userCredential.user;
-          alert("Welcome, " + user.email + "!");
-          window.location.href = "home.html";
+        .then(() => {
+          alert("Logged in successfully!");
+          showSection("about");
         })
         .catch(err => {
           console.error("Error during login:", err.message);
