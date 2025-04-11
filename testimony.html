@@ -127,6 +127,17 @@
       font-size: 18px;
       margin: 20px;
     }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px;
+        padding: 15px;
+      }
+      header h1 {
+        font-size: 18px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -145,7 +156,7 @@
   <div class="container">
     <h2>🙌 Share Your Testimony</h2>
 
-    <textarea id="testimonyInput" placeholder="Write your story here..."></textarea>
+    <textarea id="testimonyInput" placeholder="Share how God has worked in your life..."></textarea>
     <button class="submit-btn" onclick="submitTestimony()">Submit Testimony</button>
 
     <div class="loading" id="loadingMessage" style="display:none;">Loading testimonies...</div>
@@ -179,7 +190,7 @@
     const db = firebase.firestore(app);
 
     const user = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
-    if (!user) window.location.href = 'index.html';
+    if (!user) window.location.href = 'login.html'; // Redirect to login if not logged in
 
     const input = document.getElementById("testimonyInput");
     const list = document.getElementById("testimonyList");
@@ -216,7 +227,7 @@
       }
 
       const newTestimony = {
-        user: user.username,
+        user: user.username || user.fullName, // Use fullName if needed
         text: text,
         timestamp: new Date().toISOString()
       };
@@ -229,13 +240,14 @@
         })
         .catch(error => {
           console.error("Error adding testimony: ", error);
+          alert("There was an issue submitting your testimony. Please try again.");
         });
     }
 
     // Function to logout
     function logoutUser() {
       localStorage.removeItem("ccc_loggedInUser");
-      window.location.href = "index.html";
+      window.location.href = "index.html"; // Redirect to home or login page
     }
 
     // Initial load
