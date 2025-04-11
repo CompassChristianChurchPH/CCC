@@ -1,1 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compass Christian Church</title>
+  <link rel="icon" href="assets/favicon.png" />
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header>
+    <img src="assets/favicon.png" alt="CCC Logo" class="logo" />
+    <span class="ccc-title">CCC</span>
+    <nav>
+      <ul>
+        <li><a href="#login">Login</a></li>
+        <li><a href="#register">Register</a></li>
+        <li><a href="#about">About Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- LOGIN SECTION -->
+    <section id="login" class="auth-section">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <input type="text" placeholder="Username" required />
+        <input type="password" placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+    </section>
+
+    <!-- REGISTER SECTION -->
+    <section id="register" class="auth-section">
+      <h2>Register</h2>
+      <form id="registerForm">
+        <input type="text" placeholder="Username" required />
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
+        <input type="password" placeholder="Confirm Password" required />
+        <button type="submit">Register</button>
+      </form>
+    </section>
+
+    <!-- ABOUT US SECTION -->
+    <section id="about">
+      <h2>About Compass Christian Church</h2>
+      <p>We help people to find and follow Jesus. Join our community of faith and fellowship.</p>
+      <div class="social-icons">
+        <a href="https://web.facebook.com/bryangablao" target="_blank">Facebook</a>
+        <a href="https://www.linkedin.com/in/bryan-ablao-66734a359/" target="_blank">LinkedIn</a>
+        <a href="mailto:ablaobryan4400@gmail.com">Gmail</a>
+      </div>
+    </section>
+
+    <!-- HOME PAGE (Visible after login) -->
+    <section id="home" class="hidden">
+      <nav class="user-nav">
+        <ul>
+          <li>Home</li>
+          <li>Profile</li>
+          <li>Settings</li>
+          <li>Messages</li>
+          <li>Mailbox</li>
+          <li>Friendlist</li>
+          <li onclick="logout()">Logout</li>
+        </ul>
+      </nav>
+      <div class="main-tabs">
+        <button onclick="showTab('bible')">Bible</button>
+        <button onclick="showTab('testimony')">Testimony</button>
+        <button onclick="showTab('prayer')">Prayer Wall</button>
+        <button onclick="showTab('events')">Events</button>
+      </div>
+      <div id="bible" class="tab-content">Bible content here...</div>
+      <div id="testimony" class="tab-content hidden">Testimonies shared by members...</div>
+      <div id="prayer" class="tab-content hidden">Prayer Wall for your requests...</div>
+      <div id="events" class="tab-content hidden">Upcoming Events list...</div>
+    </section>
+
+    <!-- ACCOUNTS PAGE -->
+    <section id="accounts" class="hidden">
+      <h2>Account List</h2>
+      <table>
+        <thead>
+          <tr><th>Username</th><th>Email</th><th>Account Level</th></tr>
+        </thead>
+        <tbody id="accountList">
+          <!-- Account rows populated here -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Compass Christian Church | Built by Bryan Gutierrez Ablao</p>
+  </footer>
+</body>
+</html>
 
