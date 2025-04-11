@@ -54,9 +54,8 @@
       padding: 12px;
       border-radius: 10px;
       border: 1px solid #ccc;
-      resize: vertical;
-      min-height: 100px;
       margin-bottom: 15px;
+      height: 150px;
     }
 
     button.submit-btn {
@@ -108,61 +107,69 @@
       <button onclick="location.href='bible.html'">Bible</button>
       <button onclick="location.href='testimony.html'">Testimony</button>
       <button onclick="location.href='prayerwall.html'">Prayer Wall</button>
+      <button onclick="location.href='events.html'">Events</button>
       <button onclick="logoutUser()">Logout</button>
     </nav>
   </header>
 
   <div class="container">
-    <h2>🙏 Submit a Prayer Request</h2>
+    <h2>🙏 Post Your Prayer Request</h2>
 
-    <textarea id="prayerInput" placeholder="Please share your prayer request..."></textarea>
-    <button class="submit-btn" onclick="submitPrayerRequest()">Submit Prayer Request</button>
+    <textarea id="prayerMessage" placeholder="Write your prayer request or thought here..."></textarea>
+
+    <button class="submit-btn" onclick="submitPrayer()">Submit Prayer</button>
 
     <div class="prayer-list" id="prayerList">
-      <!-- Prayer requests will show here -->
+      <!-- Prayer posts will show here -->
     </div>
   </div>
 
   <footer>
-    Compass Christian Church – In Prayer and Fellowship
+    Compass Christian Church – Prayer for Everyone
   </footer>
 
   <script>
     const user = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
     if (!user) window.location.href = 'index.html';
 
-    const input = document.getElementById("prayerInput");
-    const list = document.getElementById("prayerList");
+    const prayerMessageInput = document.getElementById("prayerMessage");
+    const prayerList = document.getElementById("prayerList");
 
-    let prayerRequests = JSON.parse(localStorage.getItem("ccc_prayerRequests")) || [];
+    let prayers = JSON.parse(localStorage.getItem("ccc_prayers")) || [];
 
-    function renderPrayerRequests() {
-      list.innerHTML = "";
-      prayerRequests.slice().reverse().forEach(prayer => {
+    function renderPrayers() {
+      prayerList.innerHTML = "";
+      prayers.slice().reverse().forEach(prayer => {
         const div = document.createElement("div");
         div.className = "prayer";
-        div.innerHTML = `<strong>${prayer.user}</strong><p>${prayer.request}</p>`;
-        list.appendChild(div);
+        div.innerHTML = `
+          <strong>Prayer by: ${prayer.user}</strong>
+          <p>${prayer.message}</p>
+        `;
+        prayerList.appendChild(div);
       });
     }
 
-    function submitPrayerRequest() {
-      const request = input.value.trim();
-      if (!request) {
-        alert("Please share a prayer request first.");
+    function submitPrayer() {
+      const message = prayerMessageInput.value.trim();
+
+      if (!message) {
+        alert("Please write a prayer request.");
         return;
       }
 
       const newPrayer = {
+        message: message,
         user: user.username,
-        request: request,
         timestamp: new Date().toISOString()
       };
 
-      prayerRequests.push(newPrayer);
-      localStorage.setItem("ccc_prayerRequests", JSON.stringify(prayerRequests));
-      input.value = "";
-      renderPrayerRequests();
+      prayers.push(newPrayer);
+      localStorage.setItem("ccc_prayers", JSON.stringify(prayers));
+
+      prayerMessageInput.value = "";
+
+      renderPrayers();
     }
 
     function logoutUser() {
@@ -171,7 +178,7 @@
     }
 
     // Initial load
-    renderPrayerRequests();
+    renderPrayers();
   </script>
 
 </body>
