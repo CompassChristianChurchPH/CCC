@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Home - Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <!-- Firebase Config -->
+  <script src="firebase-config.js"></script> <!-- This is your Firebase config file -->
+  
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
     body { background-color: #f4f4f4; text-align: center; }
@@ -63,18 +70,26 @@
   </div>
 
   <script>
-    // Check if user is logged in
-    const user = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
-    if (!user) {
-      window.location.href = 'index.html'; // Redirect to login if not logged in
-    }
+    // Initialize Firebase App and Auth
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    document.getElementById('userWelcome').textContent = user.username;
+    // Check if user is logged in
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = 'index.html'; // Redirect to login if not logged in
+      } else {
+        // Fetch and display user's name
+        document.getElementById('userWelcome').textContent = user.displayName || user.email.split('@')[0];
+      }
+    });
 
     // Logout function
     function logoutUser() {
-      localStorage.removeItem('ccc_loggedInUser'); // Remove logged-in user data
-      window.location.href = 'index.html'; // Redirect to login page
+      auth.signOut().then(() => {
+        window.location.href = 'index.html'; // Redirect to login page
+      });
     }
   </script>
 </body>
