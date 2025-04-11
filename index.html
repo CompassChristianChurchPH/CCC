@@ -1,170 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Compass Christian Church</title>
-  <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
+  <link rel="icon" type="image/png" href="assets/ccc icon.png">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-    body { background-color: #f4f4f4; text-align: center; }
+    body { background-color: #f0f4f8; }
     header {
-      display: flex; align-items: center; justify-content: space-between;
-      background-color: #2b5dad; color: white; padding: 10px 20px;
+      background-color: #2b5dad;
+      padding: 10px 20px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    header h1 {
-      display: flex; align-items: center; gap: 10px;
-    }
+    header h1 { display: flex; align-items: center; gap: 10px; }
     header h1 img { width: 32px; height: 32px; }
-    nav { display: flex; gap: 15px; }
     nav button {
-      padding: 8px 16px; background-color: white; border: none; border-radius: 5px;
-      color: #2b5dad; font-weight: bold; cursor: pointer;
-    }
-    .container { padding: 40px 20px; }
-    .tab-content {
-      display: none; margin-top: 30px; background-color: white;
-      padding: 30px; width: 100%; max-width: 400px; margin-inline: auto;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1); border-radius: 10px;
-    }
-    .tab-content.active { display: block; }
-    .tab-content input {
-      width: 100%; padding: 10px; margin: 10px 0; font-size: 1rem;
-    }
-    .tab-content button {
-      padding: 10px 20px; font-weight: bold; border: none;
-      border-radius: 5px; background-color: #2b5dad; color: white;
+      background: white; color: #2b5dad; font-weight: bold;
+      border: none; border-radius: 5px;
+      padding: 8px 16px; margin-left: 10px;
       cursor: pointer;
     }
-    .social-icons img {
-      width: 32px; margin: 10px; cursor: pointer;
+    .container { max-width: 400px; margin: 40px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .container h2 { text-align: center; margin-bottom: 20px; }
+    input[type="text"], input[type="password"], input[type="email"] {
+      width: 100%; padding: 10px; margin: 10px 0;
+      border: 1px solid #ccc; border-radius: 5px;
     }
-    .message {
-      margin-top: 10px; font-size: 14px;
+    button.submit-btn {
+      background: #2b5dad; color: white; width: 100%;
+      padding: 10px; border: none; border-radius: 5px;
+      font-weight: bold; cursor: pointer;
     }
-    .success { color: green; }
-    .error { color: red; }
+    .tabs { display: flex; justify-content: center; margin-top: 30px; }
+    .tabs button.active { background: #2b5dad; color: white; }
+    .socials img { width: 32px; margin: 0 10px; }
+    .section { display: none; }
+    .section.active { display: block; }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>
-      <img src="assets/ccc icon.png" alt="favicon" />
-      CCC
-    </h1>
+    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
     <nav>
-      <button onclick="showTab('login')">Login</button>
-      <button onclick="showTab('register')">Register</button>
-      <button onclick="showTab('about')">About Us</button>
+      <button onclick="showSection('login')">Login</button>
+      <button onclick="showSection('register')">Register</button>
+      <button onclick="showSection('about')">About Us</button>
     </nav>
   </header>
 
   <div class="container">
-    <div id="login" class="tab-content">
+    <div id="login" class="section active">
       <h2>Login</h2>
-      <input id="loginUsername" type="text" placeholder="Username" />
-      <input id="loginPassword" type="password" placeholder="Password" />
-      <button onclick="loginUser()">Login</button>
-      <div id="loginMessage" class="message"></div>
+      <input type="text" id="loginUsername" placeholder="Username">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button class="submit-btn" onclick="loginUser()">Login</button>
     </div>
 
-    <div id="register" class="tab-content">
+    <div id="register" class="section">
       <h2>Register</h2>
-      <input id="regUsername" type="text" placeholder="Username" />
-      <input id="regEmail" type="email" placeholder="Email" />
-      <input id="regPassword" type="password" placeholder="Password" />
-      <input id="regConfirm" type="password" placeholder="Confirm Password" />
-      <button onclick="registerUser()">Register</button>
-      <div id="registerMessage" class="message"></div>
+      <input type="text" id="regUsername" placeholder="Username">
+      <input type="email" id="regEmail" placeholder="Email">
+      <input type="password" id="regPassword" placeholder="Password">
+      <input type="password" id="regConfirm" placeholder="Confirm Password">
+      <button class="submit-btn" onclick="registerUser()">Register</button>
     </div>
 
-    <div id="about" class="tab-content">
+    <div id="about" class="section">
       <h2>About Us</h2>
-      <p>Welcome to Compass Christian Church!<br />
-      We help people to find and follow Jesus.</p>
-      <div class="social-icons">
-        <a href="https://web.facebook.com/bryangablao" target="_blank">
-          <img src="assets/facebook.png" alt="Facebook" />
-        </a>
-        <a href="https://www.linkedin.com/in/bryan-ablao-66734a359/" target="_blank">
-          <img src="assets/linkedin.png" alt="LinkedIn" />
-        </a>
-        <a href="mailto:ablaobryan4400@gmail.com">
-          <img src="assets/gmail.png" alt="Gmail" />
-        </a>
+      <p>We help people to find and follow Jesus.</p>
+      <div class="socials">
+        <a href="https://web.facebook.com/bryangablao" target="_blank"><img src="assets/facebook.png" alt="Facebook"></a>
+        <a href="https://www.linkedin.com/in/bryan-ablao-66734a359/" target="_blank"><img src="assets/linkedin.png" alt="LinkedIn"></a>
+        <a href="mailto:ablaobryan4400@gmail.com"><img src="assets/gmail.png" alt="Gmail"></a>
       </div>
     </div>
   </div>
 
   <script>
-    function showTab(id) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      document.getElementById('loginMessage').textContent = '';
-      document.getElementById('registerMessage').textContent = '';
     }
 
     function registerUser() {
-      const username = document.getElementById('regUsername').value;
-      const email = document.getElementById('regEmail').value;
-      const password = document.getElementById('regPassword').value;
-      const confirm = document.getElementById('regConfirm').value;
-      const message = document.getElementById('registerMessage');
+      const username = document.getElementById("regUsername").value;
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPassword").value;
+      const confirm = document.getElementById("regConfirm").value;
 
-      if (!username || !email || !password || !confirm) {
-        message.textContent = 'Please fill all fields.';
-        message.className = 'message error';
-        return;
-      }
+      if (!username || !email || !password || !confirm) return alert("Please fill all fields.");
+      if (password !== confirm) return alert("Passwords do not match.");
 
-      if (password !== confirm) {
-        message.textContent = 'Passwords do not match.';
-        message.className = 'message error';
-        return;
-      }
-
-      const users = JSON.parse(localStorage.getItem('ccc_users') || '[]');
-      if (users.find(u => u.username === username)) {
-        message.textContent = 'Username already exists.';
-        message.className = 'message error';
-        return;
-      }
+      const users = JSON.parse(localStorage.getItem("ccc_users") || "[]");
+      const exists = users.some(u => u.username === username);
+      if (exists) return alert("Username already exists.");
 
       users.push({ username, email, password });
-      localStorage.setItem('ccc_users', JSON.stringify(users));
-      message.textContent = 'Registration successful!';
-      message.className = 'message success';
-
-      document.getElementById('regUsername').value = '';
-      document.getElementById('regEmail').value = '';
-      document.getElementById('regPassword').value = '';
-      document.getElementById('regConfirm').value = '';
+      localStorage.setItem("ccc_users", JSON.stringify(users));
+      alert("Registered successfully!");
+      showSection("login");
     }
 
     function loginUser() {
-      const username = document.getElementById('loginUsername').value;
-      const password = document.getElementById('loginPassword').value;
-      const message = document.getElementById('loginMessage');
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
 
-      const users = JSON.parse(localStorage.getItem('ccc_users') || '[]');
-      const user = users.find(u => u.username === username && u.password === password);
+      const users = JSON.parse(localStorage.getItem("ccc_users") || "[]");
+      const found = users.find(u => u.username === username && u.password === password);
+      if (!found) return alert("Invalid credentials.");
 
-      if (user) {
-        message.textContent = 'Login successful! Redirecting...';
-        message.className = 'message success';
-        setTimeout(() => {
-          window.location.href = 'home.html'; // Placeholder
-        }, 1500);
-      } else {
-        message.textContent = 'Invalid username or password.';
-        message.className = 'message error';
-      }
+      alert("Welcome, " + found.username + "!");
+      window.location.href = "home.html";
     }
-
-    // Default to Login tab
-    showTab('login');
   </script>
-
 </body>
 </html>
