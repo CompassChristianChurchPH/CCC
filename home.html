@@ -4,49 +4,117 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Home - Compass Christian Church</title>
-  <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
+  <link rel="icon" type="image/png" href="assets/ccc icon.png" />
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-  
-  <!-- Firebase Config -->
-  <script src="firebase-config.js"></script> <!-- This is your Firebase config file -->
-  
+  <script src="firebase-config.js"></script>
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-    body { background-color: #f4f4f4; text-align: center; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f1f3f6;
+      color: #333;
+      text-align: center;
+    }
+
     header {
-      display: flex; align-items: center; justify-content: space-between;
-      background-color: #2b5dad; color: white; padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #2b5dad;
+      color: white;
+      padding: 15px 25px;
+      flex-wrap: wrap;
     }
+
     header h1 {
-      display: flex; align-items: center; gap: 10px;
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
     }
-    header h1 img { width: 32px; height: 32px; }
-    nav { display: flex; gap: 15px; }
+
+    header h1 img {
+      width: 35px;
+      height: 35px;
+      margin-right: 10px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
     nav button {
-      padding: 8px 16px; background-color: white; border: none; border-radius: 5px;
-      color: #2b5dad; font-weight: bold; cursor: pointer;
-    }
-    .container { padding: 40px 20px; }
-    .dashboard { padding: 30px; background-color: white; box-shadow: 0 0 15px rgba(0,0,0,0.1); border-radius: 10px; }
-    .welcome { font-size: 1.5rem; margin-bottom: 20px; }
-    .logout-btn {
-      padding: 10px 20px; font-weight: bold; border: none;
-      border-radius: 5px; background-color: #2b5dad; color: white;
+      padding: 8px 14px;
+      background-color: white;
+      color: #2b5dad;
+      border: 2px solid #2b5dad;
+      border-radius: 6px;
+      font-weight: 600;
       cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    nav button:hover {
+      background-color: #2b5dad;
+      color: white;
+    }
+
+    .container {
+      padding: 40px 20px;
+    }
+
+    .dashboard {
+      background-color: white;
+      padding: 40px 30px;
+      margin: 0 auto;
+      max-width: 600px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .welcome {
+      font-size: 1.7rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #2b5dad;
+    }
+
+    .message {
+      font-size: 1.1rem;
+      color: #555;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        justify-content: center;
+      }
+
+      .dashboard {
+        padding: 30px 20px;
+      }
+
+      .welcome {
+        font-size: 1.4rem;
+      }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>
-      <img src="assets/ccc icon.png" alt="favicon" />
-      CCC
-    </h1>
+    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
     <nav>
       <button onclick="location.href='home.html'">Home</button>
       <button onclick="location.href='profile.html'">Profile</button>
@@ -65,44 +133,37 @@
   <div class="container">
     <div class="dashboard">
       <div class="welcome">
-        <p>Welcome to Compass Christian Church, <span id="userWelcome">User</span>!</p>
+        Welcome to Compass Christian Church, <span id="userWelcome">User</span>!
       </div>
-      <div class="message">You can now access your profile and other features.</div>
+      <div class="message">
+        You can now access your profile and other features.
+      </div>
     </div>
   </div>
 
   <script>
-    // Initialize Firebase App and Auth
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Check if user is logged in
+    // Check login state
     auth.onAuthStateChanged(user => {
       if (!user) {
-        window.location.href = 'index.html'; // Redirect to login if not logged in
+        window.location.href = 'index.html'; // Redirect to login
       } else {
-        // Fetch and display user's name
-        document.getElementById('userWelcome').textContent = user.displayName || user.email.split('@')[0];
-
-        // Optionally, fetch more user info from Firestore if needed
-        // db.collection("users").doc(user.uid).get().then(doc => {
-        //   if (doc.exists) {
-        //     const userData = doc.data();
-        //     // You can update user details here like userData.username or profile pic etc.
-        //   }
-        // });
+        // Display user info
+        const name = user.displayName || user.email.split('@')[0];
+        document.getElementById("userWelcome").textContent = name;
       }
     });
 
-    // Logout function
+    // Logout
     function logoutUser() {
-      auth.signOut().then(() => {
-        window.location.href = 'index.html'; // Redirect to login page
-      }).catch(error => {
-        alert("Error logging out: " + error.message);
-      });
+      auth.signOut()
+        .then(() => window.location.href = 'index.html')
+        .catch(err => alert("Logout error: " + err.message));
     }
   </script>
+
 </body>
 </html>
