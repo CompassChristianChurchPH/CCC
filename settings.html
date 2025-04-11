@@ -7,13 +7,15 @@
   <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+
     body {
       background-color: #f0f2f5;
       transition: background-color 0.3s, color 0.3s;
     }
+
     body.dark-mode {
       background-color: #1c1c1c;
-      color: white;
+      color: #fff;
     }
 
     header {
@@ -45,6 +47,11 @@
       color: #2b5dad;
       font-weight: bold;
       cursor: pointer;
+      transition: 0.2s;
+    }
+
+    nav button:hover {
+      background-color: #f1f1f1;
     }
 
     .container {
@@ -54,6 +61,11 @@
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .dark-mode .container {
+      background-color: #2c2c2c;
+      color: white;
     }
 
     h2 {
@@ -66,12 +78,20 @@
       font-weight: bold;
     }
 
-    input[type="password"], input[type="text"] {
+    input[type="password"],
+    input[type="text"] {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
       border-radius: 5px;
       border: 1px solid #ccc;
+      background-color: white;
+    }
+
+    .dark-mode input {
+      background-color: #444;
+      color: white;
+      border-color: #666;
     }
 
     .submit-btn {
@@ -85,11 +105,42 @@
       cursor: pointer;
     }
 
+    .submit-btn:hover {
+      background-color: #1e4a8c;
+    }
+
     .toggle {
-      margin-top: 25px;
+      margin-top: 30px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #2b5dad;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      display: block;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeout {
+      from { opacity: 1; }
+      to { opacity: 0; }
     }
   </style>
 </head>
@@ -104,7 +155,7 @@
     </nav>
   </header>
 
-  <div class="container">
+  <main class="container">
     <h2>Account Settings</h2>
     <label for="newPassword">New Password</label>
     <input type="password" id="newPassword" placeholder="Enter new password">
@@ -115,46 +166,47 @@
     <button class="submit-btn" onclick="updatePassword()">Update Password</button>
 
     <div class="toggle">
-      <label>Dark Mode</label>
+      <label for="darkModeToggle">Dark Mode</label>
       <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
     </div>
-  </div>
+  </main>
 
-  <!-- Include Firebase SDK and Firebase config -->
+  <div class="toast" id="toast">Saved!</div>
+
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
   <script>
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
-  authDomain: "compass-christian-church-4b02e.firebaseapp.com",
-  projectId: "compass-christian-church-4b02e",
-  storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
-  messagingSenderId: "436310011988",
-  appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
-  measurementId: "G-T6EWRN2THW"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+      projectId: "compass-christian-church-4b02e",
+      storageBucket: "compass-christian-church-4b02e.appspot.com",
+      messagingSenderId: "436310011988",
+      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+      measurementId: "G-T6EWRN2THW"
+    };
 
-    // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Check if user is logged in
     auth.onAuthStateChanged(user => {
       if (!user) {
-        window.location.href = "index.html"; // Redirect to login if not authenticated
+        window.location.href = "index.html";
       } else {
-        // Load user settings (if necessary)
         loadSettings(user);
       }
     });
 
-    // Update password function
     function updatePassword() {
-      const newPass = document.getElementById("newPassword").value;
-      const confirmPass = document.getElementById("confirmPassword").value;
+      const newPass = document.getElementById("newPassword").value.trim();
+      const confirmPass = document.getElementById("confirmPassword").value.trim();
+
+      if (newPass.length < 6) {
+        return alert("Password must be at least 6 characters.");
+      }
 
       if (newPass !== confirmPass) {
         return alert("Passwords do not match!");
@@ -162,39 +214,32 @@ const firebaseConfig = {
 
       const user = auth.currentUser;
       user.updatePassword(newPass).then(() => {
-        alert("Password updated successfully!");
+        showToast("Password updated successfully!");
+        document.getElementById("newPassword").value = "";
+        document.getElementById("confirmPassword").value = "";
       }).catch(error => {
-        alert("Error updating password: " + error.message);
+        alert("Error: " + error.message);
       });
     }
 
-    // Dark mode toggle and save to Firestore
     function toggleDarkMode() {
       const isDark = document.getElementById("darkModeToggle").checked;
-      if (isDark) {
-        document.body.classList.add("dark-mode");
-        saveThemeToFirestore("dark");
-      } else {
-        document.body.classList.remove("dark-mode");
-        saveThemeToFirestore("light");
-      }
+      document.body.classList.toggle("dark-mode", isDark);
+      const theme = isDark ? "dark" : "light";
+      saveThemeToFirestore(theme);
     }
 
     function saveThemeToFirestore(theme) {
       const user = auth.currentUser;
-      db.collection("users").doc(user.uid).update({
-        theme: theme
-      }).catch(error => {
-        console.error("Error saving theme to Firestore: " + error.message);
-      });
+      if (!user) return;
+      db.collection("users").doc(user.uid).update({ theme }).catch(console.error);
     }
 
     function loadSettings(user) {
-      // Check Firestore for user's theme preference
       db.collection("users").doc(user.uid).get().then(doc => {
         if (doc.exists) {
           const data = doc.data();
-          const theme = data.theme || "light"; // Default to light theme
+          const theme = data.theme || "light";
           if (theme === "dark") {
             document.body.classList.add("dark-mode");
             document.getElementById("darkModeToggle").checked = true;
@@ -203,13 +248,19 @@ const firebaseConfig = {
       });
     }
 
-    // Logout function
     function logoutUser() {
       auth.signOut().then(() => {
         window.location.href = "index.html";
       }).catch(error => {
-        alert("Error logging out: " + error.message);
+        alert("Logout failed: " + error.message);
       });
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
     }
   </script>
 </body>
