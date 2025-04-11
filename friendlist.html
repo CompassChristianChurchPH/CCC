@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Friendlist - Compass Christian Church</title>
+  <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background-color: #f4f4f4; }
+
+    header {
+      background-color: #2b5dad;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header h1 img { width: 32px; height: 32px; }
+
+    nav button {
+      margin-left: 10px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: white;
+      color: #2b5dad;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2b5dad;
+    }
+
+    .friend-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .friend-form input {
+      padding: 8px;
+      width: 60%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .friend-form button {
+      padding: 8px 16px;
+      border: none;
+      background-color: #2b5dad;
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    li span {
+      font-weight: bold;
+    }
+
+    li button {
+      background-color: crimson;
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .empty {
+      text-align: center;
+      color: #888;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
+    <nav>
+      <button onclick="location.href='home.html'">Home</button>
+      <button onclick="location.href='profile.html'">Profile</button>
+      <button onclick="location.href='settings.html'">Settings</button>
+      <button onclick="location.href='friendlist.html'">Friendlist</button>
+      <button onclick="logoutUser()">Logout</button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>My Friends</h2>
+
+    <div class="friend-form">
+      <input type="text" id="friendInput" placeholder="Enter friend's username"/>
+      <button onclick="addFriend()">Add</button>
+    </div>
+
+    <ul id="friendList"></ul>
+    <div class="empty" id="emptyText">No friends yet. Start adding!</div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("ccc_loggedInUser"));
+    if (!user) window.location.href = "index.html";
+
+    const friendsData = JSON.parse(localStorage.getItem("ccc_friendlist") || "{}");
+    if (!friendsData[user.username]) {
+      friendsData[user.username] = [];
+    }
+
+    const input = document.getElementById("friendInput");
+    const list = document.getElementById("friendList");
+    const emptyText = document.getElementById("emptyText");
+
+    function displayFriends() {
+      const friends = friendsData[user.username];
+      list.innerHTML = "";
+      if (friends.length === 0) {
+        emptyText.style.display = "block";
+        return;
+      }
+
+      emptyText.style.display = "none";
+      friends.forEach((f, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<span>${f}</span> <button onclick="removeFriend(${index})">Remove</button>`;
+        list.appendChild(li);
+      });
+    }
+
+    function addFriend() {
+      const name = input.value.trim();
+      if (!name) return alert("Enter a username");
+      if (friendsData[user.username].includes(name)) return alert("Already in your friend list");
+
+      friendsData[user.username].push(name);
+      localStorage.setItem("ccc_friendlist", JSON.stringify(friendsData));
+      input.value = "";
+      displayFriends();
+    }
+
+    function removeFriend(index) {
+      friendsData[user.username].splice(index, 1);
+      localStorage.setItem("ccc_friendlist", JSON.stringify(friendsData));
+      displayFriends();
+    }
+
+    function logoutUser() {
+      localStorage.removeItem("ccc_loggedInUser");
+      window.location.href = "index.html";
+    }
+
+    displayFriends();
+  </script>
+
+</body>
+</html>
