@@ -48,6 +48,11 @@
       cursor: pointer;
     }
 
+    nav button:hover {
+      background-color: #2b5dad;
+      color: white;
+    }
+
     .container {
       max-width: 800px;
       margin: 30px auto;
@@ -200,6 +205,7 @@
         })
         .catch(error => {
           console.error("Error fetching prayers: ", error);
+          alert("Failed to load prayers. Please try again later.");
         });
     }
 
@@ -223,9 +229,11 @@
         .then(() => {
           prayerMessageInput.value = "";
           renderPrayers();
+          alert("Your prayer has been submitted!");
         })
         .catch(error => {
           console.error("Error adding prayer: ", error);
+          alert("Failed to submit prayer. Please try again.");
         });
     }
 
