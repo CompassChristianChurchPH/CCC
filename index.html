@@ -6,137 +6,7 @@
   <title>Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc icon.png" />
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: #f1f4f8;
-      display: flex;
-      flex-direction: column;loginUser 
-      min-height: 100vh;
-    }
-
-    header {
-      background-color: #2b5dad;
-      color: white;
-      padding: 15px 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    header h1 {
-      display: flex;
-      align-items: center;
-      font-size: 24px;
-      gap: 10px;
-    }
-
-    header h1 img {
-      width: 30px;
-      height: 30px;
-    }
-
-    nav button {
-      background: white;
-      color: #2b5dad;
-      border: none;
-      border-radius: 5px;
-      padding: 8px 14px;
-      margin-left: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    nav button:hover {
-      background-color: #e0e8f5;
-    }
-
-    .container {
-      max-width: 400px;
-      margin: 40px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .section {
-      display: none;
-      animation: fadeIn 0.3s ease-in-out;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    .section h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #2b5dad;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 12px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    .submit-btn {
-      width: 100%;
-      padding: 10px;
-      background-color: #2b5dad;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 5px;
-    }
-
-    .submit-btn:hover {
-      background-color: #1f4c94;
-    }
-
-    .socials {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 15px;
-    }
-
-    .socials img {
-      width: 30px;
-      height: 30px;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 500px) {
-      .container {
-        margin: 20px;
-      }
-
-      nav button {
-        padding: 6px 10px;
-        font-size: 14px;
-      }
-
-      .socials img {
-        width: 25px;
-        height: 25px;
-      }
-    }
+    /* Your CSS styles here */
   </style>
 </head>
 <body>
@@ -187,64 +57,24 @@
 
   <!-- Firebase SDKs for v9+ (modular style) -->
   <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-  import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
-  import { getFirestore, query, where, getDocs, collection } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+    // Your Firebase and function code
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
-    authDomain: "compass-christian-church-4b02e.firebaseapp.com",
-    projectId: "compass-christian-church-4b02e",
-    storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
-    messagingSenderId: "436310011988",
-    appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
-    measurementId: "G-T6EWRN2THW"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  // Login user function with username
-  window.loginUser = async function () {
-    const username = document.getElementById("loginUsername").value.trim(); // Username input
-    const password = document.getElementById("loginPassword").value;
-
-    if (!username || !password) {
-      return alert("Please fill all fields.");
-    }
-
-    try {
-      // Query Firestore to get the email associated with the username
-      const usersRef = collection(db, "users");
-      const q = query(usersRef, where("username", "==", username));
-      const querySnapshot = await getDocs(q);
-
-      if (querySnapshot.empty) {
-        return alert("No user found with the provided username.");
+    // Show section function
+    function showSection(id) {
+      console.log(`Showing section: ${id}`);
+      // Hide all sections
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => section.classList.remove('active'));
+      
+      // Show the clicked section
+      const activeSection = document.getElementById(id);
+      if (activeSection) {
+        activeSection.classList.add('active');
       }
-
-      // Get the first matching document (assuming usernames are unique)
-      const userDoc = querySnapshot.docs[0];
-      const email = userDoc.data().email;
-
-      // Use the email to log in
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          alert("Logged in successfully!");
-          // Redirect to the home.html page
-          window.location.href = "https://github.com/CompassChristianChurchPH/CCC/blob/main/home.html";
-        })
-        .catch(err => {
-          console.error("Error during login:", err.message);
-          alert(err.message);
-        });
-    } catch (err) {
-      console.error("Error fetching user data:", err.message);
-      alert("An error occurred while logging in. Please try again.");
     }
-  };
-</script>
+
+    // Other Firebase or logic functions here
+
+  </script>
 </body>
 </html>
