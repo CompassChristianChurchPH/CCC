@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Events - Compass Christian Church</title>
+  <link rel="icon" type="image/png" href="assets/ccc icon.png" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body {
+      background-color: #fefefe;
+      color: #222;
+      padding-bottom: 60px;
+    }
+    header {
+      background-color: #2b5dad;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    header img { width: 32px; height: 32px; }
+
+    nav button {
+      margin-left: 10px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: white;
+      color: #2b5dad;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    textarea, input[type="text"], input[type="date"], input[type="time"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+    }
+
+    button.submit-btn {
+      padding: 10px 20px;
+      background-color: #2b5dad;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .event-list {
+      margin-top: 30px;
+    }
+
+    .event {
+      background-color: #f1f1f1;
+      border-left: 5px solid #2b5dad;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+
+    .event strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #2b5dad;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #2b5dad;
+      color: white;
+      text-align: center;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
+    <nav>
+      <button onclick="location.href='home.html'">Home</button>
+      <button onclick="location.href='profile.html'">Profile</button>
+      <button onclick="location.href='bible.html'">Bible</button>
+      <button onclick="location.href='testimony.html'">Testimony</button>
+      <button onclick="location.href='prayerwall.html'">Prayer Wall</button>
+      <button onclick="location.href='events.html'">Events</button>
+      <button onclick="logoutUser()">Logout</button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>📅 Add New Event</h2>
+
+    <input type="text" id="eventName" placeholder="Event Name" />
+    <input type="date" id="eventDate" />
+    <input type="time" id="eventTime" />
+    <textarea id="eventDescription" placeholder="Event Description"></textarea>
+
+    <button class="submit-btn" onclick="submitEvent()">Submit Event</button>
+
+    <div class="event-list" id="eventList">
+      <!-- Events will show here -->
+    </div>
+  </div>
+
+  <footer>
+    Compass Christian Church – Fellowship and Worship
+  </footer>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
+    if (!user) window.location.href = 'index.html';
+
+    const eventNameInput = document.getElementById("eventName");
+    const eventDateInput = document.getElementById("eventDate");
+    const eventTimeInput = document.getElementById("eventTime");
+    const eventDescriptionInput = document.getElementById("eventDescription");
+    const eventList = document.getElementById("eventList");
+
+    let events = JSON.parse(localStorage.getItem("ccc_events")) || [];
+
+    function renderEvents() {
+      eventList.innerHTML = "";
+      events.slice().reverse().forEach(event => {
+        const div = document.createElement("div");
+        div.className = "event";
+        div.innerHTML = `
+          <strong>${event.name}</strong>
+          <p><strong>Date:</strong> ${event.date} <strong>Time:</strong> ${event.time}</p>
+          <p>${event.description}</p>
+        `;
+        eventList.appendChild(div);
+      });
+    }
+
+    function submitEvent() {
+      const name = eventNameInput.value.trim();
+      const date = eventDateInput.value;
+      const time = eventTimeInput.value;
+      const description = eventDescriptionInput.value.trim();
+
+      if (!name || !date || !time || !description) {
+        alert("Please fill in all event details.");
+        return;
+      }
+
+      const newEvent = {
+        name: name,
+        date: date,
+        time: time,
+        description: description,
+        user: user.username,
+        timestamp: new Date().toISOString()
+      };
+
+      events.push(newEvent);
+      localStorage.setItem("ccc_events", JSON.stringify(events));
+
+      eventNameInput.value = "";
+      eventDateInput.value = "";
+      eventTimeInput.value = "";
+      eventDescriptionInput.value = "";
+
+      renderEvents();
+    }
+
+    function logoutUser() {
+      localStorage.removeItem("ccc_loggedInUser");
+      window.location.href = "index.html";
+    }
+
+    // Initial load
+    renderEvents();
+  </script>
+
+</body>
+</html>
