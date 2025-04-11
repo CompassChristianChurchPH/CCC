@@ -63,6 +63,7 @@
   </header>
 
   <div class="container">
+    <!-- Login Section -->
     <div id="login" class="section active">
       <h2>Login</h2>
       <input type="text" id="loginUsername" placeholder="Username" />
@@ -70,6 +71,7 @@
       <button class="submit-btn" onclick="loginUser()">Login</button>
     </div>
 
+    <!-- Register Section -->
     <div id="register" class="section">
       <h2>Register</h2>
       <input type="text" id="regUsername" placeholder="Username" />
@@ -79,6 +81,7 @@
       <button class="submit-btn" onclick="registerUser()">Register</button>
     </div>
 
+    <!-- About Us Section -->
     <div id="about" class="section">
       <h2>About Us</h2>
       <p>We help people to find and follow Jesus.</p>
@@ -91,41 +94,49 @@
   </div>
 
   <script>
+    // Switch between sections
     function showSection(id) {
       document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
+    // Registration function
     function registerUser() {
       const username = document.getElementById("regUsername").value;
       const email = document.getElementById("regEmail").value;
       const password = document.getElementById("regPassword").value;
       const confirm = document.getElementById("regConfirm").value;
 
+      // Ensure fields are filled and passwords match
       if (!username || !email || !password || !confirm) return alert("Please fill all fields.");
       if (password !== confirm) return alert("Passwords do not match.");
 
+      // Check if the username already exists in localStorage
       const users = JSON.parse(localStorage.getItem("ccc_users") || "[]");
       const exists = users.some(u => u.username === username);
       if (exists) return alert("Username already exists.");
 
+      // Store the new user in localStorage
       users.push({ username, email, password });
       localStorage.setItem("ccc_users", JSON.stringify(users));
       alert("Registered successfully!");
       showSection("login");
     }
 
+    // Login function
     function loginUser() {
       const username = document.getElementById("loginUsername").value;
       const password = document.getElementById("loginPassword").value;
 
+      // Check if the user exists in localStorage and credentials are correct
       const users = JSON.parse(localStorage.getItem("ccc_users") || "[]");
       const found = users.find(u => u.username === username && u.password === password);
       if (!found) return alert("Invalid credentials.");
 
-      localStorage.setItem("ccc_loggedInUser", JSON.stringify(found)); // ✅ important line
+      // Store the logged-in user in localStorage
+      localStorage.setItem("ccc_loggedInUser", JSON.stringify(found));
       alert("Welcome, " + found.username + "!");
-      window.location.href = "home.html";
+      window.location.href = "home.html"; // Redirect to home page
     }
   </script>
 </body>
