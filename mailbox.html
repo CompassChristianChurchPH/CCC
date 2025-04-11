@@ -223,6 +223,7 @@
         displayMails();
       } catch (error) {
         console.error("Error deleting mail:", error);
+        alert("There was an error deleting the mail. Please try again.");
       }
     };
 
@@ -231,7 +232,9 @@
       window.location.href = "index.html";
     };
 
-    displayMails();
+    document.addEventListener("DOMContentLoaded", function() {
+      displayMails();
+    });
   </script>
 </body>
 </html>
