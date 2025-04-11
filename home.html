@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCC | Home</title>
+  <link rel="icon" type="image/png" href="assets/ccc icon.png" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background-color: #f7f7f7; }
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 20px; background-color: #2b5dad; color: white;
+    }
+    header h1 { display: flex; align-items: center; gap: 10px; }
+    header h1 img { width: 32px; height: 32px; }
+    nav {
+      display: flex; gap: 10px;
+    }
+    nav button {
+      background: white; color: #2b5dad; font-weight: bold; border: none;
+      padding: 8px 16px; border-radius: 5px; cursor: pointer;
+    }
+    .content {
+      padding: 30px; text-align: center;
+    }
+    .content h2 {
+      font-size: 28px; color: #333;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>
+      <img src="assets/ccc icon.png" alt="CCC Logo" />
+      CCC
+    </h1>
+    <nav>
+      <button onclick="goTo('home.html')">Home</button>
+      <button onclick="goTo('profile.html')">Profile</button>
+      <button onclick="goTo('settings.html')">Settings</button>
+      <button onclick="goTo('messages.html')">Messages</button>
+      <button onclick="goTo('mailbox.html')">Mailbox</button>
+      <button onclick="goTo('friendlist.html')">Friendlist</button>
+      <button onclick="goTo('bible.html')">Bible</button>
+      <button onclick="goTo('testimony.html')">Testimony</button>
+      <button onclick="goTo('prayerwall.html')">Prayer Wall</button>
+      <button onclick="goTo('events.html')">Events</button>
+      <button onclick="goTo('accountlist.html')">Account List</button>
+      <button onclick="logout()">Logout</button>
+    </nav>
+  </header>
+
+  <div class="content">
+    <h2>Welcome to Compass Christian Church!</h2>
+    <p>This is your homepage after logging in. Use the navigation menu to access different features.</p>
+  </div>
+
+  <script>
+    function goTo(page) {
+      window.location.href = page;
+    }
+
+    function logout() {
+      alert("You have been logged out.");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
