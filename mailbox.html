@@ -80,6 +80,7 @@
 
     .mail-list {
       list-style: none;
+      padding: 0;
     }
 
     .mail-item {
@@ -88,6 +89,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: background-color 0.3s;
     }
 
     .mail-item:hover {
@@ -97,6 +99,10 @@
     .mail-subject {
       font-weight: bold;
       color: #2b5dad;
+      max-width: 70%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .mail-time {
@@ -125,6 +131,10 @@
       color: #888;
       margin-top: 20px;
       font-style: italic;
+    }
+
+    .empty.hidden {
+      display: none;
     }
   </style>
 </head>
@@ -174,38 +184,46 @@
     const emptyText = document.getElementById("emptyText");
 
     async function displayMails() {
-      mailList.innerHTML = "";
-      const mailRef = collection(db, "mailboxes", user.username, "mails");
-      const snapshot = await getDocs(mailRef);
+      try {
+        mailList.innerHTML = "";
+        const mailRef = collection(db, "mailboxes", user.username, "mails");
+        const snapshot = await getDocs(mailRef);
 
-      if (snapshot.empty) {
-        emptyText.style.display = "block";
-        return;
+        if (snapshot.empty) {
+          emptyText.classList.remove("hidden");
+          return;
+        }
+
+        emptyText.classList.add("hidden");
+
+        snapshot.forEach((docSnap) => {
+          const mail = docSnap.data();
+          const li = document.createElement("li");
+          li.className = "mail-item";
+          li.innerHTML = `
+            <div class="mail-content">
+              <div class="mail-subject">${mail.subject}</div>
+              <div class="mail-time">${mail.time}</div>
+            </div>
+            <div class="mail-actions">
+              <button onclick="deleteMail('${docSnap.id}')">Delete</button>
+            </div>
+          `;
+          mailList.appendChild(li);
+        });
+      } catch (error) {
+        console.error("Error fetching mails:", error);
       }
-
-      emptyText.style.display = "none";
-
-      snapshot.forEach((docSnap) => {
-        const mail = docSnap.data();
-        const li = document.createElement("li");
-        li.className = "mail-item";
-        li.innerHTML = `
-          <div class="mail-content">
-            <div class="mail-subject">${mail.subject}</div>
-            <div class="mail-time">${mail.time}</div>
-          </div>
-          <div class="mail-actions">
-            <button onclick="deleteMail('${docSnap.id}')">Delete</button>
-          </div>
-        `;
-        mailList.appendChild(li);
-      });
     }
 
     window.deleteMail = async (mailId) => {
-      const mailDoc = doc(db, "mailboxes", user.username, "mails", mailId);
-      await deleteDoc(mailDoc);
-      displayMails();
+      try {
+        const mailDoc = doc(db, "mailboxes", user.username, "mails", mailId);
+        await deleteDoc(mailDoc);
+        displayMails();
+      } catch (error) {
+        console.error("Error deleting mail:", error);
+      }
     };
 
     window.logoutUser = () => {
