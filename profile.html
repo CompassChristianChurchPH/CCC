@@ -6,52 +6,200 @@
   <title>Profile - Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
   <style>
-    /* Reuse styles from home.html for consistency */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background-color: #eef1f5; }
+
+    header {
+      background-color: #2b5dad;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 { display: flex; align-items: center; gap: 10px; }
+    header h1 img { width: 32px; height: 32px; }
+    nav button {
+      margin-left: 10px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: white;
+      color: #2b5dad;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .profile-header img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      background-color: #ccc;
+    }
+
+    .profile-header input[type="file"] {
+      margin-top: 10px;
+    }
+
+    .profile-info input {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .submit-btn {
+      background: #2b5dad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .posts-section {
+      margin-top: 40px;
+    }
+
+    .post {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>
-      <img src="assets/ccc icon.png" alt="favicon" />
-      CCC
-    </h1>
+    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
     <nav>
-      <!-- Navigation menu similar to home.html -->
+      <button onclick="location.href='home.html'">Home</button>
+      <button onclick="location.href='profile.html'">Profile</button>
+      <button onclick="location.href='settings.html'">Settings</button>
+      <button onclick="logoutUser()">Logout</button>
     </nav>
   </header>
 
   <div class="container">
-    <div class="dashboard">
-      <h2>Profile</h2>
-      <div id="profileDetails"></div>
-      <button onclick="editProfile()">Edit Profile</button>
+    <div class="profile-header">
+      <img id="profilePic" src="" alt="Profile Picture" />
+      <div>
+        <input type="file" id="uploadPic" accept="image/*" onchange="uploadProfilePic(event)">
+      </div>
+    </div>
+
+    <div class="profile-info">
+      <input type="text" id="profileUsername" placeholder="Username" readonly>
+      <input type="email" id="profileEmail" placeholder="Email">
+      <button class="submit-btn" onclick="saveProfile()">Save Profile</button>
+    </div>
+
+    <div class="posts-section">
+      <h3>Create a Post</h3>
+      <textarea id="newPost" rows="4" style="width:100%;padding:10px;"></textarea><br>
+      <button class="submit-btn" onclick="createPost()">Post</button>
+
+      <div id="postList"></div>
     </div>
   </div>
 
   <script>
-    // Check if user is logged in
-    const user = JSON.parse(localStorage.getItem('ccc_loggedInUser'));
+    const user = JSON.parse(localStorage.getItem("ccc_loggedInUser"));
     if (!user) {
-      window.location.href = 'index.html'; // Redirect to login if not logged in
+      window.location.href = "index.html";
     }
 
-    // Display profile details
-    function displayProfile() {
-      const profileDiv = document.getElementById('profileDetails');
-      profileDiv.innerHTML = `
-        <p><strong>Username:</strong> ${user.username}</p>
-        <p><strong>Email:</strong> ${user.email}</p>
-        <p><strong>Name:</strong> ${user.firstName} ${user.lastName}</p>
-      `;
+    // Load user info
+    document.getElementById("profileUsername").value = user.username;
+    document.getElementById("profileEmail").value = user.email || "";
+
+    // Load profile picture if stored
+    const storedPic = localStorage.getItem("ccc_profile_pic_" + user.username);
+    if (storedPic) {
+      document.getElementById("profilePic").src = storedPic;
+    } else {
+      document.getElementById("profilePic").src = "https://via.placeholder.com/100";
     }
 
-    // Edit profile functionality (could open a form)
-    function editProfile() {
-      alert('Edit profile functionality to be implemented!');
+    // Save profile changes
+    function saveProfile() {
+      const email = document.getElementById("profileEmail").value;
+      user.email = email;
+      localStorage.setItem("ccc_loggedInUser", JSON.stringify(user));
+
+      let users = JSON.parse(localStorage.getItem("ccc_users") || "[]");
+      users = users.map(u => u.username === user.username ? {...u, email} : u);
+      localStorage.setItem("ccc_users", JSON.stringify(users));
+      alert("Profile saved!");
     }
 
-    displayProfile();  // Call function to display profile on page load
+    function uploadProfilePic(event) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById("profilePic").src = e.target.result;
+        localStorage.setItem("ccc_profile_pic_" + user.username, e.target.result);
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function createPost() {
+      const content = document.getElementById("newPost").value;
+      if (!content) return alert("Please write something!");
+
+      const post = {
+        username: user.username,
+        content,
+        time: new Date().toLocaleString()
+      };
+
+      const posts = JSON.parse(localStorage.getItem("ccc_posts") || "[]");
+      posts.unshift(post); // Add to top
+      localStorage.setItem("ccc_posts", JSON.stringify(posts));
+      document.getElementById("newPost").value = "";
+      loadPosts();
+    }
+
+    function loadPosts() {
+      const posts = JSON.parse(localStorage.getItem("ccc_posts") || "[]");
+      const userPosts = posts.filter(p => p.username === user.username);
+      const postList = document.getElementById("postList");
+      postList.innerHTML = "";
+
+      userPosts.forEach(post => {
+        const div = document.createElement("div");
+        div.className = "post";
+        div.innerHTML = `<strong>${post.username}</strong><br><small>${post.time}</small><p>${post.content}</p>`;
+        postList.appendChild(div);
+      });
+    }
+
+    function logoutUser() {
+      localStorage.removeItem("ccc_loggedInUser");
+      window.location.href = "index.html";
+    }
+
+    // Load posts initially
+    loadPosts();
   </script>
 </body>
 </html>
