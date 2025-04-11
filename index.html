@@ -67,12 +67,11 @@
       if (password !== confirm) return alert("Passwords do not match.");
 
       // Create user with Firebase Authentication
-      firebase.auth().createUserWithEmailAndPassword(email, password)
+      auth.createUserWithEmailAndPassword(email, password)  // Use 'auth' from firebase-config.js
         .then((userCredential) => {
           const user = userCredential.user;
           // Store username in Firestore (as Firebase Auth does not have username)
-          const usersRef = firebase.firestore().collection("users");
-          usersRef.add({
+          db.collection("users").add({  // Use 'db' from firebase-config.js
             username: username,
             email: email,
             uid: user.uid
@@ -91,7 +90,7 @@
       const email = document.getElementById("loginUsername").value;
       const password = document.getElementById("loginPassword").value;
 
-      firebase.auth().signInWithEmailAndPassword(email, password)
+      auth.signInWithEmailAndPassword(email, password)  // Use 'auth' from firebase-config.js
         .then((userCredential) => {
           const user = userCredential.user;
           alert("Welcome, " + user.email + "!");
