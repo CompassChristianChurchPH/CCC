@@ -8,13 +8,13 @@ import { getStorage } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-st
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "your-api-key",
-  authDomain: "your-project-id.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project-id.appspot.com",
-  messagingSenderId: "your-sender-id",
-  appId: "your-app-id",
-  measurementId: "your-measurement-id"
+  apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",   // Replace with your Firebase API key
+  authDomain: "compass-christian-church-4b02e.firebaseapp.com", // Replace with your Firebase authDomain
+  projectId: "compass-christian-church-4b02e",         // Replace with your Firebase project ID
+  storageBucket: "compass-christian-church-4b02e.appspot.com", // Replace with your Firebase storage bucket
+  messagingSenderId: "436310011988",                  // Replace with your messaging sender ID
+  appId: "1:436310011988:web:4087316a7b8d306be3fdc1", // Replace with your Firebase app ID
+  measurementId: "G-T6EWRN2THW"                        // Replace with your Firebase measurement ID
 };
 
 // Initialize Firebase
