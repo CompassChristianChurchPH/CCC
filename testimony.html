@@ -6,12 +6,19 @@
   <title>Testimony - Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc icon.png" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: 'Segoe UI', sans-serif; 
+    }
+
     body {
       background-color: #fefefe;
       color: #222;
       padding-bottom: 60px;
     }
+
     header {
       background-color: #2b5dad;
       color: white;
@@ -20,12 +27,17 @@
       justify-content: space-between;
       align-items: center;
     }
+
     header h1 {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    header img { width: 32px; height: 32px; }
+
+    header img { 
+      width: 32px; 
+      height: 32px; 
+    }
 
     nav button {
       margin-left: 10px;
@@ -36,6 +48,12 @@
       color: #2b5dad;
       font-weight: bold;
       cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    nav button:hover {
+      background-color: #1c4788;
+      color: white;
     }
 
     .container {
@@ -57,16 +75,22 @@
       resize: vertical;
       min-height: 100px;
       margin-bottom: 15px;
+      font-size: 16px;
     }
 
     button.submit-btn {
-      padding: 10px 20px;
+      padding: 12px 25px;
       background-color: #2b5dad;
       color: white;
       border: none;
       border-radius: 5px;
       font-weight: bold;
       cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button.submit-btn:hover {
+      background-color: #1c4788;
     }
 
     .testimony-list {
@@ -74,11 +98,12 @@
     }
 
     .testimony {
-      background-color: #f1f1f1;
+      background-color: #f9f9f9;
       border-left: 5px solid #2b5dad;
       padding: 15px;
       margin-bottom: 15px;
       border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .testimony strong {
@@ -95,6 +120,12 @@
       color: white;
       text-align: center;
       padding: 8px;
+    }
+
+    .loading {
+      text-align: center;
+      font-size: 18px;
+      margin: 20px;
     }
   </style>
 </head>
@@ -117,6 +148,7 @@
     <textarea id="testimonyInput" placeholder="Write your story here..."></textarea>
     <button class="submit-btn" onclick="submitTestimony()">Submit Testimony</button>
 
+    <div class="loading" id="loadingMessage" style="display:none;">Loading testimonies...</div>
     <div class="testimony-list" id="testimonyList">
       <!-- Testimonies will show here -->
     </div>
@@ -131,16 +163,16 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
   
   <script>
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
-  authDomain: "compass-christian-church-4b02e.firebaseapp.com",
-  projectId: "compass-christian-church-4b02e",
-  storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
-  messagingSenderId: "436310011988",
-  appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
-  measurementId: "G-T6EWRN2THW"
-};
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+      projectId: "compass-christian-church-4b02e",
+      storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
+      messagingSenderId: "436310011988",
+      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+      measurementId: "G-T6EWRN2THW"
+    };
 
     // Initialize Firebase
     const app = firebase.initializeApp(firebaseConfig);
@@ -151,9 +183,11 @@ const firebaseConfig = {
 
     const input = document.getElementById("testimonyInput");
     const list = document.getElementById("testimonyList");
+    const loadingMessage = document.getElementById("loadingMessage");
 
     // Function to render testimonies from Firestore
     function renderTestimonies() {
+      loadingMessage.style.display = 'block'; // Show loading message
       db.collection("testimonies").orderBy("timestamp", "desc")
         .get()
         .then(snapshot => {
@@ -165,9 +199,11 @@ const firebaseConfig = {
             div.innerHTML = `<strong>${testimony.user}</strong><p>${testimony.text}</p>`;
             list.appendChild(div);
           });
+          loadingMessage.style.display = 'none'; // Hide loading message
         })
         .catch(error => {
           console.error("Error fetching testimonies: ", error);
+          loadingMessage.innerText = 'Failed to load testimonies. Please try again later.';
         });
     }
 
