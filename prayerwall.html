@@ -136,12 +136,6 @@
     <h1><img src="assets/ccc icon.png" alt="CCC Icon"> Compass Christian Church</h1>
     <nav>
       <button onclick="location.href='home.html'">Home</button>
-      <button onclick="location.href='profile.html'">Profile</button>
-      <button onclick="window.open('https://www.bible.com/bible', '_blank')">Bible</button>
-      <button onclick="location.href='testimony.html'">Testimony</button>
-      <button onclick="location.href='prayerwall.html'">Prayer Wall</button>
-      <button onclick="location.href='events.html'">Events</button>
-      <button onclick="logoutUser()">Logout</button>
     </nav>
   </header>
 
@@ -235,12 +229,6 @@
           console.error("Error adding prayer: ", error);
           alert("Failed to submit prayer. Please try again.");
         });
-    }
-
-    // Function to logout
-    function logoutUser() {
-      localStorage.removeItem("ccc_loggedInUser");
-      window.location.href = "index.html";
     }
 
     // Initial load
