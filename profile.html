@@ -106,9 +106,6 @@
     <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
     <nav>
       <button onclick="location.href='home.html'">Home</button>
-      <button onclick="location.href='profile.html'">Profile</button>
-      <button onclick="location.href='settings.html'">Settings</button>
-      <button onclick="logoutUser()">Logout</button>
     </nav>
   </header>
 
@@ -233,13 +230,7 @@
         postList.prepend(div);
       });
     }
-
-    function logoutUser() {
-      if (confirm('Are you sure you want to log out?')) {
-        auth.signOut().then(() => window.location.href = 'index.html')
-          .catch(error => alert("Error logging out: " + error.message));
-      }
-    }
   </script>
+
 </body>
 </html>
