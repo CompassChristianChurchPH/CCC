@@ -16,6 +16,12 @@
     body {
       background-color: #f4f4f4;
       min-height: 100vh;
+      transition: background-color 0.3s ease;
+    }
+
+    body.dark-mode {
+      background-color: #121212;
+      color: white;
     }
 
     header {
@@ -62,12 +68,22 @@
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s ease;
+    }
+
+    body.dark-mode .container {
+      background: #333;
+      color: white;
     }
 
     h2 {
       text-align: center;
       margin-bottom: 25px;
       color: #2b5dad;
+    }
+
+    body.dark-mode h2 {
+      color: #fff;
     }
 
     .friend-form {
@@ -86,6 +102,12 @@
       border-radius: 5px;
     }
 
+    body.dark-mode .friend-form input {
+      background-color: #555;
+      color: white;
+      border: 1px solid #888;
+    }
+
     .friend-form button {
       padding: 10px 20px;
       border: none;
@@ -99,6 +121,10 @@
 
     .friend-form button:hover {
       background-color: #1f4c8a;
+    }
+
+    body.dark-mode .friend-form button {
+      background-color: #444;
     }
 
     ul {
@@ -115,9 +141,18 @@
       align-items: center;
     }
 
+    body.dark-mode li {
+      background-color: #444;
+      border-bottom: 1px solid #555;
+    }
+
     li span {
       font-weight: bold;
       color: #333;
+    }
+
+    body.dark-mode li span {
+      color: white;
     }
 
     li button {
@@ -134,6 +169,10 @@
       background-color: darkred;
     }
 
+    body.dark-mode li button {
+      background-color: #d9534f;
+    }
+
     .empty {
       text-align: center;
       color: #888;
@@ -141,11 +180,34 @@
       font-style: italic;
     }
 
+    body.dark-mode .empty {
+      color: #bbb;
+    }
+
     .loading {
       text-align: center;
       color: #888;
       font-style: italic;
       display: none;
+    }
+
+    body.dark-mode .loading {
+      color: #bbb;
+    }
+
+    .dark-mode-toggle {
+      margin-left: 10px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #2b5dad;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .dark-mode-toggle:hover {
+      background-color: #1f4c8a;
     }
   </style>
 </head>
@@ -155,6 +217,7 @@
     <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
     <nav>
       <button onclick="location.href='home.html'">Home</button>
+      <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
     </nav>
   </header>
 
@@ -252,6 +315,10 @@
       db.collection("users").doc(user.username).collection("friends").doc(friendId).delete().then(() => {
         displayFriends();
       }).catch(err => console.error("Error removing friend:", err));
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
     }
 
     displayFriends();
