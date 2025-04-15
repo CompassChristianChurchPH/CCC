@@ -135,7 +135,22 @@
     </div>
   </div>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
   <script>
+    // Your Firebase configuration (make sure to replace with your actual config)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -143,19 +158,21 @@
     // Check login state
     auth.onAuthStateChanged(user => {
       if (!user) {
-        window.location.href = 'index.html'; // Redirect to login page
+        window.location.href = 'https://davaoph.github.io/CCC/index.html'; // Redirect to live login page
       } else {
-        // Display user info
         const name = user.displayName || user.email.split('@')[0];
         document.getElementById("userWelcome").textContent = name;
       }
     });
 
+    // Logout function
     function logoutUser() {
-  auth.signOut()
-    .then(() => window.location.href = './index.html';)
-    .catch(err => alert("Logout error: " + err.message));
-}
+      auth.signOut()
+        .then(() => {
+          window.location.href = 'https://davaoph.github.io/CCC/index.html'; // Redirect to live login page
+        })
+        .catch(err => alert("Logout error: " + err.message));
+    }
   </script>
 
 </body>
