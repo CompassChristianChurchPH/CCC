@@ -255,18 +255,29 @@
     </div>
 
     <div class="profile-info">
-      <div class="row">
-        <input type="text" id="firstName" placeholder="First Name" readonly />
-        <input type="text" id="middleName" placeholder="Middle Name" readonly />
-        <input type="text" id="lastName" placeholder="Last Name" readonly />
-      </div>
-      <div class="row">
-        <input type="email" id="email" placeholder="Email" readonly />
-        <button id="editBtn" class="edit-button" onclick="enableEditing()">Edit</button>
-      </div>
-      <button id="saveBtn" class="submit-btn" onclick="saveProfile()" style="display: none;">Save Profile</button>
-      <div id="profileDisplay" class="profile-display" style="display: none;"></div>
+  <!-- Textboxes shown only during edit -->
+  <div id="profileForm" style="display: none;">
+    <div class="row">
+      <input type="text" id="firstName" placeholder="First Name" />
+      <input type="text" id="middleName" placeholder="Middle Name" />
+      <input type="text" id="lastName" placeholder="Last Name" />
     </div>
+    <div class="row">
+      <input type="email" id="email" placeholder="Email" />
+    </div>
+  </div>
+
+  <!-- Displayed text when not editing -->
+  <div id="profileDisplay" class="profile-display">
+    <span id="displayName">Your Name Here</span>
+    <span id="displayEmail">your@email.com</span>
+  </div>
+
+  <div style="margin-top: 10px;">
+    <button id="editBtn" class="edit-button" onclick="enableEditing()">Edit</button>
+    <button id="saveBtn" class="submit-btn" onclick="saveProfile()" style="display: none;">Save Profile</button>
+  </div>
+</div>
 
     <div class="posts-section">
       <h3>Create a Post</h3>
@@ -296,37 +307,28 @@
     }
 
     function enableEditing() {
-      document.getElementById('firstName').removeAttribute('readonly');
-      document.getElementById('middleName').removeAttribute('readonly');
-      document.getElementById('lastName').removeAttribute('readonly');
-      document.getElementById('email').removeAttribute('readonly');
-      document.getElementById('saveBtn').style.display = 'inline-block';
-      document.getElementById('editBtn').style.display = 'none';
-    }
+  document.getElementById('profileForm').style.display = 'block';
+  document.getElementById('profileDisplay').style.display = 'none';
+  document.getElementById('editBtn').style.display = 'none';
+  document.getElementById('saveBtn').style.display = 'inline-block';
+}
 
-    function saveProfile() {
-      const firstName = document.getElementById('firstName').value;
-      const middleName = document.getElementById('middleName').value;
-      const lastName = document.getElementById('lastName').value;
-      const email = document.getElementById('email').value;
+function saveProfile() {
+  const firstName = document.getElementById('firstName').value;
+  const middleName = document.getElementById('middleName').value;
+  const lastName = document.getElementById('lastName').value;
+  const email = document.getElementById('email').value;
 
-      // Set the profile text and hide the editable fields
-      document.getElementById('profileDisplay').style.display = 'block';
-      document.getElementById('profileDisplay').innerHTML = `
-        <span>${firstName} ${middleName} ${lastName}</span>
-        <span>${email}</span>
-      `;
+  // Update the display
+  document.getElementById('displayName').textContent = `${firstName} ${middleName} ${lastName}`;
+  document.getElementById('displayEmail').textContent = email;
 
-      // Hide editable fields
-      document.getElementById('firstName').setAttribute('readonly', true);
-      document.getElementById('middleName').setAttribute('readonly', true);
-      document.getElementById('lastName').setAttribute('readonly', true);
-      document.getElementById('email').setAttribute('readonly', true);
-      
-      // Hide Save button and show Edit button
-      document.getElementById('saveBtn').style.display = 'none';
-      document.getElementById('editBtn').style.display = 'inline-block';
-    }
+  // Switch back to display mode
+  document.getElementById('profileForm').style.display = 'none';
+  document.getElementById('profileDisplay').style.display = 'block';
+  document.getElementById('editBtn').style.display = 'inline-block';
+  document.getElementById('saveBtn').style.display = 'none';
+}
 
     function createPost() {
       const postText = document.getElementById('newPost').value.trim();
