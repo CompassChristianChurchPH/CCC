@@ -63,17 +63,6 @@
       display: none;
     }
 
-    .text-overlay {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-    }
-
     .profile-header {
       position: relative;
       margin-top: -50px;
@@ -97,16 +86,32 @@
       display: none;
     }
 
+    /* Added new style for "Upload Profile Picture" text to be inside the circle */
+    .profile-header .text-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    }
+
+    .profile-info {
+      margin-top: 10px;
+    }
+
     .profile-info input {
-      width: 100%;
-      margin: 10px 0;
+      width: 45%;
+      margin: 10px 5%;
       padding: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
     }
 
     .profile-info input[type="email"] {
-      width: 100%; /* Adjusted to match all other inputs */
+      width: 100%; /* Adjusted to fit email input */
     }
 
     .submit-btn {
@@ -124,10 +129,6 @@
 
     .submit-btn:hover {
       background: #1f4d8d;
-    }
-
-    .profile-info {
-      margin-top: 10px;
     }
 
     .profile-info span {
@@ -199,7 +200,6 @@
     <!-- Profile Wallpaper -->
     <div class="profile-wallpaper" id="profileWallpaper" onclick="document.getElementById('uploadWallpaper').click()">
       <input type="file" id="uploadWallpaper" accept="image/*" onchange="uploadWallpaper(event)">
-      <div class="text-overlay">Upload Wallpaper</div>
     </div>
 
     <div class="profile-header">
@@ -209,9 +209,11 @@
     </div>
 
     <div class="profile-info">
-      <input type="text" id="firstName" placeholder="First Name">
-      <input type="text" id="middleName" placeholder="Middle Name">
-      <input type="text" id="lastName" placeholder="Last Name">
+      <div style="display: flex; justify-content: space-between;">
+        <input type="text" id="firstName" placeholder="First Name">
+        <input type="text" id="middleName" placeholder="Middle Name">
+        <input type="text" id="lastName" placeholder="Last Name">
+      </div>
       <input type="email" id="profileEmail" placeholder="Email" required>
       <button class="submit-btn" onclick="saveProfile()">Save Profile</button>
 
