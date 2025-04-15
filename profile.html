@@ -126,12 +126,14 @@
     .profile-info {
       padding: 20px 30px 30px;
       margin-top: 20px;
+      text-align: center;
     }
 
     .profile-info .row {
       display: flex;
       gap: 10px;
       margin-bottom: 10px;
+      justify-content: center;
     }
 
     .profile-info input {
@@ -215,6 +217,17 @@
       margin-top: 10px;
       resize: vertical;
     }
+
+    .profile-display {
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .profile-display span {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -252,6 +265,7 @@
         <button id="editBtn" class="edit-button" onclick="enableEditing()">Edit</button>
       </div>
       <button id="saveBtn" class="submit-btn" onclick="saveProfile()" style="display: none;">Save Profile</button>
+      <div id="profileDisplay" class="profile-display" style="display: none;"></div>
     </div>
 
     <div class="posts-section">
@@ -291,10 +305,25 @@
     }
 
     function saveProfile() {
+      const firstName = document.getElementById('firstName').value;
+      const middleName = document.getElementById('middleName').value;
+      const lastName = document.getElementById('lastName').value;
+      const email = document.getElementById('email').value;
+
+      // Set the profile text and hide the editable fields
+      document.getElementById('profileDisplay').style.display = 'block';
+      document.getElementById('profileDisplay').innerHTML = `
+        <span>${firstName} ${middleName} ${lastName}</span>
+        <span>${email}</span>
+      `;
+
+      // Hide editable fields
       document.getElementById('firstName').setAttribute('readonly', true);
       document.getElementById('middleName').setAttribute('readonly', true);
       document.getElementById('lastName').setAttribute('readonly', true);
       document.getElementById('email').setAttribute('readonly', true);
+      
+      // Hide Save button and show Edit button
       document.getElementById('saveBtn').style.display = 'none';
       document.getElementById('editBtn').style.display = 'inline-block';
     }
