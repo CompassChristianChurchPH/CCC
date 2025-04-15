@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Compass Christian Church</title>
-  <link rel="icon" type="image/png" href="assets/ccc icon.png" />
+  <link rel="icon" type="image/png" href="assets/ccc-icon.png" />
   <style>
     * {
       box-sizing: border-box;
@@ -160,7 +160,7 @@
 <body>
 
   <header>
-    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> Compass Christian Church</h1>
+    <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
     <nav>
       <button onclick="showSection('login')">Login</button>
       <button onclick="showSection('register')">Register</button>
@@ -172,22 +172,22 @@
     <!-- LOGIN SECTION -->
     <div id="login" class="section active">
       <h2>Login</h2>
-      <form>
+      <form onsubmit="event.preventDefault(); loginUser();">
         <input type="text" id="loginUsername" placeholder="Email" />
         <input type="password" id="loginPassword" placeholder="Password" />
-        <button type="button" class="submit-btn" onclick="loginUser()">Login</button>
+        <button type="submit" class="submit-btn">Login</button>
       </form>
     </div>
 
     <!-- REGISTER SECTION -->
     <div id="register" class="section">
       <h2>Register</h2>
-      <form>
+      <form onsubmit="event.preventDefault(); registerUser();">
         <input type="text" id="regUsername" placeholder="Username" />
         <input type="email" id="regEmail" placeholder="Email" />
         <input type="password" id="regPassword" placeholder="Password" />
         <input type="password" id="regConfirm" placeholder="Confirm Password" />
-        <button type="button" class="submit-btn" onclick="registerUser()">Register</button>
+        <button type="submit" class="submit-btn">Register</button>
       </form>
     </div>
 
@@ -226,7 +226,7 @@
 
       if (email && password) {
         alert("Logged in successfully! Redirecting...");
-        window.location.href = "home.html";
+        window.location.href = "home.html"; // This works once deployed to GitHub Pages
       } else {
         alert("Please enter both email and password.");
       }
