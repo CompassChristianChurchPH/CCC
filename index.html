@@ -165,8 +165,7 @@
     </div>
   </div>
 
-  <script type="module">
-    // Section Toggle Function
+  <script>
     function showSection(id) {
       const sections = document.querySelectorAll('.section');
       sections.forEach(section => section.classList.remove('active'));
@@ -174,13 +173,37 @@
       if (selected) selected.classList.add('active');
     }
 
-    // Placeholder for actual Firebase logic
     function loginUser() {
-      alert("Login functionality to be implemented.");
+      // Here you can validate and authenticate via Firebase
+      const email = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+
+      if (email && password) {
+        // TODO: Replace with Firebase logic
+        alert("Logged in successfully! Redirecting...");
+        window.location.href = "home.html"; // Update path if different
+      } else {
+        alert("Please enter both email and password.");
+      }
     }
 
     function registerUser() {
-      alert("Register functionality to be implemented.");
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const confirm = document.getElementById('regConfirm').value;
+
+      if (password !== confirm) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      if (email && password) {
+        // TODO: Replace with Firebase logic
+        alert("Registered successfully!");
+        showSection('login');
+      } else {
+        alert("Please fill all fields.");
+      }
     }
   </script>
 
