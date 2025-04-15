@@ -198,14 +198,14 @@
           const li = document.createElement("li");
           li.className = "mail-item";
           li.innerHTML = `
-            <div class="mail-content">
-              <div class="mail-subject">${mail.subject}</div>
-              <div class="mail-time">${mail.time}</div>
-            </div>
-            <div class="mail-actions">
-              <button onclick="deleteMail('${docSnap.id}')">Delete</button>
-            </div>
-          `;
+  <div class="mail-content">
+    <div class="mail-subject">${mail.subject}</div>
+    <div class="mail-time">${mail.time}</div>
+  </div>
+  <div class="mail-actions">
+    <button onclick="deleteMail('${docSnap.id}')">Delete</button>
+  </div>
+`;
           mailList.appendChild(li);
         });
       } catch (error) {
