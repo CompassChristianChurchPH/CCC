@@ -6,7 +6,117 @@
   <title>Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc icon.png" />
   <style>
-    /* Your CSS styles here */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f2f2f2;
+      color: #333;
+    }
+
+    header {
+      background-color: skyblue;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      color: #0000cc;
+    }
+
+    header h1 img {
+      height: 32px;
+      margin-right: 10px;
+    }
+
+    nav button {
+      background-color: white;
+      border: 2px solid #0000cc;
+      color: #0000cc;
+      padding: 8px 16px;
+      margin-left: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    nav button:hover {
+      background-color: #0000cc;
+      color: white;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #0000cc;
+    }
+
+    form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #0000cc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #000099;
+    }
+
+    .socials {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .socials a img {
+      width: 32px;
+      margin: 0 10px;
+      transition: transform 0.3s;
+    }
+
+    .socials a img:hover {
+      transform: scale(1.1);
+    }
   </style>
 </head>
 <body>
@@ -27,7 +137,7 @@
       <form>
         <input type="text" id="loginUsername" placeholder="Email" />
         <input type="password" id="loginPassword" placeholder="Password" />
-        <button class="submit-btn" type="button" onclick="loginUser()">Login</button>
+        <button type="button" class="submit-btn" onclick="loginUser()">Login</button>
       </form>
     </div>
 
@@ -39,14 +149,14 @@
         <input type="email" id="regEmail" placeholder="Email" />
         <input type="password" id="regPassword" placeholder="Password" />
         <input type="password" id="regConfirm" placeholder="Confirm Password" />
-        <button class="submit-btn" type="button" onclick="registerUser()">Register</button>
+        <button type="button" class="submit-btn" onclick="registerUser()">Register</button>
       </form>
     </div>
 
     <!-- ABOUT SECTION -->
     <div id="about" class="section">
       <h2>About Us</h2>
-      <p style="text-align: center;">We help people to find and follow Jesus.</p>
+      <p style="text-align: center; color: red; font-style: italic;">We help people to find and follow Jesus.</p>
       <div class="socials">
         <a href="https://web.facebook.com/bryangablao" target="_blank"><img src="assets/facebook.png" alt="Facebook" /></a>
         <a href="https://www.linkedin.com/in/bryan-ablao-66734a359/" target="_blank"><img src="assets/linkedin.png" alt="LinkedIn" /></a>
@@ -55,26 +165,24 @@
     </div>
   </div>
 
-  <!-- Firebase SDKs for v9+ (modular style) -->
   <script type="module">
-    // Your Firebase and function code
-
-    // Show section function
+    // Section Toggle Function
     function showSection(id) {
-      console.log(`Showing section: ${id}`);
-      // Hide all sections
       const sections = document.querySelectorAll('.section');
       sections.forEach(section => section.classList.remove('active'));
-      
-      // Show the clicked section
-      const activeSection = document.getElementById(id);
-      if (activeSection) {
-        activeSection.classList.add('active');
-      }
+      const selected = document.getElementById(id);
+      if (selected) selected.classList.add('active');
     }
 
-    // Other Firebase or logic functions here
+    // Placeholder for actual Firebase logic
+    function loginUser() {
+      alert("Login functionality to be implemented.");
+    }
 
+    function registerUser() {
+      alert("Register functionality to be implemented.");
+    }
   </script>
+
 </body>
 </html>
