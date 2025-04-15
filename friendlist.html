@@ -155,10 +155,6 @@
     <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
     <nav>
       <button onclick="location.href='home.html'">Home</button>
-      <button onclick="location.href='profile.html'">Profile</button>
-      <button onclick="location.href='settings.html'">Settings</button>
-      <button onclick="location.href='friendlist.html'">Friendlist</button>
-      <button onclick="logoutUser()">Logout</button>
     </nav>
   </header>
 
@@ -256,11 +252,6 @@
       db.collection("users").doc(user.username).collection("friends").doc(friendId).delete().then(() => {
         displayFriends();
       }).catch(err => console.error("Error removing friend:", err));
-    }
-
-    function logoutUser() {
-      localStorage.removeItem("ccc_loggedInUser");
-      window.location.href = "index.html";
     }
 
     displayFriends();
