@@ -58,7 +58,7 @@
     }
 
     .container {
-      max-width: 500px;
+      max-width: 600px;
       margin: 40px auto;
       padding: 20px;
       background: white;
@@ -103,19 +103,33 @@
       background-color: #000099;
     }
 
-    .socials {
+    .about-text {
       text-align: center;
-      margin-top: 20px;
+      line-height: 1.8;
     }
 
-    .socials a img {
-      width: 32px;
-      margin: 0 10px;
-      transition: transform 0.3s;
+    .contact-icons {
+      text-align: center;
+      margin-top: 30px;
     }
 
-    .socials a img:hover {
-      transform: scale(1.1);
+    .contact-icons p {
+      margin: 10px 0;
+    }
+
+    .contact-icons img {
+      vertical-align: middle;
+      width: 24px;
+      margin-right: 8px;
+    }
+
+    .contact-icons a {
+      text-decoration: none;
+      color: #000;
+    }
+
+    .contact-icons a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -156,11 +170,22 @@
     <!-- ABOUT SECTION -->
     <div id="about" class="section">
       <h2>About Us</h2>
-      <p style="text-align: center; color: red; font-style: italic;">We help people to find and follow Jesus.</p>
-      <div class="socials">
-        <a href="https://web.facebook.com/bryangablao" target="_blank"><img src="assets/facebook.png" alt="Facebook" /></a>
-        <a href="https://www.linkedin.com/in/bryan-ablao-66734a359/" target="_blank"><img src="assets/linkedin.png" alt="LinkedIn" /></a>
-        <a href="mailto:ablaobryan4400@gmail.com"><img src="assets/gmail.png" alt="Gmail" /></a>
+      <div class="about-text">
+        <p style="color: red; font-style: italic;">We help people to find and follow Jesus.</p>
+        <p><strong>SUNDAY SERVICE - 9:00 AM</strong></p>
+        <p><strong>SUNDAY YOUTH SERVICE - 1:00 PM</strong></p>
+        <p><strong>SATURDAY PRAYER MEETING - 4:00 PM</strong></p>
+        <p style="color: red; font-weight: bold;">EVERYONE IS WELCOME!</p>
+        <p><em>Matthew 9:12 — "It is not the healthy who need a doctor, but the sick."</em></p>
+        <p>We are located at Km 5 Buhangin, in front of Goldilocks, Davao City, Philippines, 8000</p>
+        <p><strong>Please contact us at 0927-599-2593</strong></p>
+      </div>
+
+      <div class="contact-icons">
+        <p><img src="assets/contact-information.png" alt="Contact"> 0927-599-2593</p>
+        <p><a href="https://www.facebook.com/davaoccc" target="_blank"><img src="assets/facebook.png" alt="Facebook"> https://www.facebook.com/davaoccc</a></p>
+        <p><img src="assets/gmail.png" alt="Gmail"> jgapinoy@gmail.com</p>
+        <p><img src="assets/web.png" alt="Website"> nations.ph</p>
       </div>
     </div>
   </div>
@@ -174,14 +199,12 @@
     }
 
     function loginUser() {
-      // Here you can validate and authenticate via Firebase
       const email = document.getElementById('loginUsername').value;
       const password = document.getElementById('loginPassword').value;
 
       if (email && password) {
-        // TODO: Replace with Firebase logic
         alert("Logged in successfully! Redirecting...");
-        window.location.href = "home.html"; // Update path if different
+        window.location.href = "home.html";
       } else {
         alert("Please enter both email and password.");
       }
@@ -198,7 +221,6 @@
       }
 
       if (email && password) {
-        // TODO: Replace with Firebase logic
         alert("Registered successfully!");
         showSection('login');
       } else {
