@@ -75,22 +75,24 @@
 
     .profile-pic-container {
       position: relative;
-      width: 160px;
-      height: 160px;
+      width: 220px;
+      height: 220px;
       border-radius: 50%;
       overflow: hidden;
-      margin: -80px auto 20px;
+      margin: -110px auto 20px;
       border: 5px solid white;
       background-color: #f0f0f0;
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .profile-pic-container img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border-radius: 50%;
     }
 
     .upload-profile {
@@ -110,6 +112,7 @@
       text-align: center;
       font-weight: bold;
       font-size: 14px;
+      border-radius: 50%;
     }
 
     .profile-pic-container:hover .upload-profile {
@@ -122,6 +125,7 @@
 
     .profile-info {
       padding: 20px 30px 30px;
+      margin-top: 20px;
     }
 
     .profile-info .row {
@@ -135,15 +139,14 @@
       padding: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
-      max-width: 250px;
+      max-width: 200px;
     }
 
     #email {
-      max-width: 250px;
+      max-width: 200px;
     }
 
     .edit-button {
-      display: none;
       margin-left: 10px;
       padding: 6px 12px;
       font-size: 14px;
@@ -157,6 +160,7 @@
       border-radius: 5px;
       font-weight: bold;
       cursor: pointer;
+      margin-top: 10px;
     }
 
     .submit-btn:hover {
@@ -169,6 +173,7 @@
       padding: 20px 30px;
       border-top: 1px solid #ccc;
       background: #f9f9f9;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     }
 
     .post {
@@ -178,6 +183,30 @@
       margin-top: 15px;
       text-align: left;
       box-shadow: 0 0 5px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .post-actions button {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .post-actions .edit-btn, .post-actions .delete-btn, .post-actions .report-btn {
+      font-size: 14px;
+      color: #2b5dad;
+    }
+
+    .post-actions .edit-btn:hover, .post-actions .delete-btn:hover, .post-actions .report-btn:hover {
+      color: #ff5757;
     }
 
     textarea {
@@ -214,15 +243,15 @@
 
     <div class="profile-info">
       <div class="row">
-        <input type="text" id="firstName" placeholder="First Name" />
-        <input type="text" id="middleName" placeholder="Middle Name" />
-        <input type="text" id="lastName" placeholder="Last Name" />
+        <input type="text" id="firstName" placeholder="First Name" readonly />
+        <input type="text" id="middleName" placeholder="Middle Name" readonly />
+        <input type="text" id="lastName" placeholder="Last Name" readonly />
       </div>
       <div class="row">
-        <input type="email" id="email" placeholder="Email" />
+        <input type="email" id="email" placeholder="Email" readonly />
         <button id="editBtn" class="edit-button" onclick="enableEditing()">Edit</button>
       </div>
-      <button class="submit-btn" onclick="saveProfile()">Save Profile</button>
+      <button id="saveBtn" class="submit-btn" onclick="saveProfile()" style="display: none;">Save Profile</button>
     </div>
 
     <div class="posts-section">
@@ -233,119 +262,76 @@
     </div>
   </div>
 
-  <script type="module">
-    import { auth, db, storage } from './firebase-config.js';
-    import { doc, getDoc, setDoc, addDoc, collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
-    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
-    import { ref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
-
-    onAuthStateChanged(auth, user => {
-      if (!user) {
-        window.location.href = 'index.html';
-      } else {
-        loadProfile(user);
-        loadPosts(user);
-      }
-    });
-
-    function loadProfile(user) {
-      const userRef = doc(db, "users", user.uid);
-      getDoc(userRef).then(docSnap => {
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          document.getElementById("firstName").value = data.firstName || "";
-          document.getElementById("middleName").value = data.middleName || "";
-          document.getElementById("lastName").value = data.lastName || "";
-          document.getElementById("email").value = data.email || user.email;
-          if (data.profilePicUrl) document.getElementById("profilePic").src = data.profilePicUrl;
-          if (data.wallpaperUrl) document.getElementById("wallpaperContainer").style.backgroundImage = `url('${data.wallpaperUrl}')`;
-        }
-      });
-    }
-
-    function saveProfile() {
-      const user = auth.currentUser;
-      const data = {
-        firstName: document.getElementById("firstName").value,
-        middleName: document.getElementById("middleName").value,
-        lastName: document.getElementById("lastName").value,
-        email: document.getElementById("email").value
-      };
-
-      setDoc(doc(db, "users", user.uid), data, { merge: true })
-        .then(() => {
-          document.getElementById("editBtn").style.display = 'inline-block';
-          alert("Profile saved successfully.");
-        })
-        .catch(console.error);
-    }
-
-    function enableEditing() {
-      document.querySelectorAll(".profile-info input").forEach(input => input.removeAttribute("readonly"));
-    }
-
+  <script>
     function uploadProfilePic(event) {
-      const user = auth.currentUser;
       const file = event.target.files[0];
-      const storageRef = ref(storage, `profile_pics/${user.uid}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on('state_changed', null, 
-        error => console.error(error),
-        () => getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
-          document.getElementById("profilePic").src = downloadURL;
-          setDoc(doc(db, "users", user.uid), { profilePicUrl: downloadURL }, { merge: true });
-        })
-      );
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('profilePic').src = e.target.result;
+      }
+      reader.readAsDataURL(file);
     }
 
     function uploadWallpaperPic(event) {
-      const user = auth.currentUser;
       const file = event.target.files[0];
-      const storageRef = ref(storage, `wallpapers/${user.uid}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on('state_changed', null,
-        error => console.error(error),
-        () => getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
-          document.getElementById("wallpaperContainer").style.backgroundImage = `url('${downloadURL}')`;
-          setDoc(doc(db, "users", user.uid), { wallpaperUrl: downloadURL }, { merge: true });
-        })
-      );
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('wallpaperContainer').style.backgroundImage = `url(${e.target.result})`;
+      }
+      reader.readAsDataURL(file);
     }
 
-    async function createPost() {
-      const user = auth.currentUser;
-      const content = document.getElementById("newPost").value.trim();
-      if (!content) return alert("Please write something!");
-
-      const post = {
-        uid: user.uid,
-        username: user.displayName || user.email.split('@')[0],
-        content: content,
-        time: new Date().toLocaleString()
-      };
-
-      await addDoc(collection(db, "posts"), post);
-      document.getElementById("newPost").value = "";
-      loadPosts(user);
+    function enableEditing() {
+      document.getElementById('firstName').removeAttribute('readonly');
+      document.getElementById('middleName').removeAttribute('readonly');
+      document.getElementById('lastName').removeAttribute('readonly');
+      document.getElementById('email').removeAttribute('readonly');
+      document.getElementById('saveBtn').style.display = 'inline-block';
+      document.getElementById('editBtn').style.display = 'none';
     }
 
-    async function loadPosts(user) {
-      const postList = document.getElementById("postList");
-      postList.innerHTML = '';
+    function saveProfile() {
+      document.getElementById('firstName').setAttribute('readonly', true);
+      document.getElementById('middleName').setAttribute('readonly', true);
+      document.getElementById('lastName').setAttribute('readonly', true);
+      document.getElementById('email').setAttribute('readonly', true);
+      document.getElementById('saveBtn').style.display = 'none';
+      document.getElementById('editBtn').style.display = 'inline-block';
+    }
 
-      const q = query(collection(db, "posts"), where("uid", "==", user.uid));
-      const querySnapshot = await getDocs(q);
+    function createPost() {
+      const postText = document.getElementById('newPost').value.trim();
+      if (!postText) return;
+      const post = document.createElement('div');
+      post.className = 'post';
+      post.innerHTML = `
+        <div>${postText}</div>
+        <div class="post-actions">
+          <button class="edit-btn" onclick="editPost(this)">✏️</button>
+          <button class="delete-btn" onclick="deletePost(this)">❌</button>
+          <button class="report-btn" onclick="reportPost(this)">⚠️</button>
+        </div>
+      `;
+      document.getElementById('postList').prepend(post);
+      document.getElementById('newPost').value = '';
+    }
 
-      querySnapshot.forEach(doc => {
-        const post = doc.data();
-        const div = document.createElement("div");
-        div.className = "post";
-        div.innerHTML = `
-          <strong>${post.username}</strong> <small>(${post.time})</small><br>
-          <p>${post.content}</p>
-        `;
-        postList.prepend(div);
-      });
+    function editPost(button) {
+      const post = button.closest('.post');
+      const text = post.querySelector('div');
+      const newText = prompt("Edit your post:", text.textContent);
+      if (newText) {
+        text.textContent = newText;
+      }
+    }
+
+    function deletePost(button) {
+      const post = button.closest('.post');
+      post.remove();
+    }
+
+    function reportPost(button) {
+      alert("Reported this post!");
     }
   </script>
 </body>
