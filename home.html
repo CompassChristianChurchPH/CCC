@@ -169,7 +169,7 @@
     function logoutUser() {
       auth.signOut()
         .then(() => {
-          window.location.href = 'https://davaoph.github.io/CCC/index.html'; // Redirect to live login page
+          window.location.href = '/CCC/index.html'; // Redirect to live login page
         })
         .catch(err => alert("Logout error: " + err.message));
     }
