@@ -289,22 +289,30 @@
 
   <script>
     function uploadProfilePic(event) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('profilePic').src = e.target.result;
-      }
-      reader.readAsDataURL(file);
-    }
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('previewProfileImage').src = e.target.result;
+    document.getElementById('profilePreview').style.display = 'block';
 
-    function uploadWallpaperPic(event) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        document.getElementById('wallpaperContainer').style.backgroundImage = `url(${e.target.result})`;
-      }
-      reader.readAsDataURL(file);
-    }
+    // Optionally auto-update the profile pic immediately:
+    document.getElementById('profilePic').src = e.target.result;
+  };
+  if (file) reader.readAsDataURL(file);
+}
+
+function uploadWallpaperPic(event) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('previewWallpaperImage').src = e.target.result;
+    document.getElementById('wallpaperPreview').style.display = 'block';
+
+    // Optionally auto-update the wallpaper immediately:
+    document.getElementById('wallpaperContainer').style.backgroundImage = `url(${e.target.result})`;
+  };
+  if (file) reader.readAsDataURL(file);
+}
 
     function enableEditing() {
   document.getElementById('profileForm').style.display = 'block';
