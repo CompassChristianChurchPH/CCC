@@ -10,60 +10,65 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
-      background: #f2f2f2;
+      background-color: #f1f3f6;
       color: #333;
     }
 
     header {
-      background-color: skyblue;
+      background-color: #2b5dad;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 30px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 15px 25px;
+      color: white;
+      flex-wrap: wrap;
     }
 
     header h1 {
-      font-size: 24px;
+      font-size: 1.5rem;
       display: flex;
       align-items: center;
-      font-weight: bold;
-      color: #0000cc;
     }
 
     header h1 img {
-      height: 32px;
+      height: 35px;
       margin-right: 10px;
     }
 
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
     nav button {
+      padding: 8px 14px;
       background-color: white;
-      border: 2px solid #0000cc;
-      color: #0000cc;
-      padding: 8px 16px;
-      margin-left: 10px;
-      border-radius: 5px;
+      color: #2b5dad;
+      border: 2px solid #2b5dad;
+      border-radius: 6px;
+      font-weight: 600;
       cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s;
+      transition: all 0.2s ease;
     }
 
     nav button:hover {
-      background-color: #0000cc;
+      background-color: #2b5dad;
       color: white;
     }
 
     .container {
       max-width: 600px;
       margin: 40px auto;
-      padding: 20px;
+      padding: 30px;
       background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
 
     .section {
@@ -77,30 +82,33 @@
     h2 {
       margin-bottom: 20px;
       text-align: center;
-      color: #0000cc;
+      color: #2b5dad;
     }
 
     form input {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-bottom: 15px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-size: 1rem;
     }
 
     .submit-btn {
       width: 100%;
-      padding: 10px;
-      background-color: #0000cc;
+      padding: 12px;
+      background-color: #2b5dad;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s ease;
     }
 
     .submit-btn:hover {
-      background-color: #000099;
+      background-color: #1e4582;
     }
 
     .about-text {
@@ -125,18 +133,34 @@
 
     .contact-icons a {
       text-decoration: none;
-      color: #000;
+      color: #2b5dad;
     }
 
     .contact-icons a:hover {
       text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav {
+        justify-content: center;
+        margin-top: 10px;
+      }
+
+      .container {
+        padding: 20px;
+      }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
+    <h1><img src="assets/ccc icon.png" alt="CCC Icon"> Compass Christian Church</h1>
     <nav>
       <button onclick="showSection('login')">Login</button>
       <button onclick="showSection('register')">Register</button>
@@ -183,7 +207,7 @@
 
       <div class="contact-icons">
         <p><img src="assets/contact-information.png" alt="Contact"> 0927-599-2593</p>
-        <p><a href="https://www.facebook.com/davaoccc" target="_blank"><img src="assets/facebook.png" alt="Facebook"> https://www.facebook.com/davaoccc</a></p>
+        <p><a href="https://www.facebook.com/davaoccc" target="_blank"><img src="assets/facebook.png" alt="Facebook"> facebook.com/davaoccc</a></p>
         <p><img src="assets/gmail.png" alt="Gmail"> jgapinoy@gmail.com</p>
         <p><img src="assets/web.png" alt="Website"> nations.ph</p>
       </div>
@@ -192,10 +216,8 @@
 
   <script>
     function showSection(id) {
-      const sections = document.querySelectorAll('.section');
-      sections.forEach(section => section.classList.remove('active'));
-      const selected = document.getElementById(id);
-      if (selected) selected.classList.add('active');
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
     }
 
     function loginUser() {
