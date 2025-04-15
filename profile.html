@@ -106,8 +106,7 @@
     }
 
     .profile-info input[type="email"] {
-      width: auto; /* Adjusted to fit email length */
-      display: inline-block;
+      width: 100%; /* Adjusted to match all other inputs */
     }
 
     .submit-btn {
@@ -125,6 +124,26 @@
 
     .submit-btn:hover {
       background: #1f4d8d;
+    }
+
+    .profile-info {
+      margin-top: 10px;
+    }
+
+    .profile-info span {
+      font-weight: bold;
+    }
+
+    .profile-info .edit-btn {
+      background: transparent;
+      border: none;
+      color: #2b5dad;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .profile-info .edit-btn:hover {
+      color: #1f4d8d;
     }
 
     .posts-section {
@@ -195,6 +214,8 @@
       <input type="text" id="lastName" placeholder="Last Name">
       <input type="email" id="profileEmail" placeholder="Email" required>
       <button class="submit-btn" onclick="saveProfile()">Save Profile</button>
+
+      <div id="profileDetails"></div>
     </div>
 
     <div class="posts-section">
@@ -225,7 +246,9 @@
       getDoc(userRef).then((docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
-          document.getElementById("profileUsername").value = data.username || user.email.split('@')[0];
+          document.getElementById("firstName").value = data.firstName || '';
+          document.getElementById("middleName").value = data.middleName || '';
+          document.getElementById("lastName").value = data.lastName || '';
           document.getElementById("profileEmail").value = data.email || user.email;
           if (data.profilePicUrl) {
             document.getElementById("profilePic").src = data.profilePicUrl;
@@ -239,23 +262,30 @@
 
     function saveProfile() {
       const user = auth.currentUser;
-      const email = document.getElementById("profileEmail").value;
       const firstName = document.getElementById("firstName").value;
       const middleName = document.getElementById("middleName").value;
       const lastName = document.getElementById("lastName").value;
+      const email = document.getElementById("profileEmail").value;
 
-      if (!validateEmail(email)) {
-        return alert('Please enter a valid email address.');
+      if (!firstName || !lastName || !email) {
+        return alert('Please fill in all the fields!');
       }
 
       setDoc(doc(db, "users", user.uid), { firstName, middleName, lastName, email }, { merge: true })
-        .then(() => alert('Profile updated successfully!'))
+        .then(() => {
+          // Display the profile info after saving
+          const fullName = `${firstName} ${middleName} ${lastName}`;
+          document.getElementById("profileDetails").innerHTML = `
+            <p>${fullName}</p>
+            <p>${email} <button class="edit-btn" onclick="editProfile()">Edit</button></p>
+          `;
+        })
         .catch((error) => console.error('Error updating profile: ', error));
     }
 
-    function validateEmail(email) {
-      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      return regex.test(email);
+    function editProfile() {
+      // Allow user to edit profile fields again
+      document.getElementById("firstName").focus();
     }
 
     function uploadProfilePic(event) {
