@@ -2,20 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Profile - Compass Christian Church</title>
-  <link rel="icon" type="image/png" href="assets/ccc icon.png" />
+  <link rel="icon" type="image/png" href="assets/ccc icon.png"/>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      background-color: #f4f6f9;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background-color: #eef1f5; }
 
     header {
       background-color: #2b5dad;
@@ -25,18 +17,12 @@
       justify-content: space-between;
       align-items: center;
     }
-
     header h1 {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-
-    header h1 img {
-      width: 32px;
-      height: 32px;
-    }
-
+    header h1 img { width: 32px; height: 32px; }
     nav button {
       margin-left: 10px;
       padding: 8px 12px;
@@ -47,152 +33,142 @@
       font-weight: bold;
       cursor: pointer;
     }
-
     nav button:hover {
       background-color: #f0f0f0;
+      color: #2b5dad;
     }
 
     .container {
       max-width: 800px;
       margin: 40px auto;
       background: white;
+      padding: 0;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
       overflow: hidden;
     }
 
     .wallpaper-container {
       position: relative;
       height: 250px;
-      background-color: #dce3ec;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
+      background-color: #ccc;
+      background-size: cover;
+      background-position: center;
+      text-align: center;
     }
 
-    .wallpaper-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .upload-wallpaper-label {
+    .upload-wallpaper {
       position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.4);
       color: white;
-      background-color: rgba(0, 0, 0, 0.5);
       padding: 10px 20px;
-      border-radius: 5px;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
     }
 
-    #uploadWallpaper {
+    .upload-wallpaper input {
       display: none;
     }
 
-    .profile-section {
-      padding: 20px;
-      padding-top: 60px;
+    .profile-pic-container {
       position: relative;
-    }
-
-    .profile-picture-wrapper {
-      position: absolute;
-      top: -50px;
-      left: 30px;
-      width: 100px;
-      height: 100px;
+      width: 160px;
+      height: 160px;
       border-radius: 50%;
       overflow: hidden;
-      border: 3px solid white;
-      background-color: #ccc;
+      margin: -80px auto 20px;
+      border: 5px solid white;
+      background-color: #f0f0f0;
       display: flex;
-      justify-content: center;
       align-items: center;
-      cursor: pointer;
+      justify-content: center;
     }
 
-    .profile-picture-wrapper img {
+    .profile-pic-container img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
-    .upload-profile-label {
+    .upload-profile {
       position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.5);
       color: white;
-      font-size: 14px;
-      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease;
       text-align: center;
-      pointer-events: none;
+      font-weight: bold;
+      font-size: 14px;
     }
 
-    #uploadPic {
+    .profile-pic-container:hover .upload-profile {
+      opacity: 1;
+    }
+
+    .upload-profile input {
       display: none;
     }
 
     .profile-info {
-      margin-top: 30px;
+      padding: 20px 30px 30px;
     }
 
-    .profile-row {
+    .profile-info .row {
       display: flex;
       gap: 10px;
       margin-bottom: 10px;
     }
 
-    .profile-row input {
+    .profile-info input {
       flex: 1;
       padding: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
-      width: 100%;
-      max-width: 200px;
-    }
-
-    .email-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .email-row input {
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      width: 100%;
       max-width: 250px;
     }
 
-    .email-row button {
-      margin-left: 15px;
-      padding: 8px 12px;
-      background-color: white;
-      border: 1px solid #2b5dad;
-      color: #2b5dad;
-      border-radius: 5px;
-      cursor: pointer;
+    #email {
+      max-width: 250px;
+    }
+
+    .edit-button {
+      display: none;
+      margin-left: 10px;
+      padding: 6px 12px;
+      font-size: 14px;
     }
 
     .submit-btn {
       background: white;
       color: #2b5dad;
-      border: 1px solid #2b5dad;
+      border: 2px solid #2b5dad;
       padding: 8px 16px;
       border-radius: 5px;
       font-weight: bold;
       cursor: pointer;
     }
 
+    .submit-btn:hover {
+      background-color: #2b5dad;
+      color: white;
+    }
+
     .posts-section {
-      margin-top: 40px;
-      padding: 20px;
-      background: #f9f9f9;
+      margin-top: 30px;
+      padding: 20px 30px;
       border-top: 1px solid #ccc;
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      background: #f9f9f9;
     }
 
     .post {
@@ -201,7 +177,7 @@
       border-radius: 8px;
       margin-top: 15px;
       text-align: left;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
     }
 
     textarea {
@@ -221,33 +197,32 @@
   </header>
 
   <div class="container">
-    <div class="wallpaper-container">
-      <label for="uploadWallpaper" class="upload-wallpaper-label">Upload Wallpaper</label>
-      <input type="file" id="uploadWallpaper" accept="image/*" />
-      <img id="wallpaperImage" src="" alt="Wallpaper" style="display: none;">
+    <div class="wallpaper-container" id="wallpaperContainer">
+      <label class="upload-wallpaper">
+        Upload Wallpaper
+        <input type="file" id="uploadWallpaper" accept="image/*" onchange="uploadWallpaperPic(event)">
+      </label>
     </div>
 
-    <div class="profile-section">
-      <label for="uploadPic" class="profile-picture-wrapper">
-        <img id="profilePic" src="" alt="Profile Picture">
-        <span class="upload-profile-label">Upload Profile Picture</span>
-        <input type="file" id="uploadPic" accept="image/*">
+    <div class="profile-pic-container">
+      <img id="profilePic" src="" alt="" />
+      <label class="upload-profile">
+        Upload Profile Picture
+        <input type="file" id="uploadPic" accept="image/*" onchange="uploadProfilePic(event)">
       </label>
+    </div>
 
-      <div class="profile-info">
-        <div class="profile-row">
-          <input type="text" id="firstName" placeholder="First Name">
-          <input type="text" id="middleName" placeholder="Middle Name">
-          <input type="text" id="lastName" placeholder="Last Name">
-        </div>
-
-        <div class="email-row">
-          <input type="email" id="profileEmail" placeholder="Email" required>
-          <button onclick="saveProfile()">Edit</button>
-        </div>
-
-        <button class="submit-btn" onclick="saveProfile()">Save Profile</button>
+    <div class="profile-info">
+      <div class="row">
+        <input type="text" id="firstName" placeholder="First Name" />
+        <input type="text" id="middleName" placeholder="Middle Name" />
+        <input type="text" id="lastName" placeholder="Last Name" />
       </div>
+      <div class="row">
+        <input type="email" id="email" placeholder="Email" />
+        <button id="editBtn" class="edit-button" onclick="enableEditing()">Edit</button>
+      </div>
+      <button class="submit-btn" onclick="saveProfile()">Save Profile</button>
     </div>
 
     <div class="posts-section">
@@ -257,5 +232,121 @@
       <div id="postList"></div>
     </div>
   </div>
+
+  <script type="module">
+    import { auth, db, storage } from './firebase-config.js';
+    import { doc, getDoc, setDoc, addDoc, collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+    import { ref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
+
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        window.location.href = 'index.html';
+      } else {
+        loadProfile(user);
+        loadPosts(user);
+      }
+    });
+
+    function loadProfile(user) {
+      const userRef = doc(db, "users", user.uid);
+      getDoc(userRef).then(docSnap => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById("firstName").value = data.firstName || "";
+          document.getElementById("middleName").value = data.middleName || "";
+          document.getElementById("lastName").value = data.lastName || "";
+          document.getElementById("email").value = data.email || user.email;
+          if (data.profilePicUrl) document.getElementById("profilePic").src = data.profilePicUrl;
+          if (data.wallpaperUrl) document.getElementById("wallpaperContainer").style.backgroundImage = `url('${data.wallpaperUrl}')`;
+        }
+      });
+    }
+
+    function saveProfile() {
+      const user = auth.currentUser;
+      const data = {
+        firstName: document.getElementById("firstName").value,
+        middleName: document.getElementById("middleName").value,
+        lastName: document.getElementById("lastName").value,
+        email: document.getElementById("email").value
+      };
+
+      setDoc(doc(db, "users", user.uid), data, { merge: true })
+        .then(() => {
+          document.getElementById("editBtn").style.display = 'inline-block';
+          alert("Profile saved successfully.");
+        })
+        .catch(console.error);
+    }
+
+    function enableEditing() {
+      document.querySelectorAll(".profile-info input").forEach(input => input.removeAttribute("readonly"));
+    }
+
+    function uploadProfilePic(event) {
+      const user = auth.currentUser;
+      const file = event.target.files[0];
+      const storageRef = ref(storage, `profile_pics/${user.uid}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on('state_changed', null, 
+        error => console.error(error),
+        () => getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+          document.getElementById("profilePic").src = downloadURL;
+          setDoc(doc(db, "users", user.uid), { profilePicUrl: downloadURL }, { merge: true });
+        })
+      );
+    }
+
+    function uploadWallpaperPic(event) {
+      const user = auth.currentUser;
+      const file = event.target.files[0];
+      const storageRef = ref(storage, `wallpapers/${user.uid}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on('state_changed', null,
+        error => console.error(error),
+        () => getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+          document.getElementById("wallpaperContainer").style.backgroundImage = `url('${downloadURL}')`;
+          setDoc(doc(db, "users", user.uid), { wallpaperUrl: downloadURL }, { merge: true });
+        })
+      );
+    }
+
+    async function createPost() {
+      const user = auth.currentUser;
+      const content = document.getElementById("newPost").value.trim();
+      if (!content) return alert("Please write something!");
+
+      const post = {
+        uid: user.uid,
+        username: user.displayName || user.email.split('@')[0],
+        content: content,
+        time: new Date().toLocaleString()
+      };
+
+      await addDoc(collection(db, "posts"), post);
+      document.getElementById("newPost").value = "";
+      loadPosts(user);
+    }
+
+    async function loadPosts(user) {
+      const postList = document.getElementById("postList");
+      postList.innerHTML = '';
+
+      const q = query(collection(db, "posts"), where("uid", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach(doc => {
+        const post = doc.data();
+        const div = document.createElement("div");
+        div.className = "post";
+        div.innerHTML = `
+          <strong>${post.username}</strong> <small>(${post.time})</small><br>
+          <p>${post.content}</p>
+        `;
+        postList.prepend(div);
+      });
+    }
+  </script>
 </body>
 </html>
