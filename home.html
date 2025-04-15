@@ -6,12 +6,6 @@
   <title>Home - Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc%20icon.png" />
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-  <script src="firebase-config.js"></script>
-
   <style>
     * {
       margin: 0;
@@ -24,6 +18,11 @@
       background-color: #f1f3f6;
       color: #333;
       text-align: center;
+    }
+
+    body.dark-mode {
+      background-color: #1c1c1c;
+      color: white;
     }
 
     header {
@@ -84,6 +83,11 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
 
+    .dark-mode .dashboard {
+      background-color: #2c2c2c;
+      color: white;
+    }
+
     .welcome {
       font-size: 1.7rem;
       font-weight: bold;
@@ -133,7 +137,7 @@
   <div class="container">
     <div class="dashboard">
       <div class="welcome">
-        Welcome to Compass Christian Church, <span id="userWelcome">User</span>!
+        Welcome to Compass Christian Church Website, <span id="userWelcome">User</span>!
       </div>
       <div class="message">
         You can now access your profile and other features.
@@ -142,6 +146,14 @@
   </div>
 
   <script>
+    // Load the theme from localStorage and apply it
+    window.onload = function() {
+      const theme = localStorage.getItem("theme") || "light";
+      if (theme === "dark") {
+        document.body.classList.add("dark-mode");
+      }
+    };
+
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
