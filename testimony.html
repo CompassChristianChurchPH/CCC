@@ -146,10 +146,6 @@
     <h1><img src="assets/ccc icon.png" alt="CCC Icon"> CCC</h1>
     <nav>
       <button onclick="location.href='home.html'">Home</button>
-      <button onclick="location.href='profile.html'">Profile</button>
-      <button onclick="window.open('https://www.bible.com/bible', '_blank')">Bible</button>
-      <button onclick="location.href='testimony.html'">Testimony</button>
-      <button onclick="logoutUser()">Logout</button>
     </nav>
   </header>
 
@@ -242,12 +238,6 @@
           console.error("Error adding testimony: ", error);
           alert("There was an issue submitting your testimony. Please try again.");
         });
-    }
-
-    // Function to logout
-    function logoutUser() {
-      localStorage.removeItem("ccc_loggedInUser");
-      window.location.href = "index.html"; // Redirect to home or login page
     }
 
     // Initial load
