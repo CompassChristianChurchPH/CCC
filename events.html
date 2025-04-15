@@ -161,10 +161,10 @@
             const eventDiv = document.createElement("div");
             eventDiv.className = "event";
             eventDiv.innerHTML = `
-              <h3>${event.name}</h3>
-              <p>${event.description}</p>
-              <button class="rsvp-btn" id="${rsvpId}" onclick="rsvpEvent('${eventId}', '${event.name}')">RSVP</button>
-            `;
+  <h3>${event.name}</h3>
+  <p>${event.description}</p>
+  <button class="rsvp-btn" id="${rsvpId}" onclick="rsvpEvent('${eventId}', '${event.name}')">RSVP</button>
+`;
 
             document.getElementById("eventsList").appendChild(eventDiv);
 
