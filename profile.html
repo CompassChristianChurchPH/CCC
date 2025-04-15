@@ -105,18 +105,33 @@
       border: 1px solid #ccc;
     }
 
+    .profile-info input[type="email"] {
+      width: auto; /* Adjusted to fit email length */
+      display: inline-block;
+    }
+
     .submit-btn {
       background: #2b5dad;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 8px 16px;
       border-radius: 5px;
       font-weight: bold;
       cursor: pointer;
+      width: auto;
+      margin-top: 15px;
+      display: inline-block;
+    }
+
+    .submit-btn:hover {
+      background: #1f4d8d;
     }
 
     .posts-section {
       margin-top: 40px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 15px;
+      border-radius: 10px;
     }
 
     .post {
@@ -147,6 +162,9 @@
       .profile-wallpaper {
         height: 150px;
       }
+      .profile-info input[type="email"] {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -168,10 +186,13 @@
     <div class="profile-header">
       <img id="profilePic" src="" alt="Profile Picture" onclick="document.getElementById('uploadPic').click()" />
       <input type="file" id="uploadPic" accept="image/*" onchange="uploadProfilePic(event)">
+      <div class="text-overlay">Upload Profile Picture</div>
     </div>
 
     <div class="profile-info">
-      <input type="text" id="profileUsername" placeholder="Username" readonly>
+      <input type="text" id="firstName" placeholder="First Name">
+      <input type="text" id="middleName" placeholder="Middle Name">
+      <input type="text" id="lastName" placeholder="Last Name">
       <input type="email" id="profileEmail" placeholder="Email" required>
       <button class="submit-btn" onclick="saveProfile()">Save Profile</button>
     </div>
@@ -219,12 +240,15 @@
     function saveProfile() {
       const user = auth.currentUser;
       const email = document.getElementById("profileEmail").value;
+      const firstName = document.getElementById("firstName").value;
+      const middleName = document.getElementById("middleName").value;
+      const lastName = document.getElementById("lastName").value;
 
       if (!validateEmail(email)) {
         return alert('Please enter a valid email address.');
       }
 
-      setDoc(doc(db, "users", user.uid), { email: email }, { merge: true })
+      setDoc(doc(db, "users", user.uid), { firstName, middleName, lastName, email }, { merge: true })
         .then(() => alert('Profile updated successfully!'))
         .catch((error) => console.error('Error updating profile: ', error));
     }
