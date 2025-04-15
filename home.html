@@ -151,12 +151,11 @@
       }
     });
 
-    // Logout function
     function logoutUser() {
-      auth.signOut()
-        .then(() => window.location.href = 'index.html') // Redirect to login after logging out
-        .catch(err => alert("Logout error: " + err.message)); // Handle any logout error
-    }
+  auth.signOut()
+    .then(() => window.location.href = 'https://davaoph.github.io/CCC/index.html')
+    .catch(err => alert("Logout error: " + err.message));
+}
   </script>
 
 </body>
