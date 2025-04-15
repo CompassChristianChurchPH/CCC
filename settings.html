@@ -146,22 +146,6 @@
       from { opacity: 1; }
       to { opacity: 0; }
     }
-
-    /* Mobile responsive */
-    @media (max-width: 768px) {
-      header h1 {
-        font-size: 18px;
-      }
-
-      nav button {
-        font-size: 14px;
-      }
-
-      .container {
-        margin: 20px;
-        padding: 20px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -190,81 +174,39 @@
 
   <div class="toast" id="toast">Saved!</div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
-      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
-      projectId: "compass-christian-church-4b02e",
-      storageBucket: "compass-christian-church-4b02e.appspot.com",
-      messagingSenderId: "436310011988",
-      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
-      measurementId: "G-T6EWRN2THW"
+    // Dark Mode toggle function
+    function toggleDarkMode() {
+      const isDark = document.getElementById("darkModeToggle").checked;
+      document.body.classList.toggle("dark-mode", isDark);
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    }
+
+    // Load the theme from localStorage when the page loads
+    window.onload = function() {
+      const theme = localStorage.getItem("theme") || "light";
+      if (theme === "dark") {
+        document.body.classList.add("dark-mode");
+        document.getElementById("darkModeToggle").checked = true;
+      }
     };
 
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        window.location.href = "index.html"; // Redirect if not logged in
-      } else {
-        loadSettings(user); // Load settings for logged-in user
-      }
-    });
-
+    // Update password function (optional for settings)
     function updatePassword() {
       const newPass = document.getElementById("newPassword").value.trim();
       const confirmPass = document.getElementById("confirmPassword").value.trim();
 
-      if (newPass.length < 6) {
-        return alert("Password must be at least 6 characters.");
+      if (newPass.length < 12) {
+        return alert("Password must be at least 12 characters.");
       }
 
       if (newPass !== confirmPass) {
         return alert("Passwords do not match!");
       }
 
-      const user = auth.currentUser;
-      user.updatePassword(newPass).then(() => {
-        showToast("Password updated successfully!");
-        document.getElementById("newPassword").value = "";
-        document.getElementById("confirmPassword").value = "";
-      }).catch(error => {
-        alert("Error: " + error.message);
-      });
-    }
-
-    function toggleDarkMode() {
-      const isDark = document.getElementById("darkModeToggle").checked;
-      document.body.classList.toggle("dark-mode", isDark);
-      const theme = isDark ? "dark" : "light";
-      saveThemeToFirestore(theme);
-    }
-
-    function saveThemeToFirestore(theme) {
-      const user = auth.currentUser;
-      if (!user) return;
-      db.collection("users").doc(user.uid).update({ theme }).catch(console.error);
-    }
-
-    function loadSettings(user) {
-      db.collection("users").doc(user.uid).get().then(doc => {
-        if (doc.exists) {
-          const data = doc.data();
-          const theme = data.theme || "light";
-          if (theme === "dark") {
-            document.body.classList.add("dark-mode");
-            document.getElementById("darkModeToggle").checked = true;
-          }
-        } else {
-          console.log("User data not found.");
-        }
-      }).catch(console.error);
+      alert("Password updated successfully!");
+      document.getElementById("newPassword").value = "";
+      document.getElementById("confirmPassword").value = "";
     }
   </script>
 </body>
