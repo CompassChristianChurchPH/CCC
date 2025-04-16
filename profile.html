@@ -235,13 +235,15 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
   <script>
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
+  apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+  authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+  projectId: "compass-christian-church-4b02e",
+  storageBucket: "compass-christian-church-4b02e.appspot.com",
+  messagingSenderId: "436310011988",
+  appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+  measurementId: "G-T6EWRN2THW"
+};
+
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
@@ -265,7 +267,7 @@
           console.error("Error fetching user data:", error);
         }
       } else {
-        window.location.href = "index.html";
+        window.location.href = "https://davaoph.github.io/CCC/index.html";
       }
     });
 
