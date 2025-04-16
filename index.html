@@ -6,7 +6,160 @@
   <title>Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc-icon.png" />
   <style>
-    /* (same CSS as yours — skipped here to save space, no changes needed) */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #eef2f3, #ffffff);
+      color: #333;
+    }
+
+    header {
+      background-color: #2b5dad;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      color: white;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+    }
+
+    header h1 img {
+      height: 40px;
+      margin-right: 12px;
+    }
+
+    nav {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    nav button {
+      padding: 8px 16px;
+      background-color: white;
+      color: #2b5dad;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    nav button:hover {
+      background-color: #1e4582;
+      color: white;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background-color: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #2b5dad;
+    }
+
+    form input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #2b5dad;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      font-size: 1rem;
+    }
+
+    .submit-btn:hover {
+      background-color: #1e4582;
+    }
+
+    .about-text {
+      text-align: center;
+      line-height: 1.7;
+      padding: 10px;
+    }
+
+    .about-text p {
+      margin: 12px 0;
+    }
+
+    .contact-icons {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .contact-icons p {
+      margin: 10px 0;
+    }
+
+    .contact-icons img {
+      vertical-align: middle;
+      width: 24px;
+      margin-right: 8px;
+    }
+
+    .contact-icons a {
+      text-decoration: none;
+      color: #2b5dad;
+    }
+
+    .contact-icons a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px;
+        padding: 25px;
+      }
+
+      nav {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 </head>
 <body>
@@ -25,8 +178,8 @@
     <div id="login" class="section active">
       <h2>Login</h2>
       <form onsubmit="event.preventDefault(); loginUser();">
-        <input type="text" id="loginUsername" placeholder="Email" />
-        <input type="password" id="loginPassword" placeholder="Password" />
+        <input type="email" id="loginEmail" placeholder="Email" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
         <button type="submit" class="submit-btn">Login</button>
       </form>
     </div>
@@ -35,26 +188,47 @@
     <div id="register" class="section">
       <h2>Register</h2>
       <form onsubmit="event.preventDefault(); registerUser();">
-        <input type="text" id="regUsername" placeholder="Username" />
-        <input type="email" id="regEmail" placeholder="Email" />
-        <input type="password" id="regPassword" placeholder="Password" />
-        <input type="password" id="regConfirm" placeholder="Confirm Password" />
+        <input type="text" id="firstName" placeholder="First Name (CAPS, max 12)" maxlength="12" pattern="[A-Z]+" required />
+        <input type="text" id="middleName" placeholder="Middle Name (CAPS, max 12)" maxlength="12" pattern="[A-Z]+" required />
+        <input type="text" id="lastName" placeholder="Last Name (CAPS, max 12)" maxlength="12" pattern="[A-Z]+" required />
+        <input type="text" id="birthDate" placeholder="Birthdate (MM/DD/YYYY)" pattern="\\d{2}/\\d{2}/\\d{4}" required />
+        <input type="email" id="regEmail" placeholder="Email" required />
+        <input type="password" id="regPassword" placeholder="Password (max 12)" maxlength="12" required />
+        <input type="password" id="regConfirm" placeholder="Confirm Password (max 12)" maxlength="12" required />
+        <input type="text" id="pin" placeholder="PIN (6 digits)" maxlength="6" pattern="\\d{6}" required />
         <button type="submit" class="submit-btn">Register</button>
       </form>
     </div>
 
     <!-- ABOUT SECTION -->
     <div id="about" class="section">
-      <!-- (same about section code — no changes needed) -->
+      <h2>About Us</h2>
+      <div class="about-text">
+        <p style="color: red; font-style: italic;">We help people to find and follow Jesus.</p>
+        <p><strong>SUNDAY SERVICE - 9:00 AM</strong></p>
+        <p><strong>SUNDAY YOUTH SERVICE - 1:00 PM</strong></p>
+        <p><strong>SATURDAY PRAYER MEETING - 4:00 PM</strong></p>
+        <p style="color: red; font-weight: bold;">EVERYONE IS WELCOME!</p>
+        <p><em>Matthew 9:12 — "It is not the healthy who need a doctor, but the sick."</em></p>
+        <p>We are located at Km 5 Buhangin, in front of Goldilocks, Davao City, Philippines, 8000</p>
+        <p><strong>Please contact us at 0927-599-2593</strong></p>
+      </div>
+
+      <div class="contact-icons">
+        <p><img src="assets/contact-information.png" alt="Contact"> 0927-599-2593</p>
+        <p><a href="https://www.facebook.com/davaoccc" target="_blank"><img src="assets/facebook.png" alt="Facebook"> facebook.com/davaoccc</a></p>
+        <p><img src="assets/gmail.png" alt="Gmail"> jgapinoy@gmail.com</p>
+        <p><a href="https://nations.ph" target="_blank"><img src="assets/web.png" alt="Website"> nations.ph</a></p>
+      </div>
+
+      <img src="assets/churchdvo.jpg" alt="Church Image" style="margin-top: 20px; max-width: 100%; border-radius: 12px;" />
     </div>
   </div>
 
-  <!-- 🔥 Firebase CDN scripts -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-
+  <!-- FIREBASE CONFIG -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
   <script>
-    // ✅ Initialize Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
       authDomain: "compass-christian-church-4b02e.firebaseapp.com",
@@ -66,7 +240,6 @@
     };
 
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
 
     function showSection(id) {
       document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
@@ -74,10 +247,10 @@
     }
 
     function loginUser() {
-      const email = document.getElementById("loginUsername").value;
+      const email = document.getElementById("loginEmail").value;
       const password = document.getElementById("loginPassword").value;
 
-      auth.signInWithEmailAndPassword(email, password)
+      firebase.auth().signInWithEmailAndPassword(email, password)
         .then(userCredential => {
           alert("Logged in successfully!");
           window.location.href = "home.html";
@@ -97,7 +270,12 @@
         return;
       }
 
-      auth.createUserWithEmailAndPassword(email, password)
+      if (password.length > 12) {
+        alert("Password must be 12 characters or less.");
+        return;
+      }
+
+      firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(userCredential => {
           alert("Registered successfully!");
           showSection('login');
@@ -107,5 +285,6 @@
         });
     }
   </script>
+
 </body>
 </html>
