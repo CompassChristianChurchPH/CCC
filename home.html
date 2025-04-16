@@ -181,16 +181,28 @@
     const db = firebase.firestore();
 
     auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        const uid = user.uid;
-        document.getElementById('fullName').textContent = ` ${user.displayName}`;
+  if (user) {
+    const uid = user.uid;
 
-        // Load posts from Firestore
-        loadPosts();
-      } else {
-        window.location.href = "https://davaoph.github.io/CCC/index.html";
-      }
-    });
+    // Fetch fullName from Firestore
+    const userRef = db.collection('users').doc(uid);  // Adjust the collection name if needed
+    const userDoc = await userRef.get();
+
+    if (userDoc.exists) {
+      const userData = userDoc.data();
+      const fullName = userData.fullName || "User";  // Fallback to "User" if fullName is not available
+      document.getElementById('fullName').textContent = ` ${fullName}`;
+    } else {
+      console.error("User document not found");
+    }
+
+    // Load posts from Firestore
+    loadPosts();
+  } else {
+    window.location.href = "https://davaoph.github.io/CCC/index.html";
+  }
+});
+
 
     async function loadPosts() {
       const postsContainer = document.getElementById('postList');
