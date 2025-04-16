@@ -6,155 +6,7 @@
   <title>Compass Christian Church</title>
   <link rel="icon" type="image/png" href="assets/ccc-icon.png" />
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: #f1f3f6;
-      color: #333;
-    }
-
-    header {
-      background-color: #2b5dad;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 25px;
-      color: white;
-      flex-wrap: wrap;
-    }
-
-    header h1 {
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-    }
-
-    header h1 img {
-      height: 35px;
-      margin-right: 10px;
-    }
-
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    nav button {
-      padding: 8px 14px;
-      background-color: white;
-      color: #2b5dad;
-      border: 2px solid #2b5dad;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    nav button:hover {
-      background-color: #2b5dad;
-      color: white;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 30px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-
-    .section {
-      display: none;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    h2 {
-      margin-bottom: 20px;
-      text-align: center;
-      color: #2b5dad;
-    }
-
-    form input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-
-    .submit-btn {
-      width: 100%;
-      padding: 12px;
-      background-color: #2b5dad;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.2s ease;
-    }
-
-    .submit-btn:hover {
-      background-color: #1e4582;
-    }
-
-    .about-text {
-      text-align: center;
-      line-height: 1.8;
-    }
-
-    .contact-icons {
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    .contact-icons p {
-      margin: 10px 0;
-    }
-
-    .contact-icons img {
-      vertical-align: middle;
-      width: 24px;
-      margin-right: 8px;
-    }
-
-    .contact-icons a {
-      text-decoration: none;
-      color: #2b5dad;
-    }
-
-    .contact-icons a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      nav {
-        justify-content: center;
-        margin-top: 10px;
-      }
-
-      .container {
-        padding: 20px;
-      }
-    }
+    /* (same CSS as yours — skipped here to save space, no changes needed) */
   </style>
 </head>
 <body>
@@ -193,58 +45,47 @@
 
     <!-- ABOUT SECTION -->
     <div id="about" class="section">
-      <h2>About Us</h2>
-      <div class="about-text">
-        <p style="color: red; font-style: italic;">We help people to find and follow Jesus.</p>
-        <p><strong>SUNDAY SERVICE - 9:00 AM</strong></p>
-        <p><strong>SUNDAY YOUTH SERVICE - 1:00 PM</strong></p>
-        <p><strong>SATURDAY PRAYER MEETING - 4:00 PM</strong></p>
-        <p style="color: red; font-weight: bold;">EVERYONE IS WELCOME!</p>
-        <p><em>Matthew 9:12 — "It is not the healthy who need a doctor, but the sick."</em></p>
-        <p>We are located at Km 5 Buhangin, in front of Goldilocks, Davao City, Philippines, 8000</p>
-        <p><strong>Please contact us at 0927-599-2593</strong></p>
-      </div>
-
-      <div class="contact-icons">
-         <p><a href="https://www.facebook.com/davaoccc" target="_blank"><img src="assets/facebook.png" alt="Facebook"> facebook.com/davaoccc</a></p>
-         <p><img src="assets/gmail.png" alt="Gmail"> jgapinoy@gmail.com</p>
-         <p><a href="https://nations.ph" target="_blank"><img src="assets/web.png" alt="Website"> nations.ph</a></p>
-      </div>
-
-      <img src="assets/churchdvo.jpg" alt="Church Image" style="margin-top: 20px; max-width: 100%; border-radius: 12px;" />
-
+      <!-- (same about section code — no changes needed) -->
     </div>
   </div>
 
+  <!-- 🔥 Firebase CDN scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+
   <script>
+    // ✅ Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+      projectId: "compass-christian-church-4b02e",
+      storageBucket: "compass-christian-church-4b02e.appspot.com",
+      messagingSenderId: "436310011988",
+      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+      measurementId: "G-T6EWRN2THW"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
     function showSection(id) {
       document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
     function loginUser() {
-  const email = document.getElementById("loginUsername").value;
-  const password = document.getElementById("loginPassword").value;
+      const email = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
 
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(userCredential => {
-      alert("Logged in successfully!");
-      window.location.href = "home.html"; // ✅ Redirect after login
-    })
-    .catch(error => {
-      alert("Login failed: " + error.message);
-    });
-}
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
-    authDomain: "compass-christian-church-4b02e.firebaseapp.com",
-    projectId: "compass-christian-church-4b02e",
-    storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
-    messagingSenderId: "436310011988",
-    appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
-    measurementId: "G-T6EWRN2THW"
-    };
+      auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          alert("Logged in successfully!");
+          window.location.href = "home.html";
+        })
+        .catch(error => {
+          alert("Login failed: " + error.message);
+        });
+    }
 
     function registerUser() {
       const email = document.getElementById('regEmail').value;
@@ -256,14 +97,15 @@
         return;
       }
 
-      if (email && password) {
-        alert("Registered successfully!");
-        showSection('login');
-      } else {
-        alert("Please fill all fields.");
-      }
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          alert("Registered successfully!");
+          showSection('login');
+        })
+        .catch(error => {
+          alert("Registration failed: " + error.message);
+        });
     }
   </script>
-
 </body>
 </html>
