@@ -22,17 +22,18 @@
     header {
       background-color: #2b5dad;
       color: white;
-      padding: 15px 20px;
+      padding: 12px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     header h1 {
       display: flex;
       align-items: center;
+      font-size: 1.4rem;
       gap: 10px;
-      font-size: 20px;
     }
 
     header h1 img {
@@ -40,8 +41,13 @@
       height: 32px;
     }
 
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
     nav button {
-      margin-left: 8px;
       padding: 8px 14px;
       border: none;
       border-radius: 5px;
@@ -49,21 +55,20 @@
       color: #2b5dad;
       font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.2s ease;
     }
 
     nav button:hover {
-      background-color: #e0e0e0;
+      background-color: #e6e6e6;
     }
 
     .container {
       max-width: 700px;
       margin: 40px auto;
       background: white;
-      padding: 30px;
+      padding: 25px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      transition: background 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     }
 
     h2 {
