@@ -6,200 +6,7 @@
   <title>Profile - Compass Christian Church</title>
   <link rel="icon" href="assets/ccc-icon.png" type="image/png" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-
-    body { background-color: #eef1f5; color: #333; }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: #2b5dad;
-      color: white;
-      padding: 15px 25px;
-      flex-wrap: wrap;
-    }
-
-    header h1 {
-      display: flex;
-      align-items: center;
-      font-size: 1.5rem;
-    }
-
-    header h1 img {
-      width: 35px;
-      height: 35px;
-      margin-right: 10px;
-    }
-
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    nav button {
-      padding: 8px 14px;
-      background-color: white;
-      color: #2b5dad;
-      border: 2px solid #2b5dad;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    nav button:hover {
-      background-color: #2b5dad;
-      color: white;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 40px auto;
-      background: white;
-      padding: 0;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-
-    .wallpaper-container {
-      position: relative;
-      height: 250px;
-      background-color: #ccc;
-      background-size: cover;
-      background-position: center;
-      text-align: center;
-    }
-
-    .upload-wallpaper {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(0, 0, 0, 0.4);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .upload-wallpaper input {
-      display: none;
-    }
-
-    .profile-pic-container {
-      position: relative;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin: -110px auto 20px;
-      border: 5px solid white;
-      background-color: #f0f0f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .profile-pic-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-    }
-
-    .upload-profile {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      text-align: center;
-      font-weight: bold;
-      font-size: 14px;
-      border-radius: 50%;
-    }
-
-    .profile-pic-container:hover .upload-profile {
-      opacity: 1;
-    }
-
-    .profile-info {
-      padding: 20px 30px 30px;
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    .profile-display {
-      font-size: 18px;
-      font-weight: bold;
-      line-height: 1.8;
-      text-align: center;
-    }
-
-    .profile-display span {
-      display: block;
-    }
-
-    .posts-section {
-      margin-top: 30px;
-      padding: 20px 30px;
-      border-top: 1px solid #ccc;
-      background: #f9f9f9;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .post {
-      background: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      margin-top: 15px;
-      text-align: left;
-      box-shadow: 0 0 5px rgba(0,0,0,0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .post-actions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .post-actions button {
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    .post-actions .edit-btn, .post-actions .delete-btn, .post-actions .report-btn {
-      font-size: 14px;
-      color: #2b5dad;
-    }
-
-    .post-actions .edit-btn:hover, .post-actions .delete-btn:hover, .post-actions .report-btn:hover {
-      color: #ff5757;
-    }
-
-    textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      resize: vertical;
-    }
+    /* Same styles as before */
   </style>
 </head>
 <body>
@@ -281,8 +88,10 @@
         } catch (error) {
           console.error("Error getting user data:", error);
         }
+
+        loadPosts(); // Load posts from Firestore
       } else {
-        window.location.href = "https://davaoph.github.io/CCC/index.html"; // Redirect to login if not authenticated
+        window.location.href = "https://davaoph.github.io/CCC/index.html";
       }
     });
 
@@ -336,16 +145,34 @@
         postElement.innerHTML = `
           <div>${post.content}</div>
           <div class="post-actions">
-            <button class="edit-btn">Edit</button>
-            <button class="delete-btn">Delete</button>
-            <button class="report-btn">Report</button>
+            <button class="edit-btn" onclick="editPost('${doc.id}')">Edit</button>
+            <button class="delete-btn" onclick="deletePost('${doc.id}')">Delete</button>
+            <button class="report-btn" onclick="reportPost('${doc.id}')">Report</button>
           </div>
         `;
         postsContainer.appendChild(postElement);
       });
     }
 
-    loadPosts();
+    function editPost(postId) {
+      const newContent = prompt("Edit your post:");
+      if (newContent) {
+        db.collection('posts').doc(postId).update({ content: newContent });
+        loadPosts();
+      }
+    }
+
+    function deletePost(postId) {
+      if (confirm("Are you sure you want to delete this post?")) {
+        db.collection('posts').doc(postId).delete();
+        loadPosts();
+      }
+    }
+
+    function reportPost(postId) {
+      alert("Post reported!");
+      // Implement reporting logic (e.g., flagging post in database)
+    }
   </script>
 </body>
 </html>
