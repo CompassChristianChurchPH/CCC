@@ -87,7 +87,7 @@
       width: 150px;
       height: 150px;
       border-radius: 50%;
-      margin: 0 auto;
+      margin: -75px auto 20px; /* Overlap with wallpaper */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -95,6 +95,7 @@
       font-size: 18px;
       font-weight: bold;
       position: relative;
+      cursor: pointer;
     }
 
     .profile-info {
@@ -186,11 +187,13 @@
     <!-- Wallpaper Section -->
     <div class="wallpaper">
       <div class="upload-text">Upload Wallpaper</div>
+      <input type="file" id="wallpaperUpload" style="display: none" onchange="uploadWallpaper(event)" />
     </div>
 
     <!-- Profile Picture Section -->
-    <div class="profile-picture">
+    <div class="profile-picture" onclick="document.getElementById('profilePictureUpload').click();">
       Upload Profile Picture
+      <input type="file" id="profilePictureUpload" style="display: none" onchange="uploadProfilePicture(event)" />
     </div>
 
     <!-- Profile Information -->
@@ -257,6 +260,31 @@
         window.location.href = "https://davaoph.github.io/CCC/index.html";
       }
     });
+
+    function uploadWallpaper(event) {
+      const file = event.target.files[0];
+      const storageRef = storage.ref();
+      const wallpaperRef = storageRef.child('wallpapers/' + file.name);
+
+      wallpaperRef.put(file).then(() => {
+        wallpaperRef.getDownloadURL().then(url => {
+          document.querySelector('.wallpaper').style.backgroundImage = `url(${url})`;
+        });
+      });
+    }
+
+    function uploadProfilePicture(event) {
+      const file = event.target.files[0];
+      const storageRef = storage.ref();
+      const profilePictureRef = storageRef.child('profile_pictures/' + file.name);
+
+      profilePictureRef.put(file).then(() => {
+        profilePictureRef.getDownloadURL().then(url => {
+          document.querySelector('.profile-picture').style.backgroundImage = `url(${url})`;
+          document.querySelector('.profile-picture').style.backgroundSize = 'cover';
+        });
+      });
+    }
 
     async function createPost() {
       const content = document.getElementById('postContent').value;
