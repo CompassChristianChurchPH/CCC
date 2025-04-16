@@ -6,76 +6,129 @@
   <title>Home - Compass Christian Church</title>
   <link rel="icon" href="assets/ccc-icon.png" type="image/png" />
   <style>
-    /* Same styles as before */
-    header nav {
-      display: flex;
-      justify-content: space-evenly;
-      background-color: #333;
-      padding: 10px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    header nav button {
-      background-color: #444;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    header nav button:hover {
-      background-color: #666;
-    }
-
-    header h1 {
-      font-size: 30px;
+    body {
+      background-color: #f4f6f9;
       color: #333;
     }
 
+    header {
+      background-color: #2b5dad;
+      color: white;
+      padding: 10px 20px;
+    }
+
+    header h1 {
+      display: flex;
+      align-items: center;
+      font-size: 24px;
+      gap: 10px;
+    }
+
+    header h1 img {
+      width: 32px;
+      height: 32px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      background-color: #1f4a85;
+      padding: 10px 0;
+    }
+
+    nav button {
+      background-color: #ffffff;
+      color: #2b5dad;
+      border: none;
+      margin: 5px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    nav button:hover {
+      background-color: #f0f0f0;
+    }
+
     .container {
-      margin-top: 20px;
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 0 20px;
     }
 
     .posts-section {
-      margin-top: 30px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .posts-section h3 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: #2b5dad;
     }
 
     .post {
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 15px;
       margin-bottom: 15px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 8px;
+    }
+
+    .post-actions {
+      margin-top: 10px;
     }
 
     .post-actions button {
-      margin-right: 10px;
-      padding: 5px 10px;
+      background-color: #2b5dad;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      margin-right: 8px;
+      border-radius: 4px;
       cursor: pointer;
+      font-size: 13px;
+      transition: background-color 0.2s;
+    }
+
+    .post-actions button:hover {
+      background-color: #1f4a85;
     }
   </style>
 </head>
 <body>
   <header>
     <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
-    <nav>
-      <button onclick="location.href='https://davaoph.github.io/CCC/home.html'">Home</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/profile.html'">Profile</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/settings.html'">Settings</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/messages.html'">Messages</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/mailbox.html'">Mailbox</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/friendlist.html'">Friendlist</button>
-      <button onclick="window.open('https://www.bible.com/bible', '_blank')">Bible</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/testimony.html'">Testimony</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/prayerwall.html'">Prayer Wall</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/events.html'">Events</button>
-      <button onclick="logoutUser()">Logout</button>
-    </nav>
   </header>
 
-  <div class="container">
-    <!-- Existing Home Page Content -->
+  <nav>
+    <button onclick="location.href='https://davaoph.github.io/CCC/home.html'">Home</button>
+    <button onclick="location.href='https://davaoph.github.io/CCC/profile.html'">Profile</button>
+    <button onclick="location.href='https://davaoph.github.io/CCC/settings.html'">Settings</button>
+    <button onclick="location.href='https://davaoph.github.io/CCC/messages.html'">Messages</button>
+    <button onclick="location.href='https://davaoph.github.io/CCC/mailbox.html'">Mailbox</button>
+    <button onclick="location.href='https://davaoph.github.io/CCC/friendlist.html'">Friendlist</button>
+    <button onclick="window.open('https://www.bible.com/bible', '_blank')">Bible</button>
+    <button onclick="location.href='https://davaoph.github.io/CCC/testimony.html'">Testimony</button>
+    <button onclick="location.href='https://davaoph.github.io/CCC/prayerwall.html'">Prayer Wall</button>
+    <button onclick="location.href='https://davaoph.github.io/CCC/events.html'">Events</button>
+    <button onclick="logoutUser()">Logout</button>
+  </nav>
 
-    <!-- Posts Section -->
+  <div class="container">
     <div class="posts-section">
       <h3>Community Posts</h3>
       <div id="postListHome"></div>
@@ -103,7 +156,7 @@
 
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        loadPosts(); // Load posts from Firestore
+        loadPosts();
       } else {
         window.location.href = "https://davaoph.github.io/CCC/index.html";
       }
@@ -121,9 +174,9 @@
         postElement.innerHTML = `
           <div>${post.content}</div>
           <div class="post-actions">
-            <button class="edit-btn" onclick="editPost('${doc.id}')">Edit</button>
-            <button class="delete-btn" onclick="deletePost('${doc.id}')">Delete</button>
-            <button class="report-btn" onclick="reportPost('${doc.id}')">Report</button>
+            <button onclick="editPost('${doc.id}')">Edit</button>
+            <button onclick="deletePost('${doc.id}')">Delete</button>
+            <button onclick="reportPost('${doc.id}')">Report</button>
           </div>
         `;
         postsContainer.appendChild(postElement);
@@ -147,6 +200,12 @@
 
     function reportPost(postId) {
       alert("Post reported!");
+    }
+
+    function logoutUser() {
+      auth.signOut().then(() => {
+        window.location.href = "https://davaoph.github.io/CCC/index.html";
+      });
     }
   </script>
 </body>
