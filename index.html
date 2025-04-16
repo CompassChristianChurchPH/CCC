@@ -278,39 +278,43 @@
         });
     }
 
-    function registerUser() {
-      const firstName = document.getElementById('firstName').value.trim().toUpperCase().slice(0, 12);
-      const middleName = document.getElementById('middleName').value.trim().toUpperCase().slice(0, 12);
-      const lastName = document.getElementById('lastName').value.trim().toUpperCase().slice(0, 12);
-      const birthdate = document.getElementById('birthDate').value;
-      const emailPrefix = document.getElementById('emailPrefix').value;
-      const email = emailPrefix + '@ccc.ph';
-      const password = document.getElementById('regPassword').value;
-      const confirm = document.getElementById('regConfirm').value;
+   function registerUser() {
+  const firstName = document.getElementById('firstName').value.trim();
+  const middleName = document.getElementById('middleName').value.trim();
+  const lastName = document.getElementById('lastName').value.trim();
+  const birthDate = document.getElementById('birthDate').value.trim();
+  const emailPrefix = document.getElementById('emailPrefix').value.trim();
+  const email = emailPrefix + '@ccc.ph';
+  const password = document.getElementById('regPassword').value;
+  const confirm = document.getElementById('regConfirm').value;
+  const pin = document.getElementById('pin').value.trim();
 
-      if (password !== confirm) {
-        alert("Passwords do not match.");
-        return;
-      }
+  if (password !== confirm) {
+    alert("Passwords do not match.");
+    return;
+  }
 
-      firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          const uid = userCredential.user.uid;
-          const fullName = `${firstName} ${middleName} ${lastName}`.trim();
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const uid = userCredential.user.uid;
+      const fullName = `${firstName} ${middleName} ${lastName}`;
 
-          return firebase.firestore().collection("users").doc(uid).set({
-            fullName: fullName,
-            birthdate: birthdate
-          });
-        })
-        .then(() => {
-          alert("Registration successful!");
-          showSection('login');
-        })
-        .catch(error => {
-          alert("Registration failed: " + error.message);
-        });
-    }
+      // Save additional user data to Firestore
+      return firebase.firestore().collection("users").doc(uid).set({
+        fullName: fullName,
+        birthdate: birthDate,
+        email: email,
+        pin: pin
+      });
+    })
+    .then(() => {
+      alert("Registration successful!");
+      showSection('login');
+    })
+    .catch((error) => {
+      alert("Registration failed: " + error.message);
+    });
+}
   </script>
 
 </body>
