@@ -192,7 +192,10 @@
         <input type="text" id="middleName" placeholder="Middle Name (CAPS, max 12)" maxlength="12" pattern="[A-Z]+" required />
         <input type="text" id="lastName" placeholder="Last Name (CAPS, max 12)" maxlength="12" pattern="[A-Z]+" required />
         <input type="text" id="birthDate" placeholder="Birthdate (MM/DD/YYYY)" pattern="\\d{2}/\\d{2}/\\d{4}" required />
-        <input type="email" id="regEmail" placeholder="Email" required />
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
+        <input type="text" id="regEmailUser" placeholder="Email Username" maxlength="30" style="flex: 1;" required />
+        <span style="font-size: 1rem;">@ccc.ph</span>
+    </div>
         <input type="password" id="regPassword" placeholder="Password (max 12)" maxlength="12" required />
         <input type="password" id="regConfirm" placeholder="Confirm Password (max 12)" maxlength="12" required />
         <input type="text" id="pin" placeholder="PIN (6 digits)" maxlength="6" pattern="\\d{6}" required />
