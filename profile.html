@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Profile - Compass Christian Church</title>
   <link rel="icon" href="assets/ccc-icon.png" type="image/png" />
   <style>
@@ -12,11 +12,12 @@
       padding: 0; 
       font-family: 'Segoe UI', sans-serif; 
     }
+
     body {
       background-color: #fefefe;
-      color: #222;
       padding-bottom: 60px;
     }
+
     header {
       background-color: #2b5dad;
       color: white;
@@ -28,15 +29,18 @@
       top: 0;
       z-index: 1000;
     }
+
     header h1 {
       display: flex;
       align-items: center;
       gap: 10px;
     }
+
     header img { 
       width: 32px; 
       height: 32px; 
     }
+
     nav button {
       margin-left: 10px;
       padding: 8px 12px;
@@ -53,100 +57,93 @@
       color: white;
     }
 
-    .container {
+    .profile-container {
       max-width: 800px;
       margin: 30px auto;
       padding: 20px;
-    }
-
-    .wallpaper-container {
-      position: relative;
-      height: 200px;
-      background-color: #dfe6e9;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      background-size: cover;
-      background-position: center;
-    }
-
-    .upload-wallpaper {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background-color: rgba(0, 0, 0, 0.6);
-      color: white;
-      padding: 8px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .profile-pic-container {
       text-align: center;
+    }
+
+    .wallpaper {
+      background-color: #ccc;
+      height: 250px;
+      width: 100%;
+      position: relative;
       margin-bottom: 20px;
     }
 
-    .profile-pic-container img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 3px solid #fff;
-      margin-bottom: 10px;
+    .wallpaper .upload-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
     }
 
-    .upload-profile {
-      background-color: rgba(0, 0, 0, 0.6);
+    .profile-picture {
+      background-color: #bbb;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: white;
-      padding: 8px;
-      border-radius: 5px;
-      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      position: relative;
     }
 
     .profile-info {
-      margin-bottom: 30px;
-      text-align: center;
+      margin-top: 20px;
     }
 
-    .profile-info span {
-      display: block;
-      margin: 5px 0;
-      font-size: 16px;
-      color: #333;
-    }
-
-    .posts-section {
-      margin-top: 30px;
-    }
-
-    .posts-section h3 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 22px;
+    .profile-info h2 {
+      font-size: 28px;
+      font-weight: bold;
       color: #2b5dad;
     }
 
-    textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      resize: vertical;
+    .profile-info p {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 10px;
+      color: #333;
     }
 
-    .submit-btn {
-      display: block;
+    .create-post-container {
+      margin-top: 30px;
+    }
+
+    .create-post-container textarea,
+    .create-post-container input[type="file"] {
       width: 100%;
-      padding: 12px;
-      border: none;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .create-post-container button {
+      padding: 10px 20px;
       background-color: #2b5dad;
       color: white;
-      font-weight: bold;
+      border: none;
       border-radius: 5px;
+      margin-top: 10px;
       cursor: pointer;
     }
 
-    .submit-btn:hover {
-      background-color: #1f4a76;
+    .create-post-container button:hover {
+      background-color: #1f4f8b;
+    }
+
+    .post-container {
+      margin-top: 40px;
+      text-align: left;
     }
 
     .post {
@@ -157,37 +154,23 @@
       border-radius: 8px;
     }
 
-    .post-actions {
-      margin-top: 10px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .post-actions button {
-      padding: 5px 10px;
-      background-color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    .post strong {
+      display: block;
+      margin-bottom: 8px;
       color: #2b5dad;
-      font-weight: bold;
     }
 
-    .post-actions button:hover {
-      background-color: #2b5dad;
-      color: white;
+    .post img {
+      max-width: 100%;
+      margin-top: 10px;
+      border-radius: 8px;
     }
 
-    footer {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background-color: #2b5dad;
-      color: white;
-      text-align: center;
-      padding: 8px;
+    .post video {
+      max-width: 100%;
+      margin-top: 10px;
+      border-radius: 8px;
     }
-
   </style>
 </head>
 <body>
@@ -196,51 +179,45 @@
     <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
     <nav>
       <button onclick="location.href='https://davaoph.github.io/CCC/home.html'">Home</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/profile.html'">Profile</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/settings.html'">Settings</button>
     </nav>
   </header>
 
-  <div class="container">
-    <div class="wallpaper-container" id="wallpaperContainer">
-      <label class="upload-wallpaper">
-        Upload Wallpaper
-        <input type="file" id="uploadWallpaper" accept="image/*" onchange="uploadWallpaperPic(event)">
-      </label>
+  <div class="profile-container">
+    <!-- Wallpaper Section -->
+    <div class="wallpaper">
+      <div class="upload-text">Upload Wallpaper</div>
     </div>
 
-    <div class="profile-pic-container">
-      <img id="profilePic" src="assets/default-profile.png" alt="Profile Picture" />
-      <label class="upload-profile">
-        Upload Profile Picture
-        <input type="file" id="uploadPic" accept="image/*" onchange="uploadProfilePic(event)">
-      </label>
+    <!-- Profile Picture Section -->
+    <div class="profile-picture">
+      Upload Profile Picture
     </div>
 
+    <!-- Profile Information -->
     <div class="profile-info">
-      <div id="profileDisplay" class="profile-display">
-        <span id="uidDisplay">UID: Loading...</span>
-        <span id="nameDisplay">Full Name: Loading...</span>
-        <span id="birthDisplay">Birthdate: Loading...</span>
-      </div>
+      <h2 id="fullName">Loading...</h2>
+      <p id="birthdate">Birthdate: Loading...</p>
+      <p id="accountNumber">Account Number: Loading...</p>
     </div>
 
-    <div class="posts-section">
-      <h3>Create a Post</h3>
-      <textarea id="newPost" rows="4" placeholder="Write something..."></textarea>
-      <button class="submit-btn" onclick="createPost()">Post</button>
-      <div id="postList"></div>
+    <!-- Create Post Section -->
+    <div class="create-post-container">
+      <textarea id="postContent" rows="4" placeholder="Write something..."></textarea>
+      <input type="file" id="postImage" accept="image/*, video/*, .mp3, .wav, .mp4, .pdf, .docx" />
+      <button onclick="createPost()">Post</button>
+    </div>
+
+    <!-- Display Posts -->
+    <div class="post-container" id="postList">
+      <!-- Posts will show here dynamically -->
     </div>
   </div>
 
-  <footer>
-    Compass Christian Church – Serving the Community
-  </footer>
-
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -256,73 +233,59 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+    const storage = firebase.storage();
 
     auth.onAuthStateChanged(async (user) => {
       if (user) {
         const uid = user.uid;
-        document.getElementById('uidDisplay').textContent = `UID: ${uid}`;
+        const userRef = db.collection('users').doc(uid);
+        const userDoc = await userRef.get();
 
-        try {
-          const doc = await db.collection('users').doc(uid).get();
-          if (doc.exists) {
-            const data = doc.data();
-            document.getElementById('nameDisplay').textContent = `Full Name: ${data.fullName || 'Not set'}`;
-            document.getElementById('birthDisplay').textContent = `Birthdate: ${data.birthdate || 'Not set'}`;
-          } else {
-            document.getElementById('nameDisplay').textContent = `Full Name: Not found`;
-            document.getElementById('birthDisplay').textContent = `Birthdate: Not found`;
-          }
-        } catch (error) {
-          console.error("Error getting user data:", error);
+        if (userDoc.exists) {
+          const userData = userDoc.data();
+          const fullName = userData.fullName || "User";
+          const birthdate = userData.birthdate || "Not available";
+          const accountNumber = userData.pin || "Not available";
+
+          document.getElementById('fullName').textContent = fullName;
+          document.getElementById('birthdate').textContent = `Birthdate: ${birthdate}`;
+          document.getElementById('accountNumber').textContent = `Account Number: ${accountNumber}`;
         }
 
-        loadPosts(); // Load posts from Firestore
+        loadPosts();
       } else {
         window.location.href = "https://davaoph.github.io/CCC/index.html";
       }
     });
 
-    function uploadWallpaperPic(event) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        document.getElementById('wallpaperContainer').style.backgroundImage = `url(${reader.result})`;
-      }
-      if (file) {
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function uploadProfilePic(event) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        document.getElementById('profilePic').src = reader.result;
-      }
-      if (file) {
-        reader.readAsDataURL(file);
-      }
-    }
-
     async function createPost() {
-      const newPost = document.getElementById('newPost').value;
-      if (newPost) {
-        const user = auth.currentUser;
-        if (user) {
-          await db.collection('posts').add({
-            userId: user.uid,
-            content: newPost,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          });
-          loadPosts();
-          document.getElementById('newPost').value = '';
-        }
+      const content = document.getElementById('postContent').value;
+      const file = document.getElementById('postImage').files[0];
+
+      if (!content && !file) {
+        alert("Please enter content or select a file to upload.");
+        return;
       }
+
+      const postRef = db.collection('posts').doc();
+      let postData = { content, timestamp: firebase.firestore.FieldValue.serverTimestamp() };
+
+      if (file) {
+        const fileRef = storage.ref().child('posts/' + file.name);
+        await fileRef.put(file);
+        const fileUrl = await fileRef.getDownloadURL();
+        postData.fileUrl = fileUrl;
+        postData.fileName = file.name;
+      }
+
+      await postRef.set(postData);
+      document.getElementById('postContent').value = '';
+      loadPosts();
     }
 
     async function loadPosts() {
       const postsContainer = document.getElementById('postList');
-      postsContainer.innerHTML = '';
+      postsContainer.innerHTML = ''; // Clear existing posts
       const postsQuery = db.collection('posts').orderBy('timestamp', 'desc');
       const snapshot = await postsQuery.get();
       snapshot.forEach(doc => {
@@ -330,35 +293,12 @@
         const postElement = document.createElement('div');
         postElement.classList.add('post');
         postElement.innerHTML = `
-          <div>${post.content}</div>
-          <div class="post-actions">
-            <button class="edit-btn" onclick="editPost('${doc.id}')">Edit</button>
-            <button class="delete-btn" onclick="deletePost('${doc.id}')">Delete</button>
-            <button class="report-btn" onclick="reportPost('${doc.id}')">Report</button>
-          </div>
+          <strong>${post.userName || "User"}</strong>
+          <p>${post.content}</p>
+          ${post.fileUrl ? `<img src="${post.fileUrl}" alt="${post.fileName}">` : ''}
         `;
         postsContainer.appendChild(postElement);
       });
-    }
-
-    function editPost(postId) {
-      const newContent = prompt("Edit your post:");
-      if (newContent) {
-        db.collection('posts').doc(postId).update({ content: newContent });
-        loadPosts();
-      }
-    }
-
-    function deletePost(postId) {
-      if (confirm("Are you sure you want to delete this post?")) {
-        db.collection('posts').doc(postId).delete();
-        loadPosts();
-      }
-    }
-
-    function reportPost(postId) {
-      alert("Post reported!");
-      // Implement reporting logic (e.g., flagging post in database)
     }
   </script>
 </body>
