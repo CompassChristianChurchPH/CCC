@@ -288,44 +288,51 @@
 
     async function createPost() {
       const content = document.getElementById('postContent').value;
-      const file = document.getElementById('postImage').files[0];
+      const postImage = document.getElementById('postImage').files[0];
+      const user = auth.currentUser;
 
-      if (!content && !file) {
-        alert("Please enter content or select a file to upload.");
+      if (content.trim() === "") {
+        alert("Please write something!");
         return;
       }
 
       const postRef = db.collection('posts').doc();
-      let postData = { content, timestamp: firebase.firestore.FieldValue.serverTimestamp() };
+      let postData = {
+        content: content,
+        userId: user.uid,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        userName: user.displayName || 'Anonymous'
+      };
 
-      if (file) {
-        const fileRef = storage.ref().child('posts/' + file.name);
-        await fileRef.put(file);
-        const fileUrl = await fileRef.getDownloadURL();
-        postData.fileUrl = fileUrl;
-        postData.fileName = file.name;
+      if (postImage) {
+        const storageRef = storage.ref();
+        const postImageRef = storageRef.child('post_images/' + postImage.name);
+        await postImageRef.put(postImage);
+        const imageUrl = await postImageRef.getDownloadURL();
+        postData.imageUrl = imageUrl;
       }
 
       await postRef.set(postData);
-      document.getElementById('postContent').value = '';
       loadPosts();
     }
 
     async function loadPosts() {
       const postsContainer = document.getElementById('postList');
-      postsContainer.innerHTML = ''; // Clear existing posts
-      const postsQuery = db.collection('posts').orderBy('timestamp', 'desc');
-      const snapshot = await postsQuery.get();
+      postsContainer.innerHTML = '';
+
+      const snapshot = await db.collection('posts').orderBy('createdAt', 'desc').get();
+
       snapshot.forEach(doc => {
-        const post = doc.data();
-        const postElement = document.createElement('div');
-        postElement.classList.add('post');
-        postElement.innerHTML = `
-          <strong>${post.userName || "User"}</strong>
-          <p>${post.content}</p>
-          ${post.fileUrl ? `<img src="${post.fileUrl}" alt="${post.fileName}">` : ''}
+        const postData = doc.data();
+        const postDiv = document.createElement('div');
+        postDiv.className = 'post';
+
+        postDiv.innerHTML = `
+          <strong>${postData.userName}</strong>
+          <p>${postData.content}</p>
+          ${postData.imageUrl ? `<img src="${postData.imageUrl}" alt="Post image" />` : ''}
         `;
-        postsContainer.appendChild(postElement);
+        postsContainer.appendChild(postDiv);
       });
     }
   </script>
