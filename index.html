@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Compass Christian Church</title>
-  <link rel="icon" type="image/png" href="assets/ccc-icon.png" />
+  <link rel="icon" href="assets/ccc-icon.png" type="image/png" />
   <style>
     * {
       box-sizing: border-box;
@@ -14,60 +14,55 @@
     }
 
     body {
-      background: linear-gradient(to right, #eef2f3, #ffffff);
-      color: #333;
+      background-color: #f9fafb;
+      color: #1f2937;
     }
 
     header {
-      background-color: #2b5dad;
-      padding: 20px 30px;
+      background-color: #1d4ed8;
+      padding: 20px;
+      color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      color: white;
     }
 
     header h1 {
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       display: flex;
       align-items: center;
     }
 
     header h1 img {
       height: 40px;
-      margin-right: 12px;
-    }
-
-    nav {
-      display: flex;
-      gap: 12px;
-      margin-top: 10px;
+      margin-right: 10px;
     }
 
     nav button {
-      padding: 8px 16px;
-      background-color: white;
-      color: #2b5dad;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
+      background: white;
+      color: #1d4ed8;
+      border: 2px solid #1d4ed8;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-weight: 600;
       cursor: pointer;
-      transition: 0.3s ease;
+      transition: 0.2s;
+      margin-left: 10px;
     }
 
     nav button:hover {
-      background-color: #1e4582;
+      background-color: #1d4ed8;
       color: white;
     }
 
     .container {
       max-width: 700px;
-      margin: 50px auto;
+      margin: 40px auto;
+      padding: 30px;
       background-color: white;
-      padding: 40px;
       border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     }
 
     .section {
@@ -80,44 +75,67 @@
 
     h2 {
       text-align: center;
-      margin-bottom: 30px;
-      color: #2b5dad;
+      color: #1d4ed8;
+      margin-bottom: 20px;
+    }
+
+    form .field-group {
+      margin-bottom: 15px;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #374151;
     }
 
     form input {
       width: 100%;
       padding: 12px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
+      border: 1px solid #d1d5db;
       border-radius: 8px;
       font-size: 1rem;
+    }
+
+    .email-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .email-group input {
+      flex: 1;
+      margin-right: 8px;
+    }
+
+    .email-group span {
+      background: #f3f4f6;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #6b7280;
     }
 
     .submit-btn {
       width: 100%;
       padding: 12px;
-      background-color: #2b5dad;
+      background-color: #1d4ed8;
       color: white;
       border: none;
       border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s ease;
       font-size: 1rem;
+      margin-top: 20px;
     }
 
     .submit-btn:hover {
-      background-color: #1e4582;
+      background-color: #1742b4;
     }
 
     .about-text {
       text-align: center;
-      line-height: 1.7;
-      padding: 10px;
-    }
-
-    .about-text p {
-      margin: 12px 0;
+      line-height: 1.8;
     }
 
     .contact-icons {
@@ -137,28 +155,17 @@
 
     .contact-icons a {
       text-decoration: none;
-      color: #2b5dad;
+      color: #1d4ed8;
     }
 
     .contact-icons a:hover {
       text-decoration: underline;
     }
 
-    @media (max-width: 768px) {
-      .container {
-        margin: 20px;
-        padding: 25px;
-      }
-
-      nav {
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+    img.about-image {
+      margin-top: 20px;
+      max-width: 100%;
+      border-radius: 12px;
     }
   </style>
 </head>
@@ -178,8 +185,14 @@
     <div id="login" class="section active">
       <h2>Login</h2>
       <form onsubmit="event.preventDefault(); loginUser();">
-        <input type="email" id="loginEmail" placeholder="Email" required />
-        <input type="password" id="loginPassword" placeholder="Password" required />
+        <div class="field-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" placeholder="Enter your email" required />
+        </div>
+        <div class="field-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter your password" required />
+        </div>
         <button type="submit" class="submit-btn">Login</button>
       </form>
     </div>
@@ -188,47 +201,67 @@
     <div id="register" class="section">
       <h2>Register</h2>
       <form onsubmit="event.preventDefault(); registerUser();">
-        <input type="text" id="firstName" placeholder="First Name (CAPS, max 12)" maxlength="12" pattern="[A-Z]+" required />
-        <input type="text" id="middleName" placeholder="Middle Name (CAPS, max 12)" maxlength="12" pattern="[A-Z]+" required />
-        <input type="text" id="lastName" placeholder="Last Name (CAPS, max 12)" maxlength="12" pattern="[A-Z]+" required />
-        <input type="text" id="birthDate" placeholder="Birthdate (MM/DD/YYYY)" pattern="\\d{2}/\\d{2}/\\d{4}" required />
-    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
-        <input type="text" id="regEmailUser" placeholder="Email Username" maxlength="30" style="flex: 1;" required />
-        <span style="font-size: 1rem;">@ccc.ph</span>
-    </div>
-        <input type="password" id="regPassword" placeholder="Password (max 12)" maxlength="12" required />
-        <input type="password" id="regConfirm" placeholder="Confirm Password (max 12)" maxlength="12" required />
-        <input type="text" id="pin" placeholder="PIN (6 digits)" maxlength="6" pattern="\\d{6}" required />
+        <div class="field-group">
+          <label>First Name (ALL CAPS, Max 12)</label>
+          <input type="text" id="firstName" maxlength="12" style="text-transform: uppercase;" required />
+        </div>
+        <div class="field-group">
+          <label>Middle Name (ALL CAPS, Max 12)</label>
+          <input type="text" id="middleName" maxlength="12" style="text-transform: uppercase;" required />
+        </div>
+        <div class="field-group">
+          <label>Last Name (ALL CAPS, Max 12)</label>
+          <input type="text" id="lastName" maxlength="12" style="text-transform: uppercase;" required />
+        </div>
+        <div class="field-group">
+          <label>Birthdate (MM/DD/YYYY)</label>
+          <input type="text" id="birthDate" placeholder="MM/DD/YYYY" required />
+        </div>
+        <div class="field-group">
+          <label>Email</label>
+          <div class="email-group">
+            <input type="text" id="emailPrefix" placeholder="yourname" required />
+            <span>@ccc.ph</span>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Password (Max 12 Characters)</label>
+          <input type="password" id="regPassword" maxlength="12" required />
+        </div>
+        <div class="field-group">
+          <label>Confirm Password</label>
+          <input type="password" id="regConfirm" maxlength="12" required />
+        </div>
+        <div class="field-group">
+          <label>PIN (Numbers Only, Max 6)</label>
+          <input type="text" id="pin" maxlength="6" pattern="\d{1,6}" required />
+        </div>
         <button type="submit" class="submit-btn">Register</button>
       </form>
     </div>
 
-    <!-- ABOUT SECTION -->
-    <div id="about" class="section">
-      <h2>About Us</h2>
-      <div class="about-text">
-        <p style="color: red; font-style: italic;">We help people to find and follow Jesus.</p>
-        <p><strong>SUNDAY SERVICE - 9:00 AM</strong></p>
-        <p><strong>SUNDAY YOUTH SERVICE - 1:00 PM</strong></p>
-        <p><strong>SATURDAY PRAYER MEETING - 4:00 PM</strong></p>
-        <p style="color: red; font-weight: bold;">EVERYONE IS WELCOME!</p>
-        <p><em>Matthew 9:12 — "It is not the healthy who need a doctor, but the sick."</em></p>
-        <p>We are located at Km 5 Buhangin, in front of Goldilocks, Davao City, Philippines, 8000</p>
-        <p><strong>Please contact us at 0927-599-2593</strong></p>
-      </div>
-
-      <div class="contact-icons">
-        <p><img src="assets/contact-information.png" alt="Contact"> 0927-599-2593</p>
-        <p><a href="https://www.facebook.com/davaoccc" target="_blank"><img src="assets/facebook.png" alt="Facebook"> facebook.com/davaoccc</a></p>
-        <p><img src="assets/gmail.png" alt="Gmail"> jgapinoy@gmail.com</p>
-        <p><a href="https://nations.ph" target="_blank"><img src="assets/web.png" alt="Website"> nations.ph</a></p>
-      </div>
-
-      <img src="assets/churchdvo.jpg" alt="Church Image" style="margin-top: 20px; max-width: 100%; border-radius: 12px;" />
-    </div>
+   <!-- ABOUT SECTION -->
+<div id="about" class="section">
+  <h2 style="font-size: 2rem; margin-bottom: 10px;">Compass Christian Church</h2>
+  <div class="about-text">
+    <p style="color: red; font-style: italic; margin-top: 0;">We help people to find and follow Jesus.</p>
+    <p><strong>SUNDAY SERVICE - 9:00 AM</strong></p>
+    <p><strong>SUNDAY YOUTH SERVICE - 1:00 PM</strong></p>
+    <p><strong>SATURDAY PRAYER MEETING - 4:00 PM</strong></p>
+    <p style="color: red; font-weight: bold;">EVERYONE IS WELCOME!</p>
+    <p><em>Matthew 9:12 — "It is not the healthy who need a doctor, but the sick."</em></p>
+    <p><strong>We are located at Km 5 Buhangin, in front of Goldilocks, Davao City, Philippines, 8000</strong></p>
   </div>
+  <div class="contact-icons">
+    <p><img src="assets/contact-information.png" alt="Contact"> 0927-599-2593</p>
+    <p><a href="https://www.facebook.com/davaoccc" target="_blank"><img src="assets/facebook.png" alt="Facebook"> facebook.com/davaoccc</a></p>
+    <p><img src="assets/gmail.png" alt="Gmail"> jgapinoy@gmail.com</p>
+    <p><a href="https://nations.ph" target="_blank"><img src="assets/web.png" alt="Website"> nations.ph</a></p>
+  </div>
+  <img src="assets/churchdvo.jpg" class="about-image" alt="Church Image" />
+</div>
 
-  <!-- FIREBASE CONFIG -->
+
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
   <script>
@@ -241,11 +274,10 @@
       appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
       measurementId: "G-T6EWRN2THW"
     };
-
     firebase.initializeApp(firebaseConfig);
 
     function showSection(id) {
-      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
       document.getElementById(id).classList.add('active');
     }
 
@@ -254,8 +286,8 @@
       const password = document.getElementById("loginPassword").value;
 
       firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(userCredential => {
-          alert("Logged in successfully!");
+        .then(() => {
+          alert("Login successful!");
           window.location.href = "home.html";
         })
         .catch(error => {
@@ -264,8 +296,8 @@
     }
 
     function registerUser() {
-      const emailUser = document.getElementById('regEmailUser').value.trim();
-      const email = emailUser + '@ccc.ph';
+      const emailPrefix = document.getElementById('emailPrefix').value;
+      const email = emailPrefix + '@ccc.ph';
       const password = document.getElementById('regPassword').value;
       const confirm = document.getElementById('regConfirm').value;
 
@@ -274,14 +306,9 @@
         return;
       }
 
-      if (password.length > 12) {
-        alert("Password must be 12 characters or less.");
-        return;
-      }
-
       firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(userCredential => {
-          alert("Registered successfully!");
+        .then(() => {
+          alert("Registration successful!");
           showSection('login');
         })
         .catch(error => {
@@ -289,6 +316,5 @@
         });
     }
   </script>
-
 </body>
 </html>
