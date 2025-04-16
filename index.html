@@ -264,7 +264,8 @@
     }
 
     function registerUser() {
-      const email = document.getElementById('regEmail').value;
+      const emailUser = document.getElementById('regEmailUser').value.trim();
+      const email = emailUser + '@ccc.ph';
       const password = document.getElementById('regPassword').value;
       const confirm = document.getElementById('regConfirm').value;
 
