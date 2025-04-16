@@ -149,7 +149,7 @@
   </header>
 
   <div class="container">
-    <h2>Welcome to Compass Christian Church, <span id="fullName">User</span></h2>
+    <h2>Welcome to Compass Christian Church, <span id=fullName>User</span></h2>
 
     <div class="post-container" id="postList">
       <!-- Posts will show here dynamically -->
@@ -167,41 +167,43 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
-      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
-      projectId: "compass-christian-church-4b02e",
-      storageBucket: "compass-christian-church-4b02e.appspot.com",
-      messagingSenderId: "436310011988",
-      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
-      measurementId: "G-T6EWRN2THW"
-    };
+  apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+  authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+  projectId: "compass-christian-church-4b02e",
+  storageBucket: "compass-christian-church-4b02e.appspot.com",
+  messagingSenderId: "436310011988",
+  appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+  measurementId: "G-T6EWRN2THW"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
     const db = firebase.firestore();
 
     auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        const uid = user.uid;
+  if (user) {
+    const uid = user.uid;
 
-        // Fetch fullName from Firestore
-        const userRef = db.collection('users').doc(uid);  // Adjust the collection name if needed
-        const userDoc = await userRef.get();
+    // Fetch fullName from Firestore
+    const userRef = db.collection('users').doc(uid);  // Adjust the collection name if needed
+    const userDoc = await userRef.get();
 
-        if (userDoc.exists) {
-          const userData = userDoc.data();
-          const fullName = userData.fullName || "User";  // Fallback to "User" if fullName is not available
-          document.getElementById('fullName').textContent = `${fullName}`;
-        } else {
-          console.error("User document not found");
-        }
+    if (userDoc.exists) {
+      const userData = userDoc.data();
+      console.log(userData);  // Debugging step to see the fetched data
+      const fullName = userData.fullName || "User";  // Fallback to "User" if fullName is not available
+      document.getElementById('fullName').textContent = `${fullName}`;
+    } else {
+      console.error("User document not found");
+    }
 
-        // Load posts from Firestore
-        loadPosts();
-      } else {
-        window.location.href = "https://davaoph.github.io/CCC/index.html";
-      }
-    });
+    // Load posts from Firestore
+    loadPosts();
+  } else {
+    window.location.href = "https://davaoph.github.io/CCC/index.html";
+  }
+});
+
 
     async function loadPosts() {
       const postsContainer = document.getElementById('postList');
@@ -246,12 +248,15 @@
     }
 
     function logoutUser() {
-      auth.signOut().then(() => {
-        window.location.href = "https://davaoph.github.io/CCC/index.html";
-      }).catch(error => {
-        console.error("Error logging out:", error);
-      });
-    }
+    console.log("Logging out...");  // Debugging step
+    auth.signOut().then(() => {
+      console.log("User logged out");  // Log when logout is successful
+      window.location.href = "https://davaoph.github.io/CCC/index.html";  // Redirect to index.html
+    }).catch(error => {
+      console.error("Error logging out:", error);
+    });
+  }
+
   </script>
 </body>
 </html>
