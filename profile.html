@@ -129,45 +129,15 @@
       text-align: center;
     }
 
-    .profile-info .row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
-      justify-content: center;
-    }
-
-    .profile-info input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      max-width: 200px;
-    }
-
-    #email {
-      max-width: 200px;
-    }
-
-    .edit-button {
-      margin-left: 10px;
-      padding: 6px 12px;
-      font-size: 14px;
-    }
-
-    .submit-btn {
-      background: white;
-      color: #2b5dad;
-      border: 2px solid #2b5dad;
-      padding: 8px 16px;
-      border-radius: 5px;
+    .profile-display {
+      font-size: 18px;
       font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
+      line-height: 1.8;
+      text-align: center;
     }
 
-    .submit-btn:hover {
-      background-color: #2b5dad;
-      color: white;
+    .profile-display span {
+      display: block;
     }
 
     .posts-section {
@@ -217,17 +187,6 @@
       margin-top: 10px;
       resize: vertical;
     }
-
-    .profile-display {
-      font-size: 18px;
-      font-weight: bold;
-      line-height: 1.5;
-      text-align: center;
-    }
-
-    .profile-display span {
-      display: block;
-    }
   </style>
 </head>
 <body>
@@ -247,7 +206,7 @@
     </div>
 
     <div class="profile-pic-container">
-      <img id="profilePic" src="" alt="" />
+      <img id="profilePic" src="assets/default-profile.png" alt="Profile Picture" />
       <label class="upload-profile">
         Upload Profile Picture
         <input type="file" id="uploadPic" accept="image/*" onchange="uploadProfilePic(event)">
@@ -255,29 +214,12 @@
     </div>
 
     <div class="profile-info">
-  <!-- Textboxes shown only during edit -->
-  <div id="profileForm" style="display: none;">
-    <div class="row">
-      <input type="text" id="firstName" placeholder="First Name" />
-      <input type="text" id="middleName" placeholder="Middle Name" />
-      <input type="text" id="lastName" placeholder="Last Name" />
+      <div id="profileDisplay" class="profile-display">
+        <span id="uidDisplay">UID: Loading...</span>
+        <span id="nameDisplay">Full Name: Loading...</span>
+        <span id="birthDisplay">Birthdate: Loading...</span>
+      </div>
     </div>
-    <div class="row">
-      <input type="email" id="email" placeholder="Email" />
-    </div>
-  </div>
-
-  <!-- Displayed text when not editing -->
-  <div id="profileDisplay" class="profile-display">
-    <span id="displayName">Your Name Here</span>
-    <span id="displayEmail">your@email.com</span>
-  </div>
-
-  <div style="margin-top: 10px;">
-    <button id="editBtn" class="edit-button" onclick="enableEditing()">Edit</button>
-    <button id="saveBtn" class="submit-btn" onclick="saveProfile()" style="display: none;">Save Profile</button>
-  </div>
-</div>
 
     <div class="posts-section">
       <h3>Create a Post</h3>
@@ -287,56 +229,63 @@
     </div>
   </div>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
   <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const uid = user.uid;
+        document.getElementById('uidDisplay').textContent = `UID: ${uid}`;
+
+        try {
+          const doc = await db.collection('users').doc(uid).get();
+          if (doc.exists) {
+            const data = doc.data();
+            document.getElementById('nameDisplay').textContent = `Full Name: ${data.fullName || 'Not set'}`;
+            document.getElementById('birthDisplay').textContent = `Birthdate: ${data.birthdate || 'Not set'}`;
+          } else {
+            document.getElementById('nameDisplay').textContent = `Full Name: Not found`;
+            document.getElementById('birthDisplay').textContent = `Birthdate: Not found`;
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
     function uploadProfilePic(event) {
-  const file = event.target.files[0];
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    document.getElementById('previewProfileImage').src = e.target.result;
-    document.getElementById('profilePreview').style.display = 'block';
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('profilePic').src = e.target.result;
+      };
+      if (file) reader.readAsDataURL(file);
+    }
 
-    // Optionally auto-update the profile pic immediately:
-    document.getElementById('profilePic').src = e.target.result;
-  };
-  if (file) reader.readAsDataURL(file);
-}
-
-function uploadWallpaperPic(event) {
-  const file = event.target.files[0];
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    document.getElementById('previewWallpaperImage').src = e.target.result;
-    document.getElementById('wallpaperPreview').style.display = 'block';
-
-    // Optionally auto-update the wallpaper immediately:
-    document.getElementById('wallpaperContainer').style.backgroundImage = `url(${e.target.result})`;
-  };
-  if (file) reader.readAsDataURL(file);
-}
-
-    function enableEditing() {
-  document.getElementById('profileForm').style.display = 'block';
-  document.getElementById('profileDisplay').style.display = 'none';
-  document.getElementById('editBtn').style.display = 'none';
-  document.getElementById('saveBtn').style.display = 'inline-block';
-}
-
-function saveProfile() {
-  const firstName = document.getElementById('firstName').value;
-  const middleName = document.getElementById('middleName').value;
-  const lastName = document.getElementById('lastName').value;
-  const email = document.getElementById('email').value;
-
-  // Update the display
-  document.getElementById('displayName').textContent = `${firstName} ${middleName} ${lastName}`;
-  document.getElementById('displayEmail').textContent = email;
-
-  // Switch back to display mode
-  document.getElementById('profileForm').style.display = 'none';
-  document.getElementById('profileDisplay').style.display = 'block';
-  document.getElementById('editBtn').style.display = 'inline-block';
-  document.getElementById('saveBtn').style.display = 'none';
-}
+    function uploadWallpaperPic(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('wallpaperContainer').style.backgroundImage = `url(${e.target.result})`;
+      };
+      if (file) reader.readAsDataURL(file);
+    }
 
     function createPost() {
       const postText = document.getElementById('newPost').value.trim();
@@ -359,9 +308,7 @@ function saveProfile() {
       const post = button.closest('.post');
       const text = post.querySelector('div');
       const newText = prompt("Edit your post:", text.textContent);
-      if (newText) {
-        text.textContent = newText;
-      }
+      if (newText) text.textContent = newText;
     }
 
     function deletePost(button) {
