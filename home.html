@@ -17,6 +17,7 @@
       background-color: #fefefe;
       color: #222;
       padding-bottom: 60px;
+      transition: margin-left 0.3s ease;
     }
 
     header {
@@ -44,7 +45,7 @@
     }
 
     .menu-toggle {
-      display: none;
+      display: flex;
       flex-direction: column;
       cursor: pointer;
     }
@@ -169,24 +170,49 @@
       padding: 8px;
     }
 
+    /* Slide-out sidebar */
+    .sidebar {
+      height: 100%;
+      width: 250px;
+      position: fixed;
+      top: 0;
+      left: -250px;
+      background-color: #2b5dad;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+    }
+
+    .sidebar a {
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 25px;
+      color: white;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+      color: #f1f1f1;
+    }
+
+    .sidebar .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+    }
+
+    /* Open the sidebar */
+    .sidebar.open {
+      left: 0;
+    }
+
     /* Responsive styles */
     @media (max-width: 768px) {
       nav {
         display: none;
-        flex-direction: column;
-        width: 100%;
-        background-color: #2b5dad;
-      }
-
-      nav.active {
-        display: flex;
-      }
-
-      nav button {
-        width: 100%;
-        margin: 5px 0;
-        background-color: white;
-        color: #2b5dad;
       }
 
       .menu-toggle {
@@ -205,26 +231,29 @@
   <header>
     <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
       <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
-      <div class="menu-toggle" onclick="toggleMenu()">
+      <div class="menu-toggle" onclick="toggleSidebar()">
         <span></span>
         <span></span>
         <span></span>
       </div>
     </div>
-    <nav id="navbar">
-      <button onclick="location.href='home.html'">Home</button>
-      <button onclick="location.href='profile.html'">Profile</button>
-      <button onclick="location.href='settings.html'">Settings</button>
-      <button onclick="location.href='messages.html'">Messages</button>
-      <button onclick="location.href='mailbox.html'">Mailbox</button>
-      <button onclick="location.href='friendlist.html'">Friendlist</button>
-      <button onclick="window.open('https://www.bible.com/bible', '_blank')">Bible</button>
-      <button onclick="location.href='testimony.html'">Testimony</button>
-      <button onclick="location.href='prayerwall.html'">Prayer Wall</button>
-      <button onclick="location.href='events.html'">Events</button>
-      <button onclick="logoutUser()">Logout</button>
-    </nav>
   </header>
+
+  <!-- Slide-out sidebar -->
+  <div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
+    <a href="home.html">Home</a>
+    <a href="profile.html">Profile</a>
+    <a href="settings.html">Settings</a>
+    <a href="messages.html">Messages</a>
+    <a href="mailbox.html">Mailbox</a>
+    <a href="friendlist.html">Friendlist</a>
+    <a href="https://www.bible.com/bible" target="_blank">Bible</a>
+    <a href="testimony.html">Testimony</a>
+    <a href="prayerwall.html">Prayer Wall</a>
+    <a href="events.html">Events</a>
+    <a href="javascript:void(0)" onclick="logoutUser()">Logout</a>
+  </div>
 
   <div class="container">
     <h2>Welcome to Compass Christian Church, <span id="fullName">User</span></h2>
@@ -263,9 +292,14 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    function toggleMenu() {
-      const navbar = document.getElementById("navbar");
-      navbar.classList.toggle("active");
+    function toggleSidebar() {
+      const sidebar = document.getElementById("mySidebar");
+      sidebar.classList.toggle("open");
+    }
+
+    function closeSidebar() {
+      const sidebar = document.getElementById("mySidebar");
+      sidebar.classList.remove("open");
     }
 
     auth.onAuthStateChanged(async (user) => {
@@ -290,7 +324,7 @@
         const post = doc.data();
         const postEl = document.createElement("div");
         postEl.classList.add("post");
-        postEl.innerHTML = `
+        postEl.innerHTML = ` 
           <strong>${post.userName}</strong>
           <p>${post.content}</p>
           <div class="post-actions">
