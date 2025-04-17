@@ -12,43 +12,57 @@
       padding: 0;
       font-family: 'Segoe UI', sans-serif;
     }
+
     body {
       background-color: #fefefe;
       color: #222;
       padding-bottom: 60px;
     }
+
     header {
       background-color: #2b5dad;
       color: white;
       padding: 10px 20px;
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
       z-index: 1000;
     }
+
     header h1 {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 18px;
-      margin-bottom: 10px;
+      font-size: 20px;
     }
+
     header img {
       width: 32px;
       height: 32px;
     }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      width: 25px;
+      height: 3px;
+      background-color: white;
+      margin: 4px 0;
+    }
+
     nav {
       display: flex;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      gap: 10px;
-      padding-bottom: 10px;
+      flex-wrap: wrap;
     }
+
     nav button {
-      white-space: nowrap;
+      margin-left: 10px;
       padding: 8px 12px;
       border: none;
       border-radius: 5px;
@@ -56,15 +70,15 @@
       color: #2b5dad;
       font-weight: bold;
       cursor: pointer;
-      flex-shrink: 0;
     }
+
     nav button:hover {
       background-color: #2b5dad;
       color: white;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 800px;
       margin: 30px auto;
       padding: 20px;
     }
@@ -74,12 +88,39 @@
       margin-bottom: 20px;
       font-size: 24px;
       color: #2b5dad;
-      padding: 0 10px;
+    }
+
+    .post-creation {
+      margin-bottom: 30px;
+    }
+
+    .post-creation textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+    }
+
+    .post-creation button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      border: none;
+      background-color: #2b5dad;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .post-creation button:hover {
+      background-color: #234d91;
     }
 
     .post-container {
-      margin-top: 30px;
-      padding: 0 10px;
+      margin-top: 10px;
     }
 
     .post {
@@ -99,8 +140,8 @@
     .post-actions {
       margin-top: 10px;
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .post-actions button {
@@ -111,9 +152,6 @@
       cursor: pointer;
       color: #2b5dad;
       font-weight: bold;
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
 
     .post-actions button:hover {
@@ -129,51 +167,51 @@
       color: white;
       text-align: center;
       padding: 8px;
-      font-size: 14px;
     }
 
+    /* Responsive styles */
     @media (max-width: 768px) {
+      nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #2b5dad;
+      }
+
+      nav.active {
+        display: flex;
+      }
+
+      nav button {
+        width: 100%;
+        margin: 5px 0;
+        background-color: white;
+        color: #2b5dad;
+      }
+
+      .menu-toggle {
+        display: flex;
+      }
+
       header {
         flex-direction: column;
         align-items: flex-start;
-      }
-      header h1 {
-        font-size: 16px;
-      }
-      nav {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        width: 100%;
-      }
-      .container {
-        padding: 15px;
-      }
-      h2 {
-        font-size: 20px;
-      }
-      .post {
-        font-size: 15px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      nav button {
-        padding: 6px 10px;
-        font-size: 13px;
-      }
-      h2 {
-        font-size: 18px;
-      }
-      .post {
-        font-size: 14px;
       }
     }
   </style>
 </head>
 <body>
+
   <header>
-    <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
-    <nav>
+    <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+      <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
+      <div class="menu-toggle" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <nav id="navbar">
       <button onclick="location.href='home.html'">Home</button>
       <button onclick="location.href='profile.html'">Profile</button>
       <button onclick="location.href='settings.html'">Settings</button>
@@ -190,7 +228,15 @@
 
   <div class="container">
     <h2>Welcome to Compass Christian Church, <span id="fullName">User</span></h2>
-    <div class="post-container" id="postList"></div>
+
+    <div class="post-creation">
+      <textarea id="postContent" placeholder="Write something..."></textarea>
+      <button onclick="createPost()">Post</button>
+    </div>
+
+    <div class="post-container" id="postList">
+      <!-- Posts will show here dynamically -->
+    </div>
   </div>
 
   <footer>
@@ -212,19 +258,23 @@
       appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
       measurementId: "G-T6EWRN2THW"
     };
+
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    function toggleMenu() {
+      const navbar = document.getElementById("navbar");
+      navbar.classList.toggle("active");
+    }
+
     auth.onAuthStateChanged(async (user) => {
       if (user) {
         const uid = user.uid;
-        const userRef = db.collection('users').doc(uid);
-        const userDoc = await userRef.get();
+        const userDoc = await db.collection('users').doc(uid).get();
         if (userDoc.exists) {
           const userData = userDoc.data();
-          const fullName = userData.fullName || "User";
-          document.getElementById('fullName').textContent = fullName;
+          document.getElementById('fullName').textContent = userData.fullName || "User";
         }
         loadPosts();
       } else {
@@ -233,23 +283,40 @@
     });
 
     async function loadPosts() {
-      const postsContainer = document.getElementById('postList');
-      postsContainer.innerHTML = '';
-      const snapshot = await db.collection('posts').orderBy('timestamp', 'desc').get();
+      const postList = document.getElementById("postList");
+      postList.innerHTML = '';
+      const snapshot = await db.collection("posts").orderBy("timestamp", "desc").get();
       snapshot.forEach(doc => {
         const post = doc.data();
-        const postElement = document.createElement('div');
-        postElement.classList.add('post');
-        postElement.innerHTML = `
+        const postEl = document.createElement("div");
+        postEl.classList.add("post");
+        postEl.innerHTML = `
           <strong>${post.userName}</strong>
           <p>${post.content}</p>
           <div class="post-actions">
-            <button onclick="editPost('${doc.id}')"><img src="assets/pencil-icon.png" width="16" height="16"> Edit</button>
-            <button onclick="deletePost('${doc.id}')"><img src="assets/trash-bin-icon.png" width="16" height="16"> Delete</button>
-            <button onclick="reportPost('${doc.id}')"><img src="assets/warning-icon.png" width="16" height="16"> Report</button>
+            <button onclick="editPost('${doc.id}')">✏️ Edit</button>
+            <button onclick="deletePost('${doc.id}')">🗑️ Delete</button>
+            <button onclick="reportPost('${doc.id}')">⚠️ Report</button>
           </div>
         `;
-        postsContainer.appendChild(postElement);
+        postList.appendChild(postEl);
+      });
+    }
+
+    function createPost() {
+      const content = document.getElementById("postContent").value.trim();
+      if (!content) return alert("Please write something first.");
+      const user = auth.currentUser;
+      db.collection("users").doc(user.uid).get().then(userDoc => {
+        const userName = userDoc.data().fullName;
+        db.collection("posts").add({
+          content,
+          userName,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+          document.getElementById("postContent").value = '';
+          loadPosts();
+        });
       });
     }
 
@@ -275,8 +342,6 @@
     function logoutUser() {
       auth.signOut().then(() => {
         window.location.href = "index.html";
-      }).catch(error => {
-        console.error("Logout Error:", error);
       });
     }
   </script>
