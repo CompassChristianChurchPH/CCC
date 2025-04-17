@@ -6,7 +6,6 @@
   <title>Compass Christian Church</title>
   <link rel="icon" href="assets/ccc-icon.png" type="image/png" />
   <style>
-    /* All your existing CSS (unchanged) */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -14,7 +13,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     body {
-      background-color: #f1f3f6;
+      background-color: #f4f6f8;
       color: #1f2937;
     }
     header {
@@ -43,7 +42,7 @@
       padding: 10px 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: 0.2s;
+      transition: 0.3s ease;
       margin-left: 10px;
     }
     nav button:hover {
@@ -56,7 +55,7 @@
       padding: 30px;
       background-color: white;
       border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
     }
     .section {
       display: none;
@@ -70,11 +69,11 @@
       margin-bottom: 20px;
     }
     form .field-group {
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
     form label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
       font-weight: 600;
       color: #374151;
     }
@@ -278,44 +277,42 @@
         });
     }
 
-   function registerUser() {
-  const firstName = document.getElementById('firstName').value.trim();
-  const middleName = document.getElementById('middleName').value.trim();
-  const lastName = document.getElementById('lastName').value.trim();
-  const birthDate = document.getElementById('birthDate').value.trim();
-  const emailPrefix = document.getElementById('emailPrefix').value.trim();
-  const email = emailPrefix + '@ccc.ph';
-  const password = document.getElementById('regPassword').value;
-  const confirm = document.getElementById('regConfirm').value;
-  const pin = document.getElementById('pin').value.trim();
+    function registerUser() {
+      const firstName = document.getElementById('firstName').value.trim();
+      const middleName = document.getElementById('middleName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const birthDate = document.getElementById('birthDate').value.trim();
+      const emailPrefix = document.getElementById('emailPrefix').value.trim();
+      const email = emailPrefix + '@ccc.ph';
+      const password = document.getElementById('regPassword').value;
+      const confirm = document.getElementById('regConfirm').value;
+      const pin = document.getElementById('pin').value.trim();
 
-  if (password !== confirm) {
-    alert("Passwords do not match.");
-    return;
-  }
+      if (password !== confirm) {
+        alert("Passwords do not match.");
+        return;
+      }
 
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      const uid = userCredential.user.uid;
-      const fullName = `${firstName} ${middleName} ${lastName}`;
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const uid = userCredential.user.uid;
+          const fullName = `${firstName} ${middleName} ${lastName}`;
 
-      // Save additional user data to Firestore
-      return firebase.firestore().collection("users").doc(uid).set({
-        fullName: fullName,
-        birthdate: birthDate,
-        email: email,
-        pin: pin
-      });
-    })
-    .then(() => {
-      alert("Registration successful!");
-      showSection('login');
-    })
-    .catch((error) => {
-      alert("Registration failed: " + error.message);
-    });
-}
+          return firebase.firestore().collection("users").doc(uid).set({
+            fullName: fullName,
+            birthdate: birthDate,
+            email: email,
+            pin: pin
+          });
+        })
+        .then(() => {
+          alert("Registration successful!");
+          showSection('login');
+        })
+        .catch((error) => {
+          alert("Registration failed: " + error.message);
+        });
+    }
   </script>
-
 </body>
 </html>
