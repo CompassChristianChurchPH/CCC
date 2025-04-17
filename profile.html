@@ -261,30 +261,48 @@
       }
     });
 
-    function uploadWallpaper(event) {
-      const file = event.target.files[0];
-      const storageRef = storage.ref();
-      const wallpaperRef = storageRef.child('wallpapers/' + file.name);
+   function uploadWallpaper(event) {
+  const file = event.target.files[0];
+  if (!file) return; // Handle no file selected
 
-      wallpaperRef.put(file).then(() => {
-        wallpaperRef.getDownloadURL().then(url => {
-          document.querySelector('.wallpaper').style.backgroundImage = `url(${url})`;
-        });
-      });
-    }
+  const storageRef = storage.ref();
+  const wallpaperRef = storageRef.child('wallpapers/' + file.name);
 
-    function uploadProfilePicture(event) {
-      const file = event.target.files[0];
-      const storageRef = storage.ref();
-      const profilePictureRef = storageRef.child('profile_pictures/' + file.name);
+  wallpaperRef.put(file).then(() => {
+    wallpaperRef.getDownloadURL().then(url => {
+      // Set the background image of the wallpaper
+      document.querySelector('.wallpaper').style.backgroundImage = `url(${url})`;
+      document.querySelector('.wallpaper').style.backgroundSize = 'cover'; // Ensure it covers the area
+      document.querySelector('.wallpaper').style.backgroundPosition = 'center'; // Center the image
+    }).catch(error => {
+      console.error("Error getting wallpaper URL: ", error);
+    });
+  }).catch(error => {
+    console.error("Error uploading wallpaper: ", error);
+  });
+}
 
-      profilePictureRef.put(file).then(() => {
-        profilePictureRef.getDownloadURL().then(url => {
-          document.querySelector('.profile-picture').style.backgroundImage = `url(${url})`;
-          document.querySelector('.profile-picture').style.backgroundSize = 'cover';
-        });
-      });
-    }
+function uploadProfilePicture(event) {
+  const file = event.target.files[0];
+  if (!file) return; // Handle no file selected
+
+  const storageRef = storage.ref();
+  const profilePictureRef = storageRef.child('profile_pictures/' + file.name);
+
+  profilePictureRef.put(file).then(() => {
+    profilePictureRef.getDownloadURL().then(url => {
+      // Set the background image of the profile picture container
+      document.querySelector('.profile-picture').style.backgroundImage = `url(${url})`;
+      document.querySelector('.profile-picture').style.backgroundSize = 'cover'; // Make sure the image fills the circle
+      document.querySelector('.profile-picture').style.backgroundPosition = 'center'; // Center the image
+    }).catch(error => {
+      console.error("Error getting profile picture URL: ", error);
+    });
+  }).catch(error => {
+    console.error("Error uploading profile picture: ", error);
+  });
+}
+
 
     async function createPost() {
       const content = document.getElementById('postContent').value;
