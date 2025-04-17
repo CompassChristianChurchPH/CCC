@@ -6,11 +6,11 @@
   <title>Home - Compass Christian Church</title>
   <link rel="icon" href="assets/ccc-icon.png" type="image/png" />
   <style>
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: 'Segoe UI', sans-serif; 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
     }
     body {
       background-color: #fefefe;
@@ -22,6 +22,7 @@
       color: white;
       padding: 10px 20px;
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       position: sticky;
@@ -32,13 +33,22 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      font-size: 18px;
+      margin-bottom: 10px;
     }
-    header img { 
-      width: 32px; 
-      height: 32px; 
+    header img {
+      width: 32px;
+      height: 32px;
+    }
+    nav {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 10px;
+      padding-bottom: 10px;
     }
     nav button {
-      margin-left: 10px;
+      white-space: nowrap;
       padding: 8px 12px;
       border: none;
       border-radius: 5px;
@@ -46,15 +56,15 @@
       color: #2b5dad;
       font-weight: bold;
       cursor: pointer;
+      flex-shrink: 0;
     }
-
     nav button:hover {
       background-color: #2b5dad;
       color: white;
     }
 
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 30px auto;
       padding: 20px;
     }
@@ -64,10 +74,12 @@
       margin-bottom: 20px;
       font-size: 24px;
       color: #2b5dad;
+      padding: 0 10px;
     }
 
     .post-container {
       margin-top: 30px;
+      padding: 0 10px;
     }
 
     .post {
@@ -87,6 +99,7 @@
     .post-actions {
       margin-top: 10px;
       display: flex;
+      flex-wrap: wrap;
       gap: 10px;
     }
 
@@ -98,6 +111,9 @@
       cursor: pointer;
       color: #2b5dad;
       font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
     .post-actions button:hover {
@@ -113,103 +129,113 @@
       color: white;
       text-align: center;
       padding: 8px;
+      font-size: 14px;
     }
 
-    /* Media query for responsiveness */
     @media (max-width: 768px) {
       header {
         flex-direction: column;
         align-items: flex-start;
       }
-      nav button {
-        margin-left: 0;
-        margin-bottom: 10px;
+      header h1 {
+        font-size: 16px;
+      }
+      nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
         width: 100%;
+      }
+      .container {
+        padding: 15px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      .post {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      nav button {
+        padding: 6px 10px;
+        font-size: 13px;
+      }
+      h2 {
+        font-size: 18px;
+      }
+      .post {
+        font-size: 14px;
       }
     }
   </style>
 </head>
 <body>
-
   <header>
     <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
     <nav>
-      <button onclick="location.href='https://davaoph.github.io/CCC/home.html'">Home</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/profile.html'">Profile</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/settings.html'">Settings</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/messages.html'">Messages</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/mailbox.html'">Mailbox</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/friendlist.html'">Friendlist</button>
+      <button onclick="location.href='home.html'">Home</button>
+      <button onclick="location.href='profile.html'">Profile</button>
+      <button onclick="location.href='settings.html'">Settings</button>
+      <button onclick="location.href='messages.html'">Messages</button>
+      <button onclick="location.href='mailbox.html'">Mailbox</button>
+      <button onclick="location.href='friendlist.html'">Friendlist</button>
       <button onclick="window.open('https://www.bible.com/bible', '_blank')">Bible</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/testimony.html'">Testimony</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/prayerwall.html'">Prayer Wall</button>
-      <button onclick="location.href='https://davaoph.github.io/CCC/events.html'">Events</button>
+      <button onclick="location.href='testimony.html'">Testimony</button>
+      <button onclick="location.href='prayerwall.html'">Prayer Wall</button>
+      <button onclick="location.href='events.html'">Events</button>
       <button onclick="logoutUser()">Logout</button>
     </nav>
   </header>
 
   <div class="container">
-    <h2>Welcome to Compass Christian Church, <span id=fullName>User</span></h2>
-
-    <div class="post-container" id="postList">
-      <!-- Posts will show here dynamically -->
-    </div>
+    <h2>Welcome to Compass Christian Church, <span id="fullName">User</span></h2>
+    <div class="post-container" id="postList"></div>
   </div>
 
   <footer>
     Compass Christian Church – Serving the Community
   </footer>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 
   <script>
     const firebaseConfig = {
-  apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
-  authDomain: "compass-christian-church-4b02e.firebaseapp.com",
-  projectId: "compass-christian-church-4b02e",
-  storageBucket: "compass-christian-church-4b02e.appspot.com",
-  messagingSenderId: "436310011988",
-  appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
-  measurementId: "G-T6EWRN2THW"
-};
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-
+      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+      projectId: "compass-christian-church-4b02e",
+      storageBucket: "compass-christian-church-4b02e.appspot.com",
+      messagingSenderId: "436310011988",
+      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+      measurementId: "G-T6EWRN2THW"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
     const db = firebase.firestore();
 
     auth.onAuthStateChanged(async (user) => {
-  if (user) {
-    const uid = user.uid;
-
-    // Fetch fullName from Firestore
-    const userRef = db.collection('users').doc(uid);  // Adjust the collection name if needed
-    const userDoc = await userRef.get();
-
-    if (userDoc.exists) {
-      const userData = userDoc.data();
-      console.log(userData);  // Debugging step to see the fetched data
-      const fullName = userData.fullName || "User";  // Fallback to "User" if fullName is not available
-      document.getElementById('fullName').textContent = `${fullName}`;
-    } else {
-      console.error("User document not found");
-    }
-
-    // Load posts from Firestore
-    loadPosts();
-  } else {
-    window.location.href = "https://davaoph.github.io/CCC/index.html";
-  }
-});
-
+      if (user) {
+        const uid = user.uid;
+        const userRef = db.collection('users').doc(uid);
+        const userDoc = await userRef.get();
+        if (userDoc.exists) {
+          const userData = userDoc.data();
+          const fullName = userData.fullName || "User";
+          document.getElementById('fullName').textContent = fullName;
+        }
+        loadPosts();
+      } else {
+        window.location.href = "index.html";
+      }
+    });
 
     async function loadPosts() {
       const postsContainer = document.getElementById('postList');
-      postsContainer.innerHTML = ''; // Clear existing posts
-      const postsQuery = db.collection('posts').orderBy('timestamp', 'desc');
-      const snapshot = await postsQuery.get();
+      postsContainer.innerHTML = '';
+      const snapshot = await db.collection('posts').orderBy('timestamp', 'desc').get();
       snapshot.forEach(doc => {
         const post = doc.data();
         const postElement = document.createElement('div');
@@ -218,9 +244,9 @@ const auth = firebase.auth();
           <strong>${post.userName}</strong>
           <p>${post.content}</p>
           <div class="post-actions">
-            <button onclick="editPost('${doc.id}')"><img src="assets/pencil-icon.png" alt="Edit" width="16" height="16"> Edit</button>
-            <button onclick="deletePost('${doc.id}')"><img src="assets/trash-bin-icon.png" alt="Delete" width="16" height="16"> Delete</button>
-            <button onclick="reportPost('${doc.id}')"><img src="assets/warning-icon.png" alt="Report" width="16" height="16"> Report</button>
+            <button onclick="editPost('${doc.id}')"><img src="assets/pencil-icon.png" width="16" height="16"> Edit</button>
+            <button onclick="deletePost('${doc.id}')"><img src="assets/trash-bin-icon.png" width="16" height="16"> Delete</button>
+            <button onclick="reportPost('${doc.id}')"><img src="assets/warning-icon.png" width="16" height="16"> Report</button>
           </div>
         `;
         postsContainer.appendChild(postElement);
@@ -244,19 +270,15 @@ const auth = firebase.auth();
 
     function reportPost(postId) {
       alert("Post reported!");
-      // Implement reporting logic (e.g., flagging post in the database)
     }
 
     function logoutUser() {
-    console.log("Logging out...");  // Debugging step
-    auth.signOut().then(() => {
-      console.log("User logged out");  // Log when logout is successful
-      window.location.href = "https://davaoph.github.io/CCC/index.html";  // Redirect to index.html
-    }).catch(error => {
-      console.error("Error logging out:", error);
-    });
-  }
-
+      auth.signOut().then(() => {
+        window.location.href = "index.html";
+      }).catch(error => {
+        console.error("Logout Error:", error);
+      });
+    }
   </script>
 </body>
 </html>
