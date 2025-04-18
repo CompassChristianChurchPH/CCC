@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Access Management | CCC</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="module" src="firebase-config.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #f7f7f7;
+    }
+    header {
+      background-color: #2e3a59;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+    }
+    header img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+    .filters, .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 15px;
+      align-items: center;
+    }
+    .filters select, .actions button {
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    th {
+      background-color: #e8e8e8;
+    }
+    .pagination {
+      text-align: center;
+      padding: 10px;
+    }
+    .modal, .tooltip {
+      display: none;
+      position: fixed;
+      z-index: 10;
+    }
+    .active-flag {
+      color: green;
+    }
+    .inactive-flag {
+      color: gray;
+    }
+    .never-logged-flag {
+      color: orange;
+    }
+    .bulk-actions {
+      background-color: #fff9c4;
+      border: 1px solid #ffeb3b;
+      padding: 10px;
+      margin: 10px;
+    }
+    .trash-bin-btn {
+      background-color: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="assets/ccc-icon.png" alt="CCC Logo" />
+    <h1>Access Management</h1>
+    <span title="Click to view key features" style="cursor:pointer; margin-left:auto;" onclick="showHelp()">❓</span>
+  </header>
+
+  <div class="filters">
+    <label>Role:
+      <select id="roleFilter">
+        <option value="">All</option>
+        <option value="UNIQUE">UNIQUE</option>
+        <option value="Admin">Admin</option>
+        <option value="Co-Admin">Co-Admin</option>
+        <option value="Manager">Manager</option>
+        <option value="Moderator">Moderator</option>
+        <option value="Member">Member</option>
+        <option value="Guest">Guest</option>
+      </select>
+    </label>
+    <label>Status:
+      <select id="statusFilter">
+        <option value="">All</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+    </label>
+    <button onclick="applyFilters()">Apply Filters</button>
+    <button onclick="exportCSV()">Export to CSV</button>
+    <button onclick="refreshUsers()">🔁 Refresh</button>
+    <button class="trash-bin-btn" onclick="openTrashBin()">🗑 Trash Bin</button>
+  </div>
+
+  <div class="bulk-actions">
+    <label><input type="checkbox" id="selectAll" onchange="toggleAll()"> Select All</label>
+    <button onclick="confirmBulkDelete()">Bulk Delete</button>
+    <button onclick="confirmBulkRoleChange()">Bulk Role Change</button>
+  </div>
+
+  <table id="userTable">
+    <thead>
+      <tr>
+        <th><input type="checkbox" id="checkAll" onchange="toggleAll()" /></th>
+        <th>Document ID</th>
+        <th>Birthdate</th>
+        <th>Email</th>
+        <th>Full Name</th>
+        <th>PIN</th>
+        <th>Password</th>
+        <th>Role</th>
+        <th>Last Login</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="userBody">
+      <!-- User rows injected by JS -->
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <label>Rows per page:
+      <select id="rowsPerPage" onchange="paginate()">
+        <option>10</option>
+        <option>20</option>
+        <option>50</option>
+      </select>
+    </label>
+    <button onclick="previousPage()">Previous</button>
+    <button onclick="nextPage()">Next</button>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal">
+    <!-- Injected by JS -->
+  </div>
+
+  <!-- Trash Bin Modal -->
+  <div id="trashModal" class="modal">
+    <!-- Deleted users table with restore button -->
+  </div>
+
+  <!-- Help Modal -->
+  <div id="helpModal" class="modal">
+    <div style="background:white;padding:20px;max-width:600px;margin:100px auto;border-radius:10px;">
+      <h2>🔑 Key Features</h2>
+      <ul>
+        <li>Filter users by role or status</li>
+        <li>Edit user role & status with limits</li>
+        <li>Export visible table to CSV</li>
+        <li>Pagination for large user lists</li>
+        <li>Status flags: Active, Inactive, Never Logged In</li>
+        <li>Bulk delete and bulk role change</li>
+        <li>Trash bin for restoring deleted users</li>
+      </ul>
+      <button onclick="closeHelp()">Close</button>
+    </div>
+  </div>
+
+  <script type="module" src="scripts/access.js"></script>
+</body>
+</html>
+
+import { auth, db } from './firebase-config.js';
+import { collection, query, where, getDocs, deleteDoc, doc, updateDoc, addDoc, serverTimestamp, orderBy } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+
+// Global variables
+let users = [];
+let currentPage = 1;
+let rowsPerPage = 10;
+let filteredUsers = [];
+
+// Fetch users from Firestore
+async function fetchUsers() {
+    const q = query(collection(db, "users"), orderBy("lastLogin", "desc"));
+    const querySnapshot = await getDocs(q);
+    users = [];
+    querySnapshot.forEach((doc) => {
+        users.push({ id: doc.id, ...doc.data() });
+    });
+    filteredUsers = users;
+    renderTable();
+}
+
+// Render user table with pagination
+function renderTable() {
+    const tableBody = document.getElementById("userBody");
+    tableBody.innerHTML = '';
+
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    const currentUsers = filteredUsers.slice(startIndex, endIndex);
+
+    currentUsers.forEach(user => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td><input type="checkbox" class="userCheckbox" data-id="${user.id}" /></td>
+            <td>${user.id}</td>
+            <td>${user.birthdate}</td>
+            <td>${user.email}</td>
+            <td>${user.fullName}</td>
+            <td>${user.pin}</td>
+            <td>${user.password}</td>
+            <td>${user.role}</td>
+            <td>${user.lastLogin ? new Date(user.lastLogin.seconds * 1000).toLocaleString() : 'Never'}</td>
+            <td class="${getStatusClass(user)}">${user.status}</td>
+            <td>
+                <button onclick="openEditModal('${user.id}')">Edit</button>
+                <button onclick="confirmDeleteUser('${user.id}')">Delete</button>
+            </td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+
+    updatePagination();
+}
+
+// Update pagination controls
+function updatePagination() {
+    const pageCount = Math.ceil(filteredUsers.length / rowsPerPage);
+    const pagination = document.querySelector(".pagination");
+
+    pagination.innerHTML = `
+        <button onclick="previousPage()">Previous</button>
+        <span>Page ${currentPage} of ${pageCount}</span>
+        <button onclick="nextPage()">Next</button>
+    `;
+}
+
+// Show or hide tooltips
+function showHelp() {
+    document.getElementById("helpModal").style.display = "block";
+}
+
+function closeHelp() {
+    document.getElementById("helpModal").style.display = "none";
+}
+
+// Pagination functions
+function previousPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+    }
+}
+
+function nextPage() {
+    const pageCount = Math.ceil(filteredUsers.length / rowsPerPage);
+    if (currentPage < pageCount) {
+        currentPage++;
+        renderTable();
+    }
+}
+
+function paginate() {
+    rowsPerPage = parseInt(document.getElementById("rowsPerPage").value);
+    renderTable();
+}
+
+// Apply filters for role and status
+function applyFilters() {
+    const roleFilter = document.getElementById("roleFilter").value;
+    const statusFilter = document.getElementById("statusFilter").value;
+
+    filteredUsers = users.filter(user => {
+        let matchRole = roleFilter ? user.role === roleFilter : true;
+        let matchStatus = statusFilter ? user.status === statusFilter : true;
+        return matchRole && matchStatus;
+    });
+
+    currentPage = 1;  // Reset to page 1 when filters are applied
+    renderTable();
+}
+
+// Export filtered users to CSV
+function exportCSV() {
+    const csvHeader = ['Document ID', 'Birthdate', 'Email', 'Full Name', 'PIN', 'Password', 'Role', 'Last Login', 'Status'];
+    const csvRows = filteredUsers.map(user => [
+        user.id, user.birthdate, user.email, user.fullName, user.pin, user.password, user.role,
+        user.lastLogin ? new Date(user.lastLogin.seconds * 1000).toLocaleString() : 'Never',
+        user.status
+    ]);
+
+    const csvContent = [csvHeader, ...csvRows].map(row => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'users.csv';
+    link.click();
+}
+
+// Delete user function with confirmation
+async function confirmDeleteUser(userId) {
+    const confirmed = confirm("Are you sure you want to delete this user?");
+    if (confirmed) {
+        await deleteDoc(doc(db, "users", userId));
+        fetchUsers();
+    }
+}
+
+// Open edit modal for a user
+function openEditModal(userId) {
+    const user = users.find(u => u.id === userId);
+    const modal = document.getElementById("editModal");
+
+    modal.innerHTML = `
+        <div style="background:white;padding:20px;width:400px;margin:auto;border-radius:10px;">
+            <h2>Edit User</h2>
+            <form id="editUserForm">
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" value="${user.fullName}" required /><br />
+                <label for="role">Role:</label>
+                <select id="role">
+                    <option value="Admin" ${user.role === 'Admin' ? 'selected' : ''}>Admin</option>
+                    <option value="Co-Admin" ${user.role === 'Co-Admin' ? 'selected' : ''}>Co-Admin</option>
+                    <option value="Manager" ${user.role === 'Manager' ? 'selected' : ''}>Manager</option>
+                    <option value="Moderator" ${user.role === 'Moderator' ? 'selected' : ''}>Moderator</option>
+                    <option value="Member" ${user.role === 'Member' ? 'selected' : ''}>Member</option>
+                    <option value="Guest" ${user.role === 'Guest' ? 'selected' : ''}>Guest</option>
+                </select><br />
+                <button type="submit">Save</button>
+            </form>
+            <button onclick="closeEditModal()">Close</button>
+        </div>
+    `;
+
+    document.getElementById("editUserForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        updateUser(userId);
+    });
+
+    modal.style.display = "block";
+}
+
+// Close edit modal
+function closeEditModal() {
+    document.getElementById("editModal").style.display = "none";
+}
+
+// Update user data in Firestore
+async function updateUser(userId) {
+    const fullName = document.getElementById("fullName").value;
+    const role = document.getElementById("role").value;
+
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, { fullName, role, lastUpdated: serverTimestamp() });
+
+    closeEditModal();
+    fetchUsers();
+}
+
+// Get status class based on user status
+function getStatusClass(user) {
+    if (user.status === "Active") return "active-flag";
+    if (user.status === "Inactive") return "inactive-flag";
+    return "never-logged-flag";
+}
+
+// Handle select all checkbox
+function toggleAll() {
+    const checkboxes = document.querySelectorAll(".userCheckbox");
+    const selectAll = document.getElementById("checkAll").checked;
+    checkboxes.forEach(checkbox => checkbox.checked = selectAll);
+}
+
+// Bulk delete confirmation
+function confirmBulkDelete() {
+    const selectedUsers = getSelectedUsers();
+    if (selectedUsers.length === 0) {
+        alert("No users selected.");
+        return;
+    }
+    const confirmed = confirm(`Are you sure you want to delete ${selectedUsers.length} users?`);
+    if (confirmed) {
+        selectedUsers.forEach(user => deleteDoc(doc(db, "users", user.id)));
+        fetchUsers();
+    }
+}
+
+// Bulk role change
+function confirmBulkRoleChange() {
+    const selectedUsers = getSelectedUsers();
+    if (selectedUsers.length === 0) {
+        alert("No users selected.");
+        return;
+    }
+
+    const newRole = prompt("Enter the new role for selected users:");
+    if (newRole) {
+        selectedUsers.forEach(user => updateDoc(doc(db, "users", user.id), { role: newRole }));
+        fetchUsers();
+    }
+}
+
+// Get selected users
+function getSelectedUsers() {
+    const selectedUsers = [];
+    const checkboxes = document.querySelectorAll(".userCheckbox:checked");
+    checkboxes.forEach(checkbox => {
+        const userId = checkbox.getAttribute("data-id");
+        selectedUsers.push(users.find(user => user.id === userId));
+    });
+    return selectedUsers;
+}
+
+// Refresh user list
+function refreshUsers() {
+    fetchUsers();
+}
+
+// Open trash bin modal
+function openTrashBin() {
+    const trashModal = document.getElementById("trashModal");
+    trashModal.style.display = "block";
+
+    // Fetch deleted users (example)
+    const deletedUsers = users.filter(user => user.status === "Deleted");
+    const trashTable = trashModal.querySelector("table");
+    trashTable.innerHTML = '';  // Clear existing rows
+
+    deletedUsers.forEach(user => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${user.id}</td>
+            <td>${user.fullName}</td>
+            <td><button onclick="restoreUser('${user.id}')">Restore</button></td>
+        `;
+        trashTable.appendChild(row);
+    });
+}
+
+// Restore deleted user
+async function restoreUser(userId) {
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, { status: "Active" });
+    fetchUsers();
+}
+
+// Close trash bin modal
+function closeTrashBin() {
+    document.getElementById("trashModal").style.display = "none";
+}
+
+// Initialize
+fetchUsers();
