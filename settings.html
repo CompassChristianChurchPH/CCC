@@ -290,16 +290,20 @@
     let valid = true;
 
     if (type === 'changePass') {
-      const current = document.getElementById('currentPass').value.trim();
-      const newPass = document.getElementById('newPass').value.trim();
-      const confirm = document.getElementById('confirmNewPass').value.trim();
+  const current = document.getElementById('currentPass').value.trim();
+  const newPass = document.getElementById('newPass').value.trim();
+  const confirm = document.getElementById('confirmNewPass').value.trim();
 
-      document.getElementById('errorCurrentPass').style.display = current ? "none" : "block";
-      document.getElementById('errorNewPass').style.display = newPass.length >= 12 ? "none" : "block";
-      document.getElementById('errorConfirmPass').style.display = newPass === confirm ? "none" : "block";
+  document.getElementById('errorCurrentPass').style.display = current ? "none" : "block";
 
-      if (!current || newPass.length < 12 || newPass !== confirm) valid = false;
-    }
+  const passValid = newPass.length >= 6 && newPass.length <= 12;
+  document.getElementById('errorNewPass').style.display = passValid ? "none" : "block";
+
+  document.getElementById('errorConfirmPass').style.display = newPass === confirm ? "none" : "block";
+
+  if (!current || !passValid || newPass !== confirm) valid = false;
+}
+
 
     if (type === 'changeName') {
       const first = document.getElementById('firstName').value.trim();
