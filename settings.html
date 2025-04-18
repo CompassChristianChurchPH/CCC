@@ -100,26 +100,26 @@
     }
 
     .modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Black overlay */
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Ensure modal is above other content */
-}
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
 
     .modal-content {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  width: 300px;
-  text-align: center;
-  z-index: 1100; /* Ensure modal content is above the overlay */
-}
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+      z-index: 1100;
+    }
 
     .modal-content input {
       width: 100%;
@@ -130,33 +130,32 @@
     }
 
     .modal-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;  /* Optional, adjusts the space between the buttons */
-}
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
 
-.modal-footer button {
-  padding: 10px 15px;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+    .modal-footer button {
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-.modal-footer .save-btn {
-  background-color: #2b5dad; 
-  color: white;
-}
+    .modal-footer .save-btn,
+    .modal-footer .close-btn {
+      background-color: #2b5dad;
+      color: white;
+    }
 
-.modal-footer .close-btn {
-  background-color: #2b5dad;  
-  color: white;
-}
-
-.modal-footer .close-btn:hover {
-  background-color: #2b5dad;
-}
-
+    .error-message {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: -8px;
+      margin-bottom: 10px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -170,168 +169,162 @@
 
   <div class="container">
     <h2>Account Settings</h2>
-
-    <!-- Buttons to open the modals -->
     <div class="action-buttons">
       <button onclick="openChangeNameModal()">Change Name</button>
       <button onclick="openChangePasswordModal()">Change Password</button>
       <button onclick="openAccessModal()">Access</button>
     </div>
 
-    <!-- Modal for Changing Name -->
-<div id="changeNameModal" class="modal">
-  <div class="modal-content">
-    <h3>Change Name</h3>
-    <input type="text" id="newFirstName" placeholder="First Name" />
-    <input type="text" id="newMiddleName" placeholder="Middle Name" />
-    <input type="text" id="newLastName" placeholder="Last Name" />
-    <!-- Example for the modal container inside settings.html -->
-    <div class="modal-footer">
-      <button class="save-btn" onclick="updateName()">Save</button>
-      <button class="close-btn" onclick="closeModal('changeNameModal')">Close</button> <!-- Pass modal id here -->
+    <div id="changeNameModal" class="modal">
+      <div class="modal-content">
+        <h3>Change Name</h3>
+        <input type="text" id="newFirstName" placeholder="First Name" />
+        <input type="text" id="newMiddleName" placeholder="Middle Name" />
+        <input type="text" id="newLastName" placeholder="Last Name" />
+        <div class="error-message" id="nameError">Please fill in all fields.</div>
+        <div class="modal-footer">
+          <button class="save-btn" onclick="updateName()">Save</button>
+          <button class="close-btn" onclick="closeModal('changeNameModal')">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="changePasswordModal" class="modal">
+      <div class="modal-content">
+        <h3>Change Password</h3>
+        <input type="password" id="currentPassword" placeholder="Current Password" />
+        <input type="password" id="newPassword" placeholder="New Password" />
+        <input type="password" id="reEnterPassword" placeholder="Re-enter New Password" />
+        <div class="error-message" id="passwordError">Please fill in all fields and make sure passwords match.</div>
+        <div class="modal-footer">
+          <button class="save-btn" onclick="updatePassword()">Save</button>
+          <button class="close-btn" onclick="closeModal('changePasswordModal')">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="accessModal" class="modal">
+      <div class="modal-content">
+        <h3>Access</h3>
+        <input type="email" id="accessEmail" placeholder="Enter your email" />
+        <input type="password" id="accessPin" placeholder="Enter your Password" />
+        <div class="error-message" id="accessError">Invalid email or password.</div>
+        <div class="modal-footer">
+          <button class="save-btn" onclick="verifyAccess()">Access</button>
+          <button class="close-btn" onclick="closeModal('accessModal')">Close</button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Modal for Changing Password -->
-<div id="changePasswordModal" class="modal">
-  <div class="modal-content">
-    <h3>Change Password</h3>
-    <input type="password" id="currentPassword" placeholder="Current Password" />
-    <input type="password" id="newPassword" placeholder="New Password" />
-    <input type="password" id="reEnterPassword" placeholder="Re-enter New Password" />
-    <!-- Example for the modal container inside settings.html -->
-    <div class="modal-footer">
-      <button class="save-btn" onclick="updatePassword()">Save</button>
-      <button class="close-btn" onclick="closeModal('changePasswordModal')">Close</button> <!-- Pass modal id here -->
-    </div>
-  </div>
-</div>
-
-<!-- Modal for Access -->
-<div id="accessModal" class="modal">
-  <div class="modal-content">
-    <h3>Access</h3>
-    <input type="email" id="accessEmail" placeholder="Enter your email" />
-    <input type="password" id="accessPin" placeholder="Enter your PIN" />
-    <!-- Example for the modal container inside settings.html -->
-    <div class="modal-footer">
-      <button class="save-btn" onclick="verifyAccess()">Access</button>
-      <button class="close-btn" onclick="closeModal('accessModal')">Close</button> <!-- Pass modal id here -->
-    </div>
-  </div>
-</div>
-
-
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-
   <script>
-    // Initialize Firebase with your config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
-      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
-      projectId: "compass-christian-church-4b02e",
-      storageBucket: "compass-christian-church-4b02e.appspot.com",
-      messagingSenderId: "436310011988",
-      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
-      measurementId: "G-T6EWRN2THW"
-    };
+    const firebaseConfig = { /* your config */ };
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const firestore = firebase.firestore(app);
 
-    // Open Modal
-function openChangeNameModal() {
-  document.getElementById('changeNameModal').style.display = 'flex';
-}
+    function openChangeNameModal() {
+      document.getElementById('changeNameModal').style.display = 'flex';
+      document.getElementById('nameError').style.display = 'none';
+    }
 
-function openChangePasswordModal() {
-  document.getElementById('changePasswordModal').style.display = 'flex';
-}
+    function openChangePasswordModal() {
+      document.getElementById('changePasswordModal').style.display = 'flex';
+      document.getElementById('passwordError').style.display = 'none';
+    }
 
-function openAccessModal() {
-  document.getElementById('accessModal').style.display = 'flex';
-}
+    function openAccessModal() {
+      document.getElementById('accessModal').style.display = 'flex';
+      document.getElementById('accessError').style.display = 'none';
+    }
 
-// Close Modal
-function closeModal(modalId) {
-  document.getElementById(modalId).style.display = 'none';
-}
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
 
-// Update Name in Firestore
-function updateName() {
-  const user = auth.currentUser;
-  const firstName = document.getElementById('newFirstName').value;
-  const middleName = document.getElementById('newMiddleName').value;
-  const lastName = document.getElementById('newLastName').value;
+    function updateName() {
+      const user = auth.currentUser;
+      const firstName = document.getElementById('newFirstName').value.trim();
+      const middleName = document.getElementById('newMiddleName').value.trim();
+      const lastName = document.getElementById('newLastName').value.trim();
 
-  firestore.collection('users').doc(user.uid).update({
-    firstName: firstName,
-    middleName: middleName,
-    lastName: lastName
-  })
-  .then(() => {
-    alert('Name updated successfully');
-    closeModal('changeNameModal'); // Ensure the modal is closed after saving
-  })
-  .catch(error => {
-    console.error('Error updating name:', error);
-  });
-}
-
-// Update Password in Firebase Auth
-function updatePassword() {
-  const user = auth.currentUser;
-  const currentPassword = document.getElementById('currentPassword').value;
-  const newPassword = document.getElementById('newPassword').value;
-  const reEnterPassword = document.getElementById('reEnterPassword').value;
-
-  if (newPassword !== reEnterPassword) {
-    alert('Passwords do not match');
-    return;
-  }
-
-  const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
-  user.reauthenticateWithCredential(credential).then(() => {
-    user.updatePassword(newPassword).then(() => {
-      alert('Password updated successfully');
-      closeModal('changePasswordModal'); // Ensure the modal is closed after saving
-    }).catch(error => {
-      console.error('Error updating password:', error);
-    });
-  }).catch(error => {
-    console.error('Reauthentication failed:', error);
-  });
-}
-
-// Verify Access (email and pin)
-function verifyAccess() {
-  const email = document.getElementById('accessEmail').value;
-  const pin = document.getElementById('accessPin').value;
-
-  firestore.collection('users').where('email', '==', email).where('pin', '==', pin).get()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        alert('No account found with that email and PIN');
+      if (!firstName || !middleName || !lastName) {
+        document.getElementById('nameError').style.display = 'block';
         return;
       }
 
-      snapshot.forEach(doc => {
-        const userData = doc.data();
-        if (userData.role && ['moderator', 'manager', 'co-admin', 'admin', 'UNIQUE'].includes(userData.role)) {
-          window.location.href = 'home.html';
-        } else {
-          alert('Access denied: Your account role is not authorized');
-        }
+      firestore.collection('users').doc(user.uid).update({
+        firstName,
+        middleName,
+        lastName
+      })
+      .then(() => {
+        alert('Name updated successfully');
+        closeModal('changeNameModal');
+      })
+      .catch(error => {
+        console.error('Error updating name:', error);
       });
-    })
-    .catch(error => {
-      console.error('Error verifying access:', error);
-    });
-}
+    }
+
+    function updatePassword() {
+      const user = auth.currentUser;
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const reEnterPassword = document.getElementById('reEnterPassword').value;
+
+      if (!currentPassword || !newPassword || !reEnterPassword || newPassword !== reEnterPassword) {
+        document.getElementById('passwordError').style.display = 'block';
+        return;
+      }
+
+      const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+      user.reauthenticateWithCredential(credential).then(() => {
+        user.updatePassword(newPassword).then(() => {
+          alert('Password updated successfully');
+          closeModal('changePasswordModal');
+        }).catch(error => {
+          console.error('Error updating password:', error);
+        });
+      }).catch(error => {
+        console.error('Reauthentication failed:', error);
+      });
+    }
+
+    function verifyAccess() {
+      const email = document.getElementById('accessEmail').value.trim();
+      const pin = document.getElementById('accessPin').value.trim();
+
+      if (!email || !pin) {
+        document.getElementById('accessError').textContent = 'Please fill in all fields.';
+        document.getElementById('accessError').style.display = 'block';
+        return;
+      }
+
+      firestore.collection('users').where('email', '==', email).where('pin', '==', pin).get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            document.getElementById('accessError').textContent = 'Invalid email or password.';
+            document.getElementById('accessError').style.display = 'block';
+            return;
+          }
+
+          snapshot.forEach(doc => {
+            const userData = doc.data();
+            if (userData.role && ['moderator', 'manager', 'co-admin', 'admin', 'UNIQUE'].includes(userData.role)) {
+              window.location.href = 'home.html';
+            } else {
+              alert('Access denied: Your account role is not authorized');
+            }
+          });
+        })
+        .catch(error => {
+          console.error('Error verifying access:', error);
+        });
+    }
   </script>
 </body>
 </html>
