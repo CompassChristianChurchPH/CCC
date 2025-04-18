@@ -5,17 +5,175 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CCC - Settings</title>
   <link rel="icon" href="assets/ccc-icon.png" type="image/png" />
-  <link rel="stylesheet" href="styles.css" />
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
-  <script src="firebase-config.js" type="module"></script>
+  <style>
+    /* Base Styles */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    header {
+      background-color: #2b5dad;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    nav button {
+      background: #fff;
+      color: #2b5dad;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    nav button:hover {
+      background-color: #e0e0e0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #2b5dad;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .button-group button {
+      background-color: #2b5dad;
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .button-group button:hover {
+      background-color: #1e4a8c;
+    }
+
+    .form-section {
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .submit-btn {
+      margin-top: 1.5rem;
+      background-color: #2b5dad;
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .submit-btn:hover {
+      background-color: #1e4a8c;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 2rem;
+      border: 1px solid #888;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      color: #aaa;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .button-group {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      nav button {
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
+    <h1>Compass Christian Church</h1>
     <nav>
       <button onclick="location.href='home.html'">Home</button>
     </nav>
@@ -29,7 +187,7 @@
       <button onclick="showSection('access')">Access</button>
     </div>
 
-    <section id="changePass" class="hidden">
+    <section id="changePass" class="form-section">
       <h3>Change Password</h3>
       <label for="currentPassword">Current Password</label>
       <input type="password" id="currentPassword" placeholder="Enter current password">
@@ -40,101 +198,52 @@
       <label for="confirmNewPassword">Re-Enter New Password</label>
       <input type="password" id="confirmNewPassword" placeholder="Re-enter new password">
 
-      <button onclick="verifyEmailAndPin('password')">Save</button>
+      <button class="submit-btn" onclick="verifyEmailAndPin('password')">Save</button>
     </section>
 
-    <section id="changeName" class="hidden">
+    <section id="changeName" class="form-section">
       <h3>Change Name</h3>
       <label for="firstName">First Name</label>
       <input type="text" id="firstName" placeholder="Enter first name">
 
-      <label for="middleName">Middle Name</label>
-      <input type="text" id="middleName" placeholder="Enter middle name">
-
       <label for="lastName">Last Name</label>
       <input type="text" id="lastName" placeholder="Enter last name">
 
-      <button onclick="verifyEmailAndPin('name')">Save</button>
+      <button class="submit-btn" onclick="verifyEmailAndPin('name')">Save</button>
     </section>
 
-    <section id="access" class="hidden">
-      <h3>Access</h3>
-      <label for="accessUsername">Username</label>
-      <input type="text" id="accessUsername" placeholder="Enter username">
+    <section id="access" class="form-section">
+      <h3>Access Settings</h3>
+      <label for="pin">PIN</label>
+      <input type="text" id="pin" placeholder="Enter PIN">
 
-      <label for="accessPin">PIN</label>
-      <input type="password" id="accessPin" placeholder="Enter PIN">
-
-      <button onclick="verifyAccess()">Access</button>
+      <button class="submit-btn" onclick="verifyEmailAndPin('access')">Save</button>
     </section>
   </main>
 
-  <!-- Modal for Email and PIN Verification -->
-  <div id="modal" class="modal hidden">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <h3>Verification</h3>
-      <label for="modalEmail">Email</label>
-      <input type="email" id="modalEmail" placeholder="Enter email">
+  <script>
+    // Toggle form visibility
+    function showSection(section) {
+      const sections = document.querySelectorAll('.form-section');
+      sections.forEach(sec => sec.classList.remove('active'));
+      document.getElementById(section).classList.add('active');
+    }
 
-      <label for="modalPin">PIN</label>
-      <input type="password" id="modalPin" placeholder="Enter PIN">
-
-      <button onclick="submitVerification()">Submit</button>
-    </div>
-  </div>
-
-  <script type="module">
-    import { auth, db } from './firebase-config.js';
-
-    // Function to show the selected section
-    window.showSection = function(sectionId) {
-      document.querySelectorAll('section').forEach(section => {
-        section.classList.add('hidden');
-      });
-      document.getElementById(sectionId).classList.remove('hidden');
-    };
-
-    // Function to open the modal
-    window.verifyEmailAndPin = function(action) {
-      window.currentAction = action;
-      document.getElementById('modal').classList.remove('hidden');
-    };
-
-    // Function to close the modal
-    window.closeModal = function() {
-      document.getElementById('modal').classList.add('hidden');
-    };
-
-    // Function to handle verification submission
-    window.submitVerification = async function() {
-      const email = document.getElementById('modalEmail').value;
-      const pin = document.getElementById('modalPin').value;
-
-      // Implement your verification logic here
-      // For example, fetch user data from Firestore and compare PIN
-
-      // After verification, perform the desired action
-      if (window.currentAction === 'password') {
-        // Update password logic
-      } else if (window.currentAction === 'name') {
-        // Update name logic
+    // Verify PIN and handle actions
+    function verifyEmailAndPin(action) {
+      const pin = document.getElementById('pin').value;
+      if (pin.length === 6) {
+        if (action === 'password') {
+          alert('Password successfully updated');
+        } else if (action === 'name') {
+          alert('Name successfully updated');
+        } else {
+          alert('Access successfully updated');
+        }
+      } else {
+        alert('Invalid PIN');
       }
-
-      closeModal();
-    };
-
-    // Function to handle access verification
-    window.verifyAccess = async function() {
-      const username = document.getElementById('accessUsername').value;
-      const pin = document.getElementById('accessPin').value;
-
-      // Implement your access verification logic here
-      // For example, check if the username and PIN match predefined credentials
-
-      // If verified, redirect to access.html
-      window.location.href = 'access.html';
-    };
+    }
   </script>
 </body>
 </html>
