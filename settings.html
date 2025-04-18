@@ -325,8 +325,8 @@
           console.error('Error verifying access:', error);
         });
     }
-  </script>
   <script>
+  // 1. Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
     authDomain: "compass-christian-church-4b02e.firebaseapp.com",
@@ -337,74 +337,56 @@
     measurementId: "G-T6EWRN2THW"
   };
 
+  // 2. Initialize Firebase
   const app = firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const firestore = firebase.firestore();
 
+  // 3. Auth state check before running functions
   auth.onAuthStateChanged((user) => {
     if (!user) {
-      alert("You're not signed in.");
-      window.location.href = "index.html"; // or your login page
+      alert("You must be signed in.");
+      window.location.href = "index.html"; // redirect to login
       return;
     }
 
-    // ✅ User is signed in — Now define your update functions
+    // 4. Function: Verify Access
+    window.verifyAccess = function () {
+      const email = document.getElementById('accessEmail').value.trim();
+      const password = document.getElementById('accessPassword').value;
 
-    window.updateName = function () {
-      const firstName = document.getElementById('newFirstName').value.trim().toUpperCase().slice(0, 12);
-      const middleName = document.getElementById('newMiddleName').value.trim().toUpperCase().slice(0, 12);
-      const lastName = document.getElementById('newLastName').value.trim().toUpperCase().slice(0, 12);
-
-      if (!firstName || !middleName || !lastName) {
-        document.getElementById('nameError').style.display = 'block';
+      if (!email || !password) {
+        document.getElementById('accessError').style.display = 'block';
         return;
       }
 
-      firestore.collection('users').doc(user.uid).update({
-        firstName,
-        middleName,
-        lastName
-      }).then(() => {
-        alert('Name updated successfully');
-        closeModal('changeNameModal');
-      }).catch((error) => {
-        console.error('Error updating name:', error);
-      });
-    };
-
-    window.updatePassword = function () {
-      const currentPassword = document.getElementById('currentPassword').value;
-      const newPassword = document.getElementById('newPassword').value;
-      const reEnterPassword = document.getElementById('reEnterPassword').value;
-
-      if (!currentPassword || !newPassword || !reEnterPassword || newPassword !== reEnterPassword) {
-        document.getElementById('passwordError').style.display = 'block';
-        return;
-      }
-
-      const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
-      user.reauthenticateWithCredential(credential).then(() => {
-        return user.updatePassword(newPassword);
-      }).then(() => {
-        alert('Password updated successfully');
-        closeModal('changePasswordModal');
-      }).catch((error) => {
-        console.error('Error updating password:', error);
-      });
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const uid = userCredential.user.uid;
+          return firestore.collection('users').doc(uid).get();
+        })
+        .then((doc) => {
+          if (doc.exists) {
+            const role = doc.data().role || "";
+            const allowedRoles = ["moderator", "manager", "co-admin", "admin", "UNIQUE"];
+            if (allowedRoles.includes(role)) {
+              alert("Access granted");
+              window.location.href = "home.html";
+            } else {
+              alert("Access denied: insufficient privileges");
+            }
+          } else {
+            alert("User record not found.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error verifying access:", error);
+          document.getElementById('accessError').style.display = 'block';
+        });
     };
   });
 
-  // These can stay outside
-  function openChangeNameModal() {
-    document.getElementById('changeNameModal').style.display = 'flex';
-    document.getElementById('nameError').style.display = 'none';
-  }
-
-  function openChangePasswordModal() {
-    document.getElementById('changePasswordModal').style.display = 'flex';
-    document.getElementById('passwordError').style.display = 'none';
-  }
-
+  // 5. Modal handling (this can stay outside)
   function openAccessModal() {
     document.getElementById('accessModal').style.display = 'flex';
     document.getElementById('accessError').style.display = 'none';
@@ -414,5 +396,6 @@
     document.getElementById(modalId).style.display = 'none';
   }
 </script>
+
 </body>
 </html>
