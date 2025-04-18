@@ -5,213 +5,136 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CCC - Settings</title>
   <link rel="icon" href="assets/ccc-icon.png" type="image/png" />
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Arial', sans-serif; }
-
-    body {
-      background-color: #f0f2f5;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    body.dark-mode {
-      background-color: #1c1c1c;
-      color: #fff;
-    }
-
-    header {
-      background-color: #2b5dad;
-      color: white;
-      padding: 20px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    header h1 {
-      font-size: 24px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    header h1 img {
-      width: 32px;
-      height: 32px;
-    }
-
-    nav button {
-      margin-left: 10px;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      background-color: white;
-      color: #2b5dad;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    nav button:hover {
-      background-color: #f1f1f1;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-
-    .dark-mode .container {
-      background-color: #2c2c2c;
-      color: white;
-    }
-
-    h2 {
-      margin-bottom: 20px;
-      font-size: 22px;
-      font-weight: bold;
-      color: #2b5dad;
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    input[type="password"],
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      background-color: white;
-    }
-
-    .dark-mode input {
-      background-color: #444;
-      color: white;
-      border-color: #666;
-    }
-
-    .submit-btn {
-      margin-top: 20px;
-      background: #2b5dad;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    .submit-btn:hover {
-      background-color: #1e4a8c;
-    }
-
-    .toggle {
-      margin-top: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #2b5dad;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      display: none;
-      z-index: 1000;
-    }
-
-    .toast.show {
-      display: block;
-      animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    }
-
-    @keyframes fadein {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes fadeout {
-      from { opacity: 1; }
-      to { opacity: 0; }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
+  <script src="firebase-config.js" type="module"></script>
 </head>
 <body>
   <header>
     <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
     <nav>
-      <button onclick="location.href='https://davaoph.github.io/CCC/home.html'">Home</button>
+      <button onclick="location.href='home.html'">Home</button>
     </nav>
   </header>
 
   <main class="container">
-    <h2>Account Settings</h2>
-    <label for="newPassword">New Password</label>
-    <input type="password" id="newPassword" placeholder="Enter new password">
-
-    <label for="confirmPassword">Confirm Password</label>
-    <input type="password" id="confirmPassword" placeholder="Confirm new password">
-
-    <button class="submit-btn" onclick="updatePassword()">Update Password</button>
-
-    <div class="toggle">
-      <label for="darkModeToggle">Dark Mode</label>
-      <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+    <h2>Settings</h2>
+    <div class="button-group">
+      <button onclick="showSection('changePass')">Change Pass</button>
+      <button onclick="showSection('changeName')">Change Name</button>
+      <button onclick="showSection('access')">Access</button>
     </div>
+
+    <section id="changePass" class="hidden">
+      <h3>Change Password</h3>
+      <label for="currentPassword">Current Password</label>
+      <input type="password" id="currentPassword" placeholder="Enter current password">
+
+      <label for="newPassword">New Password</label>
+      <input type="password" id="newPassword" placeholder="Enter new password">
+
+      <label for="confirmNewPassword">Re-Enter New Password</label>
+      <input type="password" id="confirmNewPassword" placeholder="Re-enter new password">
+
+      <button onclick="verifyEmailAndPin('password')">Save</button>
+    </section>
+
+    <section id="changeName" class="hidden">
+      <h3>Change Name</h3>
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" placeholder="Enter first name">
+
+      <label for="middleName">Middle Name</label>
+      <input type="text" id="middleName" placeholder="Enter middle name">
+
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" placeholder="Enter last name">
+
+      <button onclick="verifyEmailAndPin('name')">Save</button>
+    </section>
+
+    <section id="access" class="hidden">
+      <h3>Access</h3>
+      <label for="accessUsername">Username</label>
+      <input type="text" id="accessUsername" placeholder="Enter username">
+
+      <label for="accessPin">PIN</label>
+      <input type="password" id="accessPin" placeholder="Enter PIN">
+
+      <button onclick="verifyAccess()">Access</button>
+    </section>
   </main>
 
-  <div class="toast" id="toast">Saved!</div>
+  <!-- Modal for Email and PIN Verification -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3>Verification</h3>
+      <label for="modalEmail">Email</label>
+      <input type="email" id="modalEmail" placeholder="Enter email">
 
-  <script>
-    // Dark Mode toggle function
-    function toggleDarkMode() {
-      const isDark = document.getElementById("darkModeToggle").checked;
-      document.body.classList.toggle("dark-mode", isDark);
-      localStorage.setItem("theme", isDark ? "dark" : "light");
-    }
+      <label for="modalPin">PIN</label>
+      <input type="password" id="modalPin" placeholder="Enter PIN">
 
-    // Load the theme from localStorage when the page loads
-    window.onload = function() {
-      const theme = localStorage.getItem("theme") || "light";
-      if (theme === "dark") {
-        document.body.classList.add("dark-mode");
-        document.getElementById("darkModeToggle").checked = true;
-      }
+      <button onclick="submitVerification()">Submit</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from './firebase-config.js';
+
+    // Function to show the selected section
+    window.showSection = function(sectionId) {
+      document.querySelectorAll('section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      document.getElementById(sectionId).classList.remove('hidden');
     };
 
-    // Update password function (optional for settings)
-    function updatePassword() {
-      const newPass = document.getElementById("newPassword").value.trim();
-      const confirmPass = document.getElementById("confirmPassword").value.trim();
+    // Function to open the modal
+    window.verifyEmailAndPin = function(action) {
+      window.currentAction = action;
+      document.getElementById('modal').classList.remove('hidden');
+    };
 
-      if (newPass.length < 12) {
-        return alert("Password must be at least 12 characters.");
+    // Function to close the modal
+    window.closeModal = function() {
+      document.getElementById('modal').classList.add('hidden');
+    };
+
+    // Function to handle verification submission
+    window.submitVerification = async function() {
+      const email = document.getElementById('modalEmail').value;
+      const pin = document.getElementById('modalPin').value;
+
+      // Implement your verification logic here
+      // For example, fetch user data from Firestore and compare PIN
+
+      // After verification, perform the desired action
+      if (window.currentAction === 'password') {
+        // Update password logic
+      } else if (window.currentAction === 'name') {
+        // Update name logic
       }
 
-      if (newPass !== confirmPass) {
-        return alert("Passwords do not match!");
-      }
+      closeModal();
+    };
 
-      alert("Password updated successfully!");
-      document.getElementById("newPassword").value = "";
-      document.getElementById("confirmPassword").value = "";
-    }
+    // Function to handle access verification
+    window.verifyAccess = async function() {
+      const username = document.getElementById('accessUsername').value;
+      const pin = document.getElementById('accessPin').value;
+
+      // Implement your access verification logic here
+      // For example, check if the username and PIN match predefined credentials
+
+      // If verified, redirect to access.html
+      window.location.href = 'access.html';
+    };
   </script>
 </body>
 </html>
