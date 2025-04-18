@@ -5,299 +5,206 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CCC - Settings</title>
   <link rel="icon" href="assets/ccc-icon.png" type="image/png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* Original Header Styles Restored */
-    body {
-      font-family: 'Inter', sans-serif;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      background-color: #f4f4f9;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f4f4f4;
+      min-height: 100vh;
+      transition: background-color 0.3s ease;
     }
 
     header {
-      background-color: #333;
+      background-color: #2b5dad;
       color: white;
-      padding: 20px;
+      padding: 12px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      flex-wrap: wrap;
     }
 
     header h1 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 600;
+      display: flex;
+      align-items: center;
+      font-size: 1.4rem;
+      gap: 10px;
     }
 
-    header img {
-      width: 30px;
-      height: 30px;
-      margin-right: 10px;
+    header h1 img {
+      width: 32px;
+      height: 32px;
     }
 
-    header nav button {
-      background: #ff6f61;
-      color: white;
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    nav button {
+      padding: 8px 14px;
       border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-size: 16px;
       border-radius: 5px;
+      background-color: white;
+      color: #2b5dad;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
     }
 
-    header nav button:hover {
-      background: #ff4f3a;
+    nav button:hover {
+      background-color: #e6e6e6;
     }
 
     .container {
-      padding: 20px;
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     }
 
-    .button-group {
-      margin-bottom: 20px;
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #2b5dad;
     }
 
-    .action-btn {
-      background-color: #4CAF50;
+    .settings-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .settings-form input, .settings-form button {
+      padding: 12px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .settings-form input {
+      font-size: 1rem;
+    }
+
+    .settings-form button {
+      background-color: #2b5dad;
       color: white;
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
+      font-weight: bold;
       cursor: pointer;
-      margin-right: 10px;
+      transition: background-color 0.3s ease;
     }
 
-    .section {
-      display: none;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    .save-btn {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      cursor: pointer;
-      margin-top: 20px;
+    .settings-form button:hover {
+      background-color: #1f4c8a;
     }
 
     .error-message {
       color: red;
+      font-size: 0.9rem;
+      margin-top: -10px;
+    }
+
+    .loading {
+      text-align: center;
+      color: #888;
+      font-style: italic;
       display: none;
     }
 
-    .popup-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-    }
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.2rem;
+      }
 
-    .popup {
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    }
+      .container {
+        margin: 20px;
+        padding: 15px;
+      }
 
-    .popup input {
-      margin-bottom: 10px;
-      padding: 8px;
-      font-size: 16px;
-      width: 100%;
-    }
-
-    .popup button {
-      background-color: #ff6f61;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
+      .settings-form input, .settings-form button {
+        font-size: 0.9rem;
+        padding: 10px;
+      }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
-  <nav>
-    <button onclick="location.href='home.html'">Home</button>
-  </nav>
-</header>
+  <header>
+    <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
+    <nav>
+      <button onclick="location.href='home.html'">Home</button>
+    </nav>
+  </header>
 
-<main class="container">
-  <div class="button-group">
-    <button class="action-btn" onclick="showSection('changePass')">Change Pass</button>
-    <button class="action-btn" onclick="showSection('changeName')">Change Name</button>
-    <button class="action-btn" onclick="showSection('access')">Access</button>
+  <div class="container">
+    <h2>Settings</h2>
+    <div class="settings-form">
+      <input type="text" id="nameInput" placeholder="Enter your name" />
+      <input type="email" id="emailInput" placeholder="Enter your email" />
+      <button onclick="saveSettings()">Save</button>
+      <div class="error-message" id="errorMessage"></div>
+    </div>
+    <div class="loading" id="loadingText">Saving settings...</div>
   </div>
 
-  <div id="changePass" class="section">
-    <h3>Change Password</h3>
-    <label>Current Password</label>
-    <input type="password" id="currentPass">
-    <div class="error-message" id="errorCurrentPass">This field is required.</div>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 
-    <label>New Password</label>
-    <input type="password" id="newPass">
-    <div class="error-message" id="errorNewPass">Must be at least 12 characters.</div>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+      authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+      projectId: "compass-christian-church-4b02e",
+      storageBucket: "compass-christian-church-4b02e.appspot.com",
+      messagingSenderId: "436310011988",
+      appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+      measurementId: "G-T6EWRN2THW"
+    };
 
-    <label>Re-Enter New Password</label>
-    <input type="password" id="confirmNewPass">
-    <div class="error-message" id="errorConfirmPass">Passwords do not match.</div>
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore(app);
 
-    <button class="save-btn" onclick="openPopup('changePass')">Save</button>
-  </div>
+    const user = JSON.parse(localStorage.getItem("ccc_loggedInUser"));
+    if (!user) window.location.href = "index.html";
 
-  <div id="changeName" class="section">
-    <h3>Change Name</h3>
-    <label>First Name</label>
-    <input type="text" id="firstName">
-    <div class="error-message" id="errorFirstName">Required.</div>
+    const nameInput = document.getElementById("nameInput");
+    const emailInput = document.getElementById("emailInput");
+    const errorMessage = document.getElementById("errorMessage");
+    const loadingText = document.getElementById("loadingText");
 
-    <label>Middle Name</label>
-    <input type="text" id="middleName">
-    <div class="error-message" id="errorMiddleName">Required.</div>
+    function saveSettings() {
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
 
-    <label>Last Name</label>
-    <input type="text" id="lastName">
-    <div class="error-message" id="errorLastName">Required.</div>
+      if (!name || !email) {
+        errorMessage.textContent = "Both fields are required.";
+        return;
+      }
 
-    <button class="save-btn" onclick="openPopup('changeName')">Save</button>
-  </div>
+      loadingText.style.display = "block";
 
-  <div id="access" class="section">
-    <h3>Secure Access</h3>
-    <label>Email</label>
-    <input type="email" id="accessEmail" disabled>
-    <div class="error-message" id="errorAccessEmail">Required.</div>
-
-    <label>PIN</label>
-    <input type="password" id="accessPin">
-    <div class="error-message" id="errorAccessPin">Required.</div>
-
-    <button class="save-btn" onclick="handleAccess()">Access</button>
-  </div>
-</main>
-
-<!-- Popup Modal -->
-<div class="popup-overlay" id="popupOverlay">
-  <div class="popup" id="popupContent">
-    <h4>Confirm Identity</h4>
-    <label>Email</label>
-    <input type="email" id="popupEmail" />
-    <label>PIN</label>
-    <input type="password" id="popupPin" />
-    <button class="save-btn" onclick="submitPopup()">Submit</button>
-  </div>
-</div>
-
-<script type="module">
-  import { auth, db } from './firebase-config.js';
-
-  // Fetch the current user's data from Firestore and display the email
-  window.onload = () => {
-    const user = auth.currentUser;
-    if (user) {
-      // Fetch user data from Firestore
-      const userRef = db.collection('users').doc(user.uid);
-      userRef.get().then(doc => {
-        if (doc.exists) {
-          // Set the email from Firestore to the input field
-          document.getElementById('accessEmail').value = user.email;  // Pre-fill the email field
-        }
-      }).catch(error => {
-        console.error("Error getting document:", error);
+      const userRef = db.collection("users").doc(user.username);
+      userRef.update({
+        name,
+        email
+      }).then(() => {
+        loadingText.style.display = "none";
+        alert("Settings saved successfully!");
+      }).catch((error) => {
+        loadingText.style.display = "none";
+        errorMessage.textContent = `Error: ${error.message}`;
       });
     }
-  };
-
-  window.showSection = (id) => {
-    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  };
-
-  window.openPopup = (type) => {
-    const valid = validateSection(type);
-    if (!valid) return;
-    document.getElementById('popupOverlay').style.display = 'flex';
-    // you can store current type if needed
-  };
-
-  window.submitPopup = () => {
-    const email = document.getElementById('popupEmail').value.trim();
-    const pin = document.getElementById('popupPin').value.trim();
-
-    if (!email || !pin) {
-      alert("Email and PIN are required.");
-      return;
-    }
-
-    // Firestore check logic here
-    alert("Verified! (Simulation)");
-    document.getElementById('popupOverlay').style.display = 'none';
-  };
-
-  window.handleAccess = () => {
-    const email = document.getElementById('accessEmail').value.trim();
-    const pin = document.getElementById('accessPin').value.trim();
-
-    document.getElementById('errorAccessEmail').style.display = email ? "none" : "block";
-    document.getElementById('errorAccessPin').style.display = pin ? "none" : "block";
-
-    if (email && pin === "123456") {  // Example condition, replace with actual logic
-      window.location.href = "access.html";
-    } else {
-      alert("Access denied.");
-    }
-  };
-
-  function validateSection(type) {
-    let valid = true;
-
-    if (type === 'changePass') {
-      const current = document.getElementById('currentPass').value.trim();
-      const newPass = document.getElementById('newPass').value.trim();
-      const confirm = document.getElementById('confirmNewPass').value.trim();
-
-      document.getElementById('errorCurrentPass').style.display = current ? "none" : "block";
-
-      const passValid = newPass.length >= 6 && newPass.length <= 12;
-      document.getElementById('errorNewPass').style.display = passValid ? "none" : "block";
-
-      document.getElementById('errorConfirmPass').style.display = newPass === confirm ? "none" : "block";
-
-      if (!current || !passValid || newPass !== confirm) valid = false;
-    }
-
-    if (type === 'changeName') {
-      const first = document.getElementById('firstName').value.trim();
-      const middle = document.getElementById('middleName').value.trim();
-      const last = document.getElementById('lastName').value.trim();
-
-      document.getElementById('errorFirstName').style.display = first ? "none" : "block";
-      document.getElementById('errorMiddleName').style.display = middle ? "none" : "block";
-      document.getElementById('errorLastName').style.display = last ? "none" : "block";
-
-      if (!first || !middle || !last) valid = false;
-    }
-
-    return valid;
-  }
-</script>
-
+  </script>
 </body>
 </html>
