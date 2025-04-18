@@ -5,245 +5,314 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CCC - Settings</title>
   <link rel="icon" href="assets/ccc-icon.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* Base Styles */
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f9f9f9;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: #f4f6fa;
       color: #333;
+      min-height: 100vh;
     }
 
     header {
       background-color: #2b5dad;
-      color: #fff;
-      padding: 1rem 2rem;
+      color: white;
+      padding: 20px 30px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 15px;
+    }
+
+    header img {
+      width: 32px;
+      height: 32px;
     }
 
     header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
-
-    nav button {
-      background: #fff;
-      color: #2b5dad;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    nav button:hover {
-      background-color: #e0e0e0;
+      font-size: 22px;
+      font-weight: 600;
     }
 
     .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      background: #fff;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 2rem;
-      color: #2b5dad;
+      max-width: 700px;
+      margin: 30px auto;
+      background-color: white;
+      border-radius: 12px;
+      padding: 30px 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
 
     .button-group {
       display: flex;
       justify-content: center;
-      gap: 1rem;
       flex-wrap: wrap;
-      margin-bottom: 2rem;
+      gap: 15px;
+      margin-bottom: 20px;
     }
 
-    .button-group button {
+    .action-btn {
+      padding: 10px 20px;
       background-color: #2b5dad;
-      color: #fff;
+      color: white;
       border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 5px;
+      border-radius: 8px;
+      font-weight: 600;
       cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s;
+      transition: background 0.3s;
     }
 
-    .button-group button:hover {
-      background-color: #1e4a8c;
+    .action-btn:hover {
+      background-color: #204a8c;
     }
 
-    .form-section {
+    .section {
       display: none;
-      margin-top: 1rem;
+      margin-top: 20px;
     }
 
-    .form-section.active {
+    .section.active {
       display: block;
+    }
+
+    .section h3 {
+      margin-bottom: 15px;
+      color: #2b5dad;
+      font-size: 20px;
     }
 
     label {
       display: block;
-      margin-top: 1rem;
-      font-weight: bold;
+      margin: 10px 0 5px;
+      font-weight: 600;
     }
 
     input[type="text"],
     input[type="password"],
     input[type="email"] {
       width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
+      padding: 10px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 6px;
+      margin-bottom: 5px;
     }
 
-    .submit-btn {
-      margin-top: 1.5rem;
-      background-color: #2b5dad;
-      color: #fff;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .submit-btn:hover {
-      background-color: #1e4a8c;
-    }
-
-    /* Modal Styles */
-    .modal {
+    .error-message {
+      color: red;
+      font-size: 13px;
+      margin-bottom: 10px;
       display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
+    }
+
+    .save-btn {
+      margin-top: 15px;
       width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.5);
-    }
-
-    .modal-content {
-      background-color: #fff;
-      margin: 10% auto;
-      padding: 2rem;
-      border: 1px solid #888;
-      width: 90%;
-      max-width: 400px;
-      border-radius: 10px;
-      position: relative;
-    }
-
-    .close {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      color: #aaa;
-      font-size: 1.5rem;
+      padding: 10px;
+      background-color: #2b5dad;
+      color: white;
+      border: none;
+      border-radius: 6px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    .close:hover {
-      color: #000;
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
     }
 
-    /* Responsive Design */
-    @media (max-width: 600px) {
+    .popup {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .popup h4 {
+      margin-bottom: 15px;
+      color: #2b5dad;
+      text-align: center;
+    }
+
+    .popup input {
+      margin-bottom: 10px;
+    }
+
+    .popup .save-btn {
+      background-color: #2b5dad;
+    }
+
+    @media screen and (max-width: 600px) {
       .button-group {
         flex-direction: column;
         align-items: center;
-      }
-
-      nav button {
-        margin-top: 0.5rem;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Compass Christian Church</h1>
-    <nav>
-      <button onclick="location.href='home.html'">Home</button>
-    </nav>
-  </header>
 
-  <main class="container">
-    <h2>Settings</h2>
-    <div class="button-group">
-      <button onclick="showSection('changePass')">Change Pass</button>
-      <button onclick="showSection('changeName')">Change Name</button>
-      <button onclick="showSection('access')">Access</button>
-    </div>
+<header>
+  <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
+</header>
 
-    <section id="changePass" class="form-section">
-      <h3>Change Password</h3>
-      <label for="currentPassword">Current Password</label>
-      <input type="password" id="currentPassword" placeholder="Enter current password">
+<main class="container">
+  <div class="button-group">
+    <button class="action-btn" onclick="showSection('changePass')">Change Pass</button>
+    <button class="action-btn" onclick="showSection('changeName')">Change Name</button>
+    <button class="action-btn" onclick="showSection('access')">Access</button>
+  </div>
 
-      <label for="newPassword">New Password</label>
-      <input type="password" id="newPassword" placeholder="Enter new password">
+  <div id="changePass" class="section">
+    <h3>Change Password</h3>
+    <label>Current Password</label>
+    <input type="password" id="currentPass">
+    <div class="error-message" id="errorCurrentPass">This field is required.</div>
 
-      <label for="confirmNewPassword">Re-Enter New Password</label>
-      <input type="password" id="confirmNewPassword" placeholder="Re-enter new password">
+    <label>New Password</label>
+    <input type="password" id="newPass">
+    <div class="error-message" id="errorNewPass">Must be at least 12 characters.</div>
 
-      <button class="submit-btn" onclick="verifyEmailAndPin('password')">Save</button>
-    </section>
+    <label>Re-Enter New Password</label>
+    <input type="password" id="confirmNewPass">
+    <div class="error-message" id="errorConfirmPass">Passwords do not match.</div>
 
-    <section id="changeName" class="form-section">
-      <h3>Change Name</h3>
-      <label for="firstName">First Name</label>
-      <input type="text" id="firstName" placeholder="Enter first name">
+    <button class="save-btn" onclick="openPopup('changePass')">Save</button>
+  </div>
 
-      <label for="lastName">Last Name</label>
-      <input type="text" id="lastName" placeholder="Enter last name">
+  <div id="changeName" class="section">
+    <h3>Change Name</h3>
+    <label>First Name</label>
+    <input type="text" id="firstName">
+    <div class="error-message" id="errorFirstName">Required.</div>
 
-      <button class="submit-btn" onclick="verifyEmailAndPin('name')">Save</button>
-    </section>
+    <label>Middle Name</label>
+    <input type="text" id="middleName">
+    <div class="error-message" id="errorMiddleName">Required.</div>
 
-    <section id="access" class="form-section">
-      <h3>Access Settings</h3>
-      <label for="pin">PIN</label>
-      <input type="text" id="pin" placeholder="Enter PIN">
+    <label>Last Name</label>
+    <input type="text" id="lastName">
+    <div class="error-message" id="errorLastName">Required.</div>
 
-      <button class="submit-btn" onclick="verifyEmailAndPin('access')">Save</button>
-    </section>
-  </main>
+    <button class="save-btn" onclick="openPopup('changeName')">Save</button>
+  </div>
 
-  <script>
-    // Toggle form visibility
-    function showSection(section) {
-      const sections = document.querySelectorAll('.form-section');
-      sections.forEach(sec => sec.classList.remove('active'));
-      document.getElementById(section).classList.add('active');
+  <div id="access" class="section">
+    <h3>Secure Access</h3>
+    <label>Username</label>
+    <input type="text" id="accessUsername">
+    <div class="error-message" id="errorAccessUsername">Required.</div>
+
+    <label>PIN</label>
+    <input type="password" id="accessPin">
+    <div class="error-message" id="errorAccessPin">Required.</div>
+
+    <button class="save-btn" onclick="handleAccess()">Access</button>
+  </div>
+</main>
+
+<!-- Popup Modal -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup" id="popupContent">
+    <h4>Confirm Identity</h4>
+    <label>Email</label>
+    <input type="email" id="popupEmail" />
+    <label>PIN</label>
+    <input type="password" id="popupPin" />
+    <button class="save-btn" onclick="submitPopup()">Submit</button>
+  </div>
+</div>
+
+<script type="module">
+  import { auth, db } from './firebase-config.js';
+
+  window.showSection = (id) => {
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  };
+
+  window.openPopup = (type) => {
+    const valid = validateSection(type);
+    if (!valid) return;
+    document.getElementById('popupOverlay').style.display = 'flex';
+    // you can store current type if needed
+  };
+
+  window.submitPopup = () => {
+    const email = document.getElementById('popupEmail').value.trim();
+    const pin = document.getElementById('popupPin').value.trim();
+
+    if (!email || !pin) {
+      alert("Email and PIN are required.");
+      return;
     }
 
-    // Verify PIN and handle actions
-    function verifyEmailAndPin(action) {
-      const pin = document.getElementById('pin').value;
-      if (pin.length === 6) {
-        if (action === 'password') {
-          alert('Password successfully updated');
-        } else if (action === 'name') {
-          alert('Name successfully updated');
-        } else {
-          alert('Access successfully updated');
-        }
-      } else {
-        alert('Invalid PIN');
-      }
+    // Firestore check logic here
+    alert("Verified! (Simulation)");
+    document.getElementById('popupOverlay').style.display = 'none';
+  };
+
+  window.handleAccess = () => {
+    const username = document.getElementById('accessUsername').value.trim();
+    const pin = document.getElementById('accessPin').value.trim();
+
+    document.getElementById('errorAccessUsername').style.display = username ? "none" : "block";
+    document.getElementById('errorAccessPin').style.display = pin ? "none" : "block";
+
+    if (username === "cccadmin" && pin === "000000") {
+      window.location.href = "access.html";
+    } else if (username === "cccmanager" && pin === "010101") {
+      window.location.href = "access.html";
+    } else if (username === "cccmoderator" && pin === "100101") {
+      window.location.href = "access.html";
+    } else {
+      alert("Access denied.");
     }
-  </script>
+  };
+
+  function validateSection(type) {
+    let valid = true;
+
+    if (type === 'changePass') {
+      const current = document.getElementById('currentPass').value.trim();
+      const newPass = document.getElementById('newPass').value.trim();
+      const confirm = document.getElementById('confirmNewPass').value.trim();
+
+      document.getElementById('errorCurrentPass').style.display = current ? "none" : "block";
+      document.getElementById('errorNewPass').style.display = newPass.length >= 12 ? "none" : "block";
+      document.getElementById('errorConfirmPass').style.display = newPass === confirm ? "none" : "block";
+
+      if (!current || newPass.length < 12 || newPass !== confirm) valid = false;
+    }
+
+    if (type === 'changeName') {
+      const first = document.getElementById('firstName').value.trim();
+      const middle = document.getElementById('middleName').value.trim();
+      const last = document.getElementById('lastName').value.trim();
+
+      document.getElementById('errorFirstName').style.display = first ? "none" : "block";
+      document.getElementById('errorMiddleName').style.display = middle ? "none" : "block";
+      document.getElementById('errorLastName').style.display = last ? "none" : "block";
+
+      if (!first || !middle || !last) valid = false;
+    }
+
+    return valid;
+  }
+</script>
+
 </body>
 </html>
