@@ -127,18 +127,33 @@
       border-radius: 5px;
     }
 
-    .modal-content button {
-      width: 50%;
-      padding: 10px;
-      background-color: #2b5dad;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
+    .modal-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;  /* Optional, adjusts the space between the buttons */
+}
 
-    .modal-content button:hover {
-      background-color: #1f4c8a;
-    }
+.modal-footer button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-footer .save-btn {
+  background-color: #2b5dad;  /* Blue for Save Changes/Access */
+  color: white;
+}
+
+.modal-footer .close-btn {
+  background-color: #e6e6e6;  /* Light grey for Close */
+  color: #333;
+}
+
+.modal-footer .close-btn:hover {
+  background-color: #ccc;
+}
 
   </style>
 </head>
@@ -168,7 +183,11 @@
         <input type="text" id="newFirstName" placeholder="First Name" />
         <input type="text" id="newMiddleName" placeholder="Middle Name" />
         <input type="text" id="newLastName" placeholder="Last Name" />
-        <button onclick="updateName()">Save Changes</button>  <button onclick="closeModal('changeNameModal')">Close</button>
+        <!-- Example for the modal container inside settings.html -->
+        <div class="modal-footer">
+          <button class="save-btn" onclick="saveChanges()">Save Changes</button>
+          <button class="close-btn" onclick="closeModal()">Close</button>
+        </div>
       </div>
     </div>
 
@@ -179,7 +198,11 @@
         <input type="password" id="currentPassword" placeholder="Current Password" />
         <input type="password" id="newPassword" placeholder="New Password" />
         <input type="password" id="reEnterPassword" placeholder="Re-enter New Password" />
-        <button onclick="updatePassword()">Save Changes</button>  <button onclick="closeModal('changePasswordModal')">Close</button>
+        <!-- Example for the modal container inside settings.html -->
+        <div class="modal-footer">
+          <button class="save-btn" onclick="saveChanges()">Save Changes</button>
+          <button class="close-btn" onclick="closeModal()">Close</button>
+        </div>
       </div>
     </div>
 
@@ -189,7 +212,11 @@
         <h3>Access</h3>
         <input type="email" id="accessEmail" placeholder="Enter your email" />
         <input type="password" id="accessPin" placeholder="Enter your PIN" />
-        <button onclick="verifyAccess()">Access</button>   <button onclick="closeModal('accessModal')">Close</button>
+        <!-- Example for the modal container inside settings.html -->
+        <div class="modal-footer">
+          <button class="save-btn" onclick="verifyAccess()">Access</button>
+          <button class="close-btn" onclick="closeModal('accessModal')">Close</button>
+        </div>
       </div>
     </div>
   </div>
