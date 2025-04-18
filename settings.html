@@ -244,94 +244,94 @@
     const firestore = firebase.firestore(app);
 
     // Open Modal
-    function openChangeNameModal() {
-      document.getElementById('changeNameModal').style.display = 'flex';
-    }
+function openChangeNameModal() {
+  document.getElementById('changeNameModal').style.display = 'flex';
+}
 
-    function openChangePasswordModal() {
-      document.getElementById('changePasswordModal').style.display = 'flex';
-    }
+function openChangePasswordModal() {
+  document.getElementById('changePasswordModal').style.display = 'flex';
+}
 
-    function openAccessModal() {
-      document.getElementById('accessModal').style.display = 'flex';
-    }
+function openAccessModal() {
+  document.getElementById('accessModal').style.display = 'flex';
+}
 
-    // Close Modal
-    function closeModal(modalId) {
-      document.getElementById(modalId).style.display = 'none';
-    }
+// Close Modal
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none';
+}
 
-    // Update Name in Firestore
-    function updateName() {
-      const user = auth.currentUser;
-      const firstName = document.getElementById('newFirstName').value;
-      const middleName = document.getElementById('newMiddleName').value;
-      const lastName = document.getElementById('newLastName').value;
+// Update Name in Firestore
+function updateName() {
+  const user = auth.currentUser;
+  const firstName = document.getElementById('newFirstName').value;
+  const middleName = document.getElementById('newMiddleName').value;
+  const lastName = document.getElementById('newLastName').value;
 
-      firestore.collection('users').doc(user.uid).update({
-        firstName: firstName,
-        middleName: middleName,
-        lastName: lastName
-      })
-      .then(() => {
-        alert('Name updated successfully');
-        closeModal('changeNameModal');
-      })
-      .catch(error => {
-        console.error('Error updating name:', error);
-      });
-    }
+  firestore.collection('users').doc(user.uid).update({
+    firstName: firstName,
+    middleName: middleName,
+    lastName: lastName
+  })
+  .then(() => {
+    alert('Name updated successfully');
+    closeModal('changeNameModal'); // Ensure the modal is closed after saving
+  })
+  .catch(error => {
+    console.error('Error updating name:', error);
+  });
+}
 
-    // Update Password in Firebase Auth
-    function updatePassword() {
-      const user = auth.currentUser;
-      const currentPassword = document.getElementById('currentPassword').value;
-      const newPassword = document.getElementById('newPassword').value;
-      const reEnterPassword = document.getElementById('reEnterPassword').value;
+// Update Password in Firebase Auth
+function updatePassword() {
+  const user = auth.currentUser;
+  const currentPassword = document.getElementById('currentPassword').value;
+  const newPassword = document.getElementById('newPassword').value;
+  const reEnterPassword = document.getElementById('reEnterPassword').value;
 
-      if (newPassword !== reEnterPassword) {
-        alert('Passwords do not match');
+  if (newPassword !== reEnterPassword) {
+    alert('Passwords do not match');
+    return;
+  }
+
+  const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+  user.reauthenticateWithCredential(credential).then(() => {
+    user.updatePassword(newPassword).then(() => {
+      alert('Password updated successfully');
+      closeModal('changePasswordModal'); // Ensure the modal is closed after saving
+    }).catch(error => {
+      console.error('Error updating password:', error);
+    });
+  }).catch(error => {
+    console.error('Reauthentication failed:', error);
+  });
+}
+
+// Verify Access (email and pin)
+function verifyAccess() {
+  const email = document.getElementById('accessEmail').value;
+  const pin = document.getElementById('accessPin').value;
+
+  firestore.collection('users').where('email', '==', email).where('pin', '==', pin).get()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        alert('No account found with that email and PIN');
         return;
       }
 
-      const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
-      user.reauthenticateWithCredential(credential).then(() => {
-        user.updatePassword(newPassword).then(() => {
-          alert('Password updated successfully');
-          closeModal('changePasswordModal');
-        }).catch(error => {
-          console.error('Error updating password:', error);
-        });
-      }).catch(error => {
-        console.error('Reauthentication failed:', error);
+      snapshot.forEach(doc => {
+        const userData = doc.data();
+        if (userData.role && ['moderator', 'manager', 'co-admin', 'admin', 'UNIQUE'].includes(userData.role)) {
+          window.location.href = 'home.html';
+        } else {
+          alert('Access denied: Your account role is not authorized');
+        }
       });
-    }
-
-    // Verify Access (email and pin)
-    function verifyAccess() {
-      const email = document.getElementById('accessEmail').value;
-      const pin = document.getElementById('accessPin').value;
-
-      firestore.collection('users').where('email', '==', email).where('pin', '==', pin).get()
-        .then(snapshot => {
-          if (snapshot.empty) {
-            alert('No account found with that email and PIN');
-            return;
-          }
-
-          snapshot.forEach(doc => {
-            const userData = doc.data();
-            if (userData.role && ['moderator', 'manager', 'co-admin', 'admin', 'UNIQUE'].includes(userData.role)) {
-              window.location.href = 'home.html';
-            } else {
-              alert('Access denied: Your account role is not authorized');
-            }
-          });
-        })
-        .catch(error => {
-          console.error('Error verifying access:', error);
-        });
-    }
+    })
+    .catch(error => {
+      console.error('Error verifying access:', error);
+    });
+}
   </script>
 </body>
 </html>
