@@ -326,5 +326,93 @@
         });
     }
   </script>
+  <script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBNmkZ4KYQ0r_WC9bt-YS6Y-Mu8yV52usY",
+    authDomain: "compass-christian-church-4b02e.firebaseapp.com",
+    projectId: "compass-christian-church-4b02e",
+    storageBucket: "compass-christian-church-4b02e.firebasestorage.app",
+    messagingSenderId: "436310011988",
+    appId: "1:436310011988:web:4087316a7b8d306be3fdc1",
+    measurementId: "G-T6EWRN2THW"
+  };
+
+  const app = firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const firestore = firebase.firestore();
+
+  auth.onAuthStateChanged((user) => {
+    if (!user) {
+      alert("You're not signed in.");
+      window.location.href = "index.html"; // or your login page
+      return;
+    }
+
+    // ✅ User is signed in — Now define your update functions
+
+    window.updateName = function () {
+      const firstName = document.getElementById('newFirstName').value.trim().toUpperCase().slice(0, 12);
+      const middleName = document.getElementById('newMiddleName').value.trim().toUpperCase().slice(0, 12);
+      const lastName = document.getElementById('newLastName').value.trim().toUpperCase().slice(0, 12);
+
+      if (!firstName || !middleName || !lastName) {
+        document.getElementById('nameError').style.display = 'block';
+        return;
+      }
+
+      firestore.collection('users').doc(user.uid).update({
+        firstName,
+        middleName,
+        lastName
+      }).then(() => {
+        alert('Name updated successfully');
+        closeModal('changeNameModal');
+      }).catch((error) => {
+        console.error('Error updating name:', error);
+      });
+    };
+
+    window.updatePassword = function () {
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const reEnterPassword = document.getElementById('reEnterPassword').value;
+
+      if (!currentPassword || !newPassword || !reEnterPassword || newPassword !== reEnterPassword) {
+        document.getElementById('passwordError').style.display = 'block';
+        return;
+      }
+
+      const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+      user.reauthenticateWithCredential(credential).then(() => {
+        return user.updatePassword(newPassword);
+      }).then(() => {
+        alert('Password updated successfully');
+        closeModal('changePasswordModal');
+      }).catch((error) => {
+        console.error('Error updating password:', error);
+      });
+    };
+  });
+
+  // These can stay outside
+  function openChangeNameModal() {
+    document.getElementById('changeNameModal').style.display = 'flex';
+    document.getElementById('nameError').style.display = 'none';
+  }
+
+  function openChangePasswordModal() {
+    document.getElementById('changePasswordModal').style.display = 'flex';
+    document.getElementById('passwordError').style.display = 'none';
+  }
+
+  function openAccessModal() {
+    document.getElementById('accessModal').style.display = 'flex';
+    document.getElementById('accessError').style.display = 'none';
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+  }
+</script>
 </body>
 </html>
