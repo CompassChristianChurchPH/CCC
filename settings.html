@@ -3,166 +3,182 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Settings - Compass Christian Church</title>
+  <title>CCC - Settings</title>
   <link rel="icon" href="assets/ccc-icon.png" type="image/png" />
   <style>
-    /* Global styles */
-    body {
-      font-family: 'Arial', sans-serif;
-      background: #f5f5f5;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f4f4f4;
       min-height: 100vh;
-    }
-
-    /* Header styles */
-    header {
-      background-color: #2b5dad;
-      color: white;
-      text-align: center;
-      padding: 15px 20px;
-      width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-    }
-    
-    header h1 {
-      font-size: 30px;
-      margin: 0;
-    }
-    
-    header p {
-      font-size: 14px;
-      margin-top: 5px;
-    }
-
-    /* Main container styles */
-    .container {
-      background-color: white;
-      width: 100%;
-      max-width: 450px;
-      margin-top: 80px; /* Offset for fixed header */
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-
-    h2 {
-      font-size: 22px;
-      margin-bottom: 30px;
-    }
-
-    .container input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 5px;
-      border: 1px solid #ddd;
-      font-size: 16px;
-    }
-
-    .btn {
-      background-color: #2b5dad;
-      color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 5px;
-      width: 100%;
-      cursor: pointer;
-      font-size: 16px;
       transition: background-color 0.3s ease;
     }
 
-    .btn:hover {
-      background-color: #1f4c8a;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .error-message {
-      color: red;
-      margin-top: 10px;
-      display: none;
-    }
-
-    /* Home Button */
-    #home-btn {
-      background-color: #1f4c8a;
+    header {
+      background-color: #2b5dad;
       color: white;
-      font-size: 16px;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      display: flex;
+      align-items: center;
+      font-size: 1.4rem;
+      gap: 10px;
+    }
+
+    header h1 img {
+      width: 32px;
+      height: 32px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    nav button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 5px;
+      background-color: white;
+      color: #2b5dad;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    nav button:hover {
+      background-color: #e6e6e6;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #2b5dad;
+    }
+
+    .form-section {
+      display: none;
+      margin-bottom: 20px;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    .form-section input {
       padding: 10px;
       width: 100%;
+      border: 1px solid #ccc;
       border-radius: 5px;
-      cursor: pointer;
-      text-align: center;
-      margin-top: 20px;
+      margin-bottom: 20px;
     }
 
-    #home-btn:hover {
-      background-color: #164b6c;
+    .form-section button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #2b5dad;
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .form-section button:hover {
+      background-color: #1f4c8a;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .nav-buttons button {
+      padding: 10px;
+      border: none;
+      background-color: #2b5dad;
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-buttons button:hover {
+      background-color: #1f4c8a;
+    }
+
+    .empty {
+      text-align: center;
+      color: #888;
+      margin-top: 15px;
+      font-style: italic;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Compass Christian Church</h1>
-    <p>Settings - Manage Your Account</p>
+    <h1><img src="assets/ccc-icon.png" alt="CCC Icon"> Compass Christian Church</h1>
+    <nav>
+      <button onclick="location.href='home.html'">Home</button>
+    </nav>
   </header>
 
   <div class="container">
     <h2>Settings</h2>
-
-    <!-- Home Button -->
-    <button id="home-btn" onclick="goHome()">Go to Home</button>
-
-    <!-- Change Name Section -->
-    <button class="btn" id="change-name-btn" onclick="showChangeNameForm()">Change Name</button>
-    <div id="change-name-form" class="hidden">
-      <label for="new-first-name">New First Name:</label>
-      <input type="text" id="new-first-name" placeholder="Enter new first name" required />
-      
-      <label for="new-last-name">New Last Name:</label>
-      <input type="text" id="new-last-name" placeholder="Enter new last name" required />
-      
-      <button class="btn" onclick="updateName()">Save Name</button>
+    <div class="nav-buttons">
+      <button onclick="toggleSection('changePass')">Change Password</button>
+      <button onclick="toggleSection('changeName')">Change Name</button>
+      <button onclick="toggleSection('access')">Access</button>
     </div>
 
     <!-- Change Password Section -->
-    <button class="btn" id="change-pass-btn" onclick="showChangePassForm()">Change Password</button>
-    <div id="change-pass-form" class="hidden">
-      <label for="new-password">New Password:</label>
-      <input type="password" id="new-password" placeholder="Enter new password" required />
-      
-      <label for="confirm-new-password">Confirm New Password:</label>
-      <input type="password" id="confirm-new-password" placeholder="Confirm new password" required />
-      
-      <button class="btn" onclick="updatePassword()">Save Password</button>
+    <div class="form-section" id="changePass">
+      <h3>Change Password</h3>
+      <input type="password" id="newPassword" placeholder="Enter new password"/>
+      <button onclick="changePassword()">Save</button>
     </div>
 
-    <!-- Access Section (Email + PIN) -->
-    <button class="btn" id="access-btn" onclick="showAccessForm()">ACCESS</button>
-    <div id="access-form" class="hidden">
-      <label for="email">Email:</label>
-      <input type="email" id="email" placeholder="Enter your email" required />
-      
-      <label for="pin">PIN:</label>
-      <input type="password" id="pin" placeholder="Enter your PIN" required />
-      
-      <button class="btn" onclick="login()">Login</button>
+    <!-- Change Name Section -->
+    <div class="form-section" id="changeName">
+      <h3>Change Name</h3>
+      <input type="text" id="newFullName" placeholder="Enter new full name"/>
+      <input type="text" id="newMiddleName" placeholder="Enter new middle name"/>
+      <button onclick="changeName()">Save</button>
+    </div>
 
-      <p id="error-message" class="error-message">Invalid Email or PIN. Please try again.</p>
+    <!-- Access Section -->
+    <div class="form-section" id="access">
+      <h3>Access</h3>
+      <input type="password" id="pin" placeholder="Enter PIN to confirm"/>
+      <button onclick="updateAccess()">Save</button>
     </div>
   </div>
 
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
@@ -182,98 +198,58 @@
     const db = firebase.firestore(app);
     const auth = firebase.auth();
 
-    // Show Change Name Form
-    function showChangeNameForm() {
-      document.getElementById('change-name-form').classList.remove('hidden');
-      document.getElementById('change-name-btn').classList.add('hidden');
+    const user = JSON.parse(localStorage.getItem("ccc_loggedInUser"));
+    if (!user) window.location.href = "index.html";
+
+    function toggleSection(sectionId) {
+      const sections = document.querySelectorAll(".form-section");
+      sections.forEach(section => {
+        if (section.id === sectionId) {
+          section.classList.add("active");
+        } else {
+          section.classList.remove("active");
+        }
+      });
     }
 
-    // Update Name
-    function updateName() {
-      const newFirstName = document.getElementById('new-first-name').value;
-      const newLastName = document.getElementById('new-last-name').value;
+    function changePassword() {
+      const newPassword = document.getElementById("newPassword").value.trim();
+      if (newPassword) {
+        auth.currentUser.updatePassword(newPassword).then(() => {
+          alert("Password updated successfully");
+        }).catch(err => {
+          console.error("Error updating password:", err);
+        });
+      } else {
+        alert("Please enter a new password.");
+      }
+    }
 
-      if (newFirstName && newLastName) {
-        // Update the name in Firestore (example collection: users)
-        const user = auth.currentUser;
-        db.collection('users').doc(user.uid).update({
-          firstName: newFirstName,
-          lastName: newLastName
+    function changeName() {
+      const newFullName = document.getElementById("newFullName").value.trim();
+      const newMiddleName = document.getElementById("newMiddleName").value.trim();
+      if (newFullName && newMiddleName) {
+        db.collection("users").doc(user.username).update({
+          fullName: newFullName,
+          middleName: newMiddleName
         }).then(() => {
-          alert('Name updated successfully!');
-          location.reload(); // Reload page to reflect changes
-        }).catch(error => {
-          console.error('Error updating name:', error);
+          alert("Name updated successfully");
+        }).catch(err => {
+          console.error("Error updating name:", err);
         });
       } else {
-        alert('Please fill in both fields.');
+        alert("Please enter a valid name.");
       }
     }
 
-    // Show Change Password Form
-    function showChangePassForm() {
-      document.getElementById('change-pass-form').classList.remove('hidden');
-      document.getElementById('change-pass-btn').classList.add('hidden');
-    }
-
-    // Update Password
-    function updatePassword() {
-      const newPassword = document.getElementById('new-password').value;
-      const confirmNewPassword = document.getElementById('confirm-new-password').value;
-
-      if (newPassword === confirmNewPassword && newPassword.length >= 6) {
-        const user = auth.currentUser;
-        user.updatePassword(newPassword).then(() => {
-          alert('Password updated successfully!');
-          location.reload(); // Reload page to reflect changes
-        }).catch(error => {
-          console.error('Error updating password:', error);
-        });
+    function updateAccess() {
+      const pin = document.getElementById("pin").value.trim();
+      if (pin === user.pin) {
+        alert("Access updated successfully");
       } else {
-        alert('Passwords do not match or are too short.');
+        alert("Invalid PIN.");
       }
-    }
-
-    // Show Access Form (Email + PIN)
-    function showAccessForm() {
-      document.getElementById('access-form').classList.remove('hidden');
-      document.getElementById('access-btn').classList.add('hidden');
-    }
-
-    // Login with Email + PIN
-    function login() {
-      const email = document.getElementById('email').value;
-      const pin = document.getElementById('pin').value;
-
-      if (!email || !pin) {
-        document.getElementById('error-message').textContent = 'Both email and PIN are required.';
-        document.getElementById('error-message').style.display = 'block';
-        return;
-      }
-
-      db.collection('users').where('email', '==', email).where('pin', '==', pin).get()
-        .then(querySnapshot => {
-          if (querySnapshot.empty) {
-            document.getElementById('error-message').textContent = 'Invalid Email or PIN. Please try again.';
-            document.getElementById('error-message').style.display = 'block';
-            return;
-          }
-
-          // On successful login, redirect to access.html
-          window.location.href = 'access.html';
-        })
-        .catch(error => {
-          console.log('Error logging in:', error);
-          document.getElementById('error-message').textContent = 'An error occurred. Please try again later.';
-          document.getElementById('error-message').style.display = 'block';
-        });
-    }
-
-    // Redirect to Home page
-    function goHome() {
-      window.location.href = 'home.html'; // Adjust this link as needed for your Home page
     }
   </script>
-
 </body>
 </html>
