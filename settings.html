@@ -134,7 +134,7 @@
 }
 
 .modal-footer button {
-  padding: 10px 20px;
+  padding: 10px 15px;
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
@@ -142,17 +142,17 @@
 }
 
 .modal-footer .save-btn {
-  background-color: #2b5dad;  /* Blue for Save Changes/Access */
+  background-color: #2b5dad; 
   color: white;
 }
 
 .modal-footer .close-btn {
-  background-color: #e6e6e6;  /* Light grey for Close */
-  color: #333;
+  background-color: #2b5dad;  
+  color: #2b5dad;
 }
 
 .modal-footer .close-btn:hover {
-  background-color: #ccc;
+  background-color: #2b5dad;
 }
 
   </style>
@@ -185,7 +185,7 @@
         <input type="text" id="newLastName" placeholder="Last Name" />
         <!-- Example for the modal container inside settings.html -->
         <div class="modal-footer">
-          <button class="save-btn" onclick="saveChanges()">Save Changes</button>
+          <button class="save-btn" onclick="updateName()">Save</button>
           <button class="close-btn" onclick="closeModal()">Close</button>
         </div>
       </div>
@@ -200,7 +200,7 @@
         <input type="password" id="reEnterPassword" placeholder="Re-enter New Password" />
         <!-- Example for the modal container inside settings.html -->
         <div class="modal-footer">
-          <button class="save-btn" onclick="saveChanges()">Save Changes</button>
+          <button class="save-btn" onclick="updatePassword()">Save</button>
           <button class="close-btn" onclick="closeModal()">Close</button>
         </div>
       </div>
