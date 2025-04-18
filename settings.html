@@ -179,49 +179,49 @@
     </div>
 
     <!-- Modal for Changing Name -->
-    <div id="changeNameModal" class="modal">
-      <div class="modal-content">
-        <h3>Change Name</h3>
-        <input type="text" id="newFirstName" placeholder="First Name" />
-        <input type="text" id="newMiddleName" placeholder="Middle Name" />
-        <input type="text" id="newLastName" placeholder="Last Name" />
-        <!-- Example for the modal container inside settings.html -->
-        <div class="modal-footer">
-          <button class="save-btn" onclick="updateName()">Save</button>
-          <button class="close-btn" onclick="closeModal()">Close</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal for Changing Password -->
-    <div id="changePasswordModal" class="modal">
-      <div class="modal-content">
-        <h3>Change Password</h3>
-        <input type="password" id="currentPassword" placeholder="Current Password" />
-        <input type="password" id="newPassword" placeholder="New Password" />
-        <input type="password" id="reEnterPassword" placeholder="Re-enter New Password" />
-        <!-- Example for the modal container inside settings.html -->
-        <div class="modal-footer">
-          <button class="save-btn" onclick="updatePassword()">Save</button>
-          <button class="close-btn" onclick="closeModal()">Close</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal for Access -->
-    <div id="accessModal" class="modal">
-      <div class="modal-content">
-        <h3>Access</h3>
-        <input type="email" id="accessEmail" placeholder="Enter your email" />
-        <input type="password" id="accessPin" placeholder="Enter your PIN" />
-        <!-- Example for the modal container inside settings.html -->
-        <div class="modal-footer">
-          <button class="save-btn" onclick="verifyAccess()">Access</button>
-          <button class="close-btn" onclick="closeModal('accessModal')">Close</button>
-        </div>
-      </div>
+<div id="changeNameModal" class="modal">
+  <div class="modal-content">
+    <h3>Change Name</h3>
+    <input type="text" id="newFirstName" placeholder="First Name" />
+    <input type="text" id="newMiddleName" placeholder="Middle Name" />
+    <input type="text" id="newLastName" placeholder="Last Name" />
+    <!-- Example for the modal container inside settings.html -->
+    <div class="modal-footer">
+      <button class="save-btn" onclick="updateName()">Save</button>
+      <button class="close-btn" onclick="closeModal('changeNameModal')">Close</button> <!-- Pass modal id here -->
     </div>
   </div>
+</div>
+
+<!-- Modal for Changing Password -->
+<div id="changePasswordModal" class="modal">
+  <div class="modal-content">
+    <h3>Change Password</h3>
+    <input type="password" id="currentPassword" placeholder="Current Password" />
+    <input type="password" id="newPassword" placeholder="New Password" />
+    <input type="password" id="reEnterPassword" placeholder="Re-enter New Password" />
+    <!-- Example for the modal container inside settings.html -->
+    <div class="modal-footer">
+      <button class="save-btn" onclick="updatePassword()">Save</button>
+      <button class="close-btn" onclick="closeModal('changePasswordModal')">Close</button> <!-- Pass modal id here -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Access -->
+<div id="accessModal" class="modal">
+  <div class="modal-content">
+    <h3>Access</h3>
+    <input type="email" id="accessEmail" placeholder="Enter your email" />
+    <input type="password" id="accessPin" placeholder="Enter your PIN" />
+    <!-- Example for the modal container inside settings.html -->
+    <div class="modal-footer">
+      <button class="save-btn" onclick="verifyAccess()">Access</button>
+      <button class="close-btn" onclick="closeModal('accessModal')">Close</button> <!-- Pass modal id here -->
+    </div>
+  </div>
+</div>
+
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
